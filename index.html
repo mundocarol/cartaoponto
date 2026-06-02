@@ -75,7 +75,6 @@
         .sunday-row { background-color: #ffebee; }
         .saturday-row { background-color: #e3f2fd; }
         .holiday-row { background-color: #fff8e1; }
-        .overtime-row { background-color: #d4edda; }
         .jornada-edit { background: #e8f4fd; padding: 10px; border-radius: 14px; margin-bottom: 12px; }
         .jornada-edit h4 { font-size: 12px; margin-bottom: 6px; }
         .jornada-input { width: 65px; text-align: center; padding: 5px; border: 1px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 11px; }
@@ -198,6 +197,7 @@
         <div class="management-header">
             <h2>📊 Gestão</h2>
             <div style="display: flex; gap: 8px;">
+                <button id="testPrintBtn" class="btn-small" style="background:#9b59b6;">🖨️ Teste</button>
                 <button id="backupManagerBtn" class="btn-small" style="background:#6c757d;">💾 Backup</button>
                 <button id="addEmployeeBtn" class="btn-small" style="background:#27ae60;">👤 Novo</button>
                 <button id="backToClockBtn" class="btn-small" style="background:#6c757d;">← Voltar</button>
@@ -235,7 +235,6 @@ const sbClient = supabase.createClient(SB_URL, SB_KEY);
 
 let employees = [];
 let holidays = [];
-let backups = [];
 let currentEmployeeIndex = 0;
 let currentMonthYear = '';
 let selectedEmployee = null;
@@ -246,7 +245,6 @@ let selectedBackupDate = null;
 const SENHA_GESTOR = '8301';
 const ALMOCO_PADRAO_MINUTOS = 120;
 
-// Nomes para exibição
 const NOMES_ABREVIADOS = {
     'Janne': 'Janne A.', 'Telma': 'Telma G.', 'Danielle': 'Danielle D.',
     'Bianca': 'Bianca S.', 'Royle': 'Royle L.', 'Nicolas': 'Nicolas V.',
@@ -259,7 +257,6 @@ const HORARIOS_CHEGADA = {
     'Danielle': '08:30', 'Nicolas': '10:00', 'Daniel': '10:00'
 };
 
-// ==================== FUNÇÕES AUXILIARES ====================
 function timeToCompare(t) { if (!t) return 0; const [h,m] = t.split(':').map(Number); return h * 60 + m; }
 function timeToMinutes(t) { if (!t) return 0; const [h,m] = t.split(':').map(Number); return (h * 60) + m; }
 function minutesToTime(min) { 
@@ -308,21 +305,19 @@ function updateDateTime() {
     }
 }
 
-// ==================== CÁLCULO DE HORAS (COM SUPORTE A NOTURNO) ====================
+// ==================== CÁLCULO DE HORAS ====================
 function calculateWorkedMinutes(entrada, saida_almoco, volta_almoco, saida) {
     if (!entrada || !saida) return 0;
     
     let entradaMin = timeToMinutes(entrada);
     let saidaMin = timeToMinutes(saida);
     
-    // DETECÇÃO DE HORÁRIO NOTURNO (passou da meia-noite)
     if (saidaMin < entradaMin) {
-        saidaMin += 1440; // Adiciona 24 horas
+        saidaMin += 1440;
     }
     
     let worked = saidaMin - entradaMin;
     
-    // Descontar almoço
     if (saida_almoco && volta_almoco) {
         let almocoOut = timeToMinutes(saida_almoco);
         let almocoIn = timeToMinutes(volta_almoco);
@@ -356,7 +351,13 @@ function calculateExpectedMinutes(employee, dayOfWeek) {
 }
 
 function calculateDayBalance(record, employee, dayOfWeek) {
-    if (dayOfWeek === 0 || record.observacao === 'folga' || record.observacao === 'feriado-descanso' || 
+    // Domingo: só calcula se tiver ponto, senão retorna zero
+    if (dayOfWeek === 0 && !record.entrada) {
+        return { hoursWorked: 0, dayBalance: 0 };
+    }
+    
+    // Observações especiais zeram o saldo (DOMINGO NUNCA É MARCADO COMO FOLGA AUTOMATICAMENTE)
+    if (record.observacao === 'folga' || record.observacao === 'feriado-descanso' || 
         record.observacao === 'falta' || record.observacao === 'atestado' || record.observacao === 'ferias') {
         return { hoursWorked: 0, dayBalance: 0 };
     }
@@ -366,6 +367,34 @@ function calculateDayBalance(record, employee, dayOfWeek) {
     let balanceMinutes = workedMinutes - expectedMinutes;
     
     return { hoursWorked: workedMinutes, dayBalance: Math.round(balanceMinutes) };
+}
+
+// ==================== FUNÇÃO PARA ATUALIZAR OBSERVAÇÃO AUTOMÁTICA ====================
+async function atualizarObservacaoAutomatica(employeeId, date, dayOfWeek) {
+    let { data: record } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', employeeId).eq('data', date).maybeSingle();
+    if (!record) return;
+    
+    const isHoliday = holidays.some(h => h.data === date);
+    let novaObs = record.observacao || '';
+    
+    // REGRA 1: FERIADO - só altera se não for observação manual
+    const observacoesManuais = ['falta', 'atestado', 'ferias', 'folga'];
+    if (isHoliday && !observacoesManuais.includes(record.observacao)) {
+        if (record.entrada) {
+            novaObs = 'feriado-trabalhado';
+        } else {
+            novaObs = 'feriado-descanso';
+        }
+    }
+    
+    // REGRA 2: DOMINGO - NUNCA marca como folga, mantém o que está (Normal)
+    // Não faz nenhuma alteração automática para domingo
+    
+    // Salvar se houver mudança
+    if (novaObs !== record.observacao) {
+        await sbClient.from('registros_ponto').update({ observacao: novaObs }).eq('id', record.id);
+        console.log(`🔄 Observação atualizada para ${date}: ${novaObs || 'Normal'}`);
+    }
 }
 
 // ==================== SUPABASE OPERATIONS ====================
@@ -381,38 +410,11 @@ async function loadEmployees() {
     return employees;
 }
 
-async function saveEmployeeToSupabase(employee) {
-    if (employee.id) {
-        const { error } = await sbClient.from('funcionarios').update(employee).eq('id', employee.id);
-        if (error) throw error;
-    } else {
-        const { data, error } = await sbClient.from('funcionarios').insert(employee).select();
-        if (error) throw error;
-        employee.id = data[0].id;
-    }
-    return employee;
-}
-
-async function deleteEmployeeFromSupabase(employeeId) {
-    const { error } = await sbClient.from('funcionarios').delete().eq('id', employeeId);
-    if (error) throw error;
-}
-
 async function loadHolidays() {
     const { data, error } = await sbClient.from('feriados').select('*');
     if (error) return [];
     holidays = data || [];
     return holidays;
-}
-
-async function addHolidayToSupabase(date, name) {
-    const { error } = await sbClient.from('feriados').insert({ data: date, nome: name });
-    if (error) throw error;
-}
-
-async function deleteHolidayFromSupabase(id) {
-    const { error } = await sbClient.from('feriados').delete().eq('id', id);
-    if (error) throw error;
 }
 
 async function loadRecords(employeeId, month, year) {
@@ -539,6 +541,7 @@ async function markClock(employee) {
     const t = await getServerTime();
     const date = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
     const now = `${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
+    const dayOfWeek = t.getDay();
     
     const records = await loadRecords(employee.id, t.getMonth()+1, t.getFullYear());
     const today = records[date] || {};
@@ -551,10 +554,13 @@ async function markClock(employee) {
     else { showMessage('⚠️ Dia completo!', 'warning'); return; }
     
     await saveRecord(employee.id, date, field, now, false);
+    
+    // ATUALIZAR OBSERVAÇÃO AUTOMÁTICA
+    await atualizarObservacaoAutomatica(employee.id, date, dayOfWeek);
+    
     showMessage(`✅ ${name}: ${now}`, 'success');
     await renderEmployeeGrid();
     
-    // Backup automático a cada 10 marcações
     if (Math.random() < 0.1) await criarBackupAutomatico();
 }
 
@@ -707,6 +713,98 @@ function renderTabs() {
     });
 }
 
+// ==================== FUNÇÃO SAVE FIELD ====================
+window.saveField = async function(idx, day, field) {
+    const emp = employees[idx];
+    const [year, month] = currentMonthYear.split('-').map(Number);
+    const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const inputElement = document.getElementById(`${field}-${idx}-${day}`);
+    let val = inputElement.value;
+    const dateObj = new Date(dateKey);
+    const dayOfWeek = dateObj.getDay();
+    
+    let { data: existing } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', dateKey).maybeSingle();
+    
+    if (val === '') {
+        if (existing) {
+            const updatedRecord = {
+                entrada: existing.entrada || null,
+                saida_almoco: existing.saida_almoco || null,
+                volta_almoco: existing.volta_almoco || null,
+                saida: existing.saida || null,
+                observacao: existing.observacao,
+                marcado_por: 'gestor',
+                manager_intervention: true
+            };
+            updatedRecord[field] = null;
+            await sbClient.from('registros_ponto').update(updatedRecord).eq('id', existing.id);
+            showMessage(`✅ ${field} removido!`, 'success');
+        }
+    } else {
+        if (existing) {
+            const updatedRecord = {
+                entrada: existing.entrada,
+                saida_almoco: existing.saida_almoco,
+                volta_almoco: existing.volta_almoco,
+                saida: existing.saida,
+                observacao: existing.observacao,
+                [field]: val,
+                marcado_por: 'gestor',
+                manager_intervention: true
+            };
+            await sbClient.from('registros_ponto').update(updatedRecord).eq('id', existing.id);
+            showMessage(`✅ ${field} alterado para ${val}`, 'success');
+        } else {
+            const newRecord = {
+                funcionario_id: emp.id,
+                data: dateKey,
+                [field]: val,
+                marcado_por: 'gestor',
+                manager_intervention: true
+            };
+            await sbClient.from('registros_ponto').insert(newRecord);
+            showMessage(`✅ ${field} adicionado: ${val}`, 'success');
+        }
+    }
+    
+    // ATUALIZAR OBSERVAÇÃO AUTOMÁTICA
+    await atualizarObservacaoAutomatica(emp.id, dateKey, dayOfWeek);
+    await renderTabContent(idx);
+};
+
+// ==================== FUNÇÃO SAVE OBS ====================
+window.saveObs = async function(idx, day) {
+    const emp = employees[idx];
+    const [year, month] = currentMonthYear.split('-').map(Number);
+    const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const val = document.getElementById(`obs-${idx}-${day}`).value;
+    const dateObj = new Date(dateKey);
+    const dayOfWeek = dateObj.getDay();
+    
+    let { data: existing } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', dateKey).maybeSingle();
+    if (existing) {
+        await sbClient.from('registros_ponto').update({ observacao: val, marcado_por: 'gestor', manager_intervention: true }).eq('id', existing.id);
+    } else {
+        await sbClient.from('registros_ponto').insert({ 
+            funcionario_id: emp.id, data: dateKey, observacao: val, marcado_por: 'gestor', manager_intervention: true 
+        });
+    }
+    showMessage(`✅ Observação salva`, 'success');
+    
+    // ATUALIZAR OBSERVAÇÃO AUTOMÁTICA (para garantir consistência)
+    await atualizarObservacaoAutomatica(emp.id, dateKey, dayOfWeek);
+    await renderTabContent(idx);
+};
+
+// ==================== FUNÇÃO UPDATE JORNADA ====================
+window.updateJornada = async function(id, field, val) {
+    await sbClient.from('funcionarios').update({ [field]: val }).eq('id', id);
+    await loadEmployees();
+    await renderTabContent(currentEmployeeIndex);
+    showMessage('✅ Jornada atualizada!', 'success');
+};
+
+// ==================== FUNÇÃO RENDERTABCONTENT ====================
 async function renderTabContent(idx) {
     const emp = employees[idx];
     const [year, month] = currentMonthYear.split('-').map(Number);
@@ -734,36 +832,58 @@ async function renderTabContent(idx) {
         </div>`;
     }
     
-    html += `<div class="table-wrapper"><table class="timesheet-table"><thead><tr><th>Data</th><th>Ent</th><th>Sai Alm</th><th>Vol Alm</th><th>Sai</th><th>H.T.</th><th>Saldo</th><th>Obs</th></tr></thead><tbody>`;
+    html += `<div class="table-wrapper"><table class="timesheet-table"><thead><tr><th>Data</th><th>Dia</th><th>Ent</th><th>Sai Alm</th><th>Vol Alm</th><th>Sai</th><th>H.T.</th><th>Saldo</th><th>Obs</th></tr></thead><tbody>`;
     
     for (let d = 1; d <= days; d++) {
         const date = new Date(year, month-1, d);
         const dow = date.getDay();
+        const dayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][dow];
         const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        const rec = records[dateKey] || {};
+        let rec = records[dateKey] || {};
         const isHoliday = holidays.some(h => h.data === dateKey);
+        
+        // Se não tem observação, calcular automaticamente (sem forçar folga em domingo)
+        if (!rec.observacao) {
+            if (isHoliday) {
+                if (rec.entrada) {
+                    rec.observacao = 'feriado-trabalhado';
+                } else {
+                    rec.observacao = 'feriado-descanso';
+                }
+            }
+            // DOMINGO: NÃO força nada, mantém como Normal (vazio)
+        }
+        
         const { hoursWorked, dayBalance } = calculateDayBalance(rec, emp, dow);
         
         let obsVal = rec.observacao || '';
-        if (isHoliday && !obsVal) obsVal = rec.entrada ? 'feriado-trabalhado' : 'feriado-descanso';
-        
         let obsText = '';
+        
+        // Lógica para DOMINGO - NUNCA marca como folga
+        if (dow === 0 && !obsVal) {
+            obsVal = ''; // Normal
+        }
+        
+        // Lógica para FERIADO
+        if (isHoliday && !obsVal) {
+            obsVal = rec.entrada ? 'feriado-trabalhado' : 'feriado-descanso';
+        }
+        
         if (obsVal === 'folga') obsText = 'Folga';
         else if (obsVal === 'falta') obsText = 'Falta';
         else if (obsVal === 'atestado') obsText = 'Atestado';
         else if (obsVal === 'ferias') obsText = 'Férias';
-        else if (obsVal === 'feriado-trabalhado') obsText = 'Feriado Trab';
-        else if (obsVal === 'feriado-descanso') obsText = 'Feriado';
+        else if (obsVal === 'feriado-trabalhado') obsText = 'Feriado Trabalhado';
+        else if (obsVal === 'feriado-descanso') obsText = 'Feriado Descanso';
         else obsText = 'Normal';
         
         let rowClass = '';
         if (dow === 0) rowClass = 'sunday-row';
         else if (dow === 6) rowClass = 'saturday-row';
         if (isHoliday) rowClass = 'holiday-row';
-        if (rec.manager_intervention) rowClass += ' manager-marked';
         
         html += `<tr class="${rowClass}">
-            <td>${String(d).padStart(2,'0')}/${String(month).padStart(2,'0')}</td>
+            <td>${String(d).padStart(2,'0')}/${String(month).padStart(2,'0')}</td><td style="font-size:9px;">${dayName}</td>
             <td><input type="time" class="time-input" id="entrada-${idx}-${d}" value="${rec.entrada || ''}" ${!isActive ? 'disabled' : ''} onchange="saveField(${idx},${d},'entrada')"></td>
             <td><input type="time" class="time-input" id="saida_almoco-${idx}-${d}" value="${rec.saida_almoco || ''}" ${!isActive ? 'disabled' : ''} onchange="saveField(${idx},${d},'saida_almoco')"></td>
             <td><input type="time" class="time-input" id="volta_almoco-${idx}-${d}" value="${rec.volta_almoco || ''}" ${!isActive ? 'disabled' : ''} onchange="saveField(${idx},${d},'volta_almoco')"></td>
@@ -782,7 +902,7 @@ async function renderTabContent(idx) {
     
     html += `</tbody></table></div>`;
     
-    // Cálculo dos totais (apenas para ativos)
+    // Cálculo dos totais
     let totalHoras = 0, banco = 0, extras = 0, neg = 0, faltas = 0, folgas = 0, ferTrab = 0, intervs = 0;
     
     for (let d = 1; d <= days; d++) {
@@ -823,41 +943,86 @@ async function renderTabContent(idx) {
     document.getElementById('tabContent').innerHTML = html;
 }
 
-// ==================== FUNÇÕES DO GESTOR ====================
-window.saveField = async function(idx, day, field) {
-    const emp = employees[idx];
-    const [year, month] = currentMonthYear.split('-').map(Number);
-    const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const val = document.getElementById(`${field}-${idx}-${day}`).value;
-    if (val !== undefined) {
-        await saveRecord(emp.id, dateKey, field, val, true);
-        await renderTabContent(idx);
-    }
-};
-
-window.saveObs = async function(idx, day) {
-    const emp = employees[idx];
-    const [year, month] = currentMonthYear.split('-').map(Number);
-    const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const val = document.getElementById(`obs-${idx}-${day}`).value;
+// ==================== FUNÇÃO ADDHOLIDAY ====================
+async function addHoliday() {
+    const date = document.getElementById('holidayDate').value;
+    const name = document.getElementById('holidayName').value;
+    if (!date || !name) { showMessage('Preencha data e nome', 'warning'); return; }
     
-    let { data: existing } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', dateKey).maybeSingle();
-    if (existing) {
-        await sbClient.from('registros_ponto').update({ observacao: val }).eq('id', existing.id);
-    } else {
-        await sbClient.from('registros_ponto').insert({ funcionario_id: emp.id, data: dateKey, observacao: val, marcado_por: 'gestor' });
+    await sbClient.from('feriados').insert({ data: date, nome: name });
+    
+    const [year, month] = currentMonthYear.split('-').map(Number);
+    const [hYear, hMonth] = date.split('-').map(Number);
+    const dateObj = new Date(date);
+    const dayOfWeek = dateObj.getDay();
+    
+    if (hYear === year && hMonth === month) {
+        for (const emp of employees) {
+            let { data: existing } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', date).maybeSingle();
+            
+            if (existing) {
+                if (existing.entrada) {
+                    await sbClient.from('registros_ponto').update({ observacao: 'feriado-trabalhado' }).eq('id', existing.id);
+                } else {
+                    await sbClient.from('registros_ponto').update({ observacao: 'feriado-descanso' }).eq('id', existing.id);
+                }
+            } else {
+                // Se não existe registro, cria com feriado-descanso (não bateu ponto)
+                await sbClient.from('registros_ponto').insert({ 
+                    funcionario_id: emp.id, 
+                    data: date, 
+                    observacao: 'feriado-descanso', 
+                    marcado_por: 'gestor', 
+                    manager_intervention: true 
+                });
+            }
+        }
     }
-    await renderTabContent(idx);
-};
-
-window.updateJornada = async function(id, field, val) {
-    await sbClient.from('funcionarios').update({ [field]: val }).eq('id', id);
-    await loadEmployees();
+    
+    document.getElementById('holidayDate').value = '';
+    document.getElementById('holidayName').value = '';
+    await loadHolidays();
+    renderHolidayList();
     await renderTabContent(currentEmployeeIndex);
-    showMessage('✅ Jornada atualizada!', 'success');
+    showMessage('✅ Feriado adicionado!', 'success');
+}
+
+// ==================== FUNÇÃO DELETEHOLIDAY ====================
+window.deleteHoliday = async function(id) {
+    const holidayToDelete = holidays.find(h => h.id == id);
+    const holidayDate = holidayToDelete ? holidayToDelete.data : null;
+    
+    await sbClient.from('feriados').delete().eq('id', id);
+    await loadHolidays();
+    renderHolidayList();
+    
+    if (holidayDate) {
+        const [year, month] = currentMonthYear.split('-').map(Number);
+        const [hYear, hMonth] = holidayDate.split('-').map(Number);
+        
+        if (hYear === year && hMonth === month) {
+            for (const emp of employees) {
+                let { data: existing } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', holidayDate).maybeSingle();
+                if (existing) {
+                    await sbClient.from('registros_ponto').update({ observacao: '' }).eq('id', existing.id);
+                }
+            }
+        }
+    }
+    
+    await renderTabContent(currentEmployeeIndex);
+    showMessage('✅ Feriado removido!', 'success');
 };
 
-// ==================== GERENCIAMENTO DE FUNCIONÁRIOS ====================
+// ==================== FUNÇÃO RENDER HOLIDAY LIST ====================
+function renderHolidayList() {
+    const div = document.getElementById('holidayList');
+    if (!div) return;
+    if (!holidays.length) { div.innerHTML = '<p>Nenhum feriado cadastrado</p>'; return; }
+    div.innerHTML = holidays.map(h => `<div class="holiday-tag">${h.data.split('-')[2]}/${h.data.split('-')[1]} - ${h.nome} <button onclick="deleteHoliday('${h.id}')">×</button></div>`).join('');
+}
+
+// ==================== FUNÇÕES DE GERENCIAMENTO DE FUNCIONÁRIOS ====================
 function showAddEmployeeModal() {
     editingEmployeeId = null;
     document.getElementById('employeeModalTitle').innerHTML = '👤 Novo Funcionário';
@@ -960,79 +1125,40 @@ window.deleteEmployee = async function(id) {
     showMessage('✅ Funcionário excluído!', 'success');
 };
 
-// ==================== FERIADOS ====================
-function renderHolidayList() {
-    const div = document.getElementById('holidayList');
-    if (!div) return;
-    if (!holidays.length) { div.innerHTML = '<p>Nenhum feriado cadastrado</p>'; return; }
-    div.innerHTML = holidays.map(h => `<div class="holiday-tag">${h.data.split('-')[2]}/${h.data.split('-')[1]} - ${h.nome} <button onclick="deleteHoliday('${h.id}')">×</button></div>`).join('');
-}
-
-window.deleteHoliday = async function(id) {
-    await deleteHolidayFromSupabase(id);
-    await loadHolidays();
-    renderHolidayList();
-    await renderTabContent(currentEmployeeIndex);
-    showMessage('✅ Feriado removido!', 'success');
-};
-
-async function addHoliday() {
-    const date = document.getElementById('holidayDate').value;
-    const name = document.getElementById('holidayName').value;
-    if (!date || !name) { showMessage('Preencha data e nome', 'warning'); return; }
-    
-    await addHolidayToSupabase(date, name);
-    
-    const [year, month] = currentMonthYear.split('-').map(Number);
-    const [hYear, hMonth] = date.split('-').map(Number);
-    
-    if (hYear === year && hMonth === month) {
-        for (const emp of employees) {
-            let { data: existing } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', date).maybeSingle();
-            if (existing) {
-                const autoObs = existing.entrada ? 'feriado-trabalhado' : 'feriado-descanso';
-                await sbClient.from('registros_ponto').update({ observacao: autoObs }).eq('id', existing.id);
-            } else {
-                await sbClient.from('registros_ponto').insert({ funcionario_id: emp.id, data: date, observacao: 'feriado-descanso', marcado_por: 'gestor' });
-            }
-        }
-    }
-    
-    document.getElementById('holidayDate').value = '';
-    document.getElementById('holidayName').value = '';
-    await loadHolidays();
-    renderHolidayList();
-    await renderTabContent(currentEmployeeIndex);
-    showMessage('✅ Feriado adicionado!', 'success');
+function showBackupModal() {
+    carregarListaBackups();
+    document.getElementById('backupModal').style.display = 'flex';
 }
 
 // ==================== IMPRESSÃO ====================
-async function validateAndPrint(empId, year, month) {
+async function validateAndPrint(empId, year, month, isTest = false) {
     const emp = employees.find(e => e.id == empId);
     const records = await loadRecords(emp.id, month, year);
     const days = new Date(year, month, 0).getDate();
     const missing = [];
     
-    for (let d = 1; d <= days; d++) {
-        const date = new Date(year, month-1, d);
-        if (date.getDay() === 0) continue;
-        const key = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        const rec = records[key] || {};
-        const temHorario = rec.entrada || rec.saida_almoco || rec.volta_almoco || rec.saida;
-        const obsOk = ['folga','falta','atestado','ferias'].includes(rec.observacao);
-        if (!temHorario && !obsOk) missing.push(`${d}/${month}`);
+    if (!isTest) {
+        for (let d = 1; d <= days; d++) {
+            const date = new Date(year, month-1, d);
+            if (date.getDay() === 0) continue;
+            const key = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            const rec = records[key] || {};
+            const temHorario = rec.entrada || rec.saida_almoco || rec.volta_almoco || rec.saida;
+            const obsOk = ['folga','falta','atestado','ferias','feriado-descanso','feriado-trabalhado'].includes(rec.observacao);
+            if (!temHorario && !obsOk) missing.push(`${d}/${month}`);
+        }
+        
+        if (missing.length) {
+            document.getElementById('missingDaysList').innerHTML = missing.map(m => `<div class="missing-day-item">📅 ${m}</div>`).join('');
+            document.getElementById('validationModal').style.display = 'flex';
+            return;
+        }
     }
     
-    if (missing.length) {
-        document.getElementById('missingDaysList').innerHTML = missing.map(m => `<div class="missing-day-item">📅 ${m}</div>`).join('');
-        document.getElementById('validationModal').style.display = 'flex';
-        return;
-    }
-    
-    await generatePrint(empId, year, month);
+    await generatePrint(empId, year, month, isTest);
 }
 
-async function generatePrint(empId, year, month) {
+async function generatePrint(empId, year, month, isTest = false) {
     const emp = employees.find(e => e.id == empId);
     const records = await loadRecords(emp.id, month, year);
     const days = new Date(year, month, 0).getDate();
@@ -1066,7 +1192,6 @@ async function generatePrint(empId, year, month) {
         else if (rec.observacao === 'ferias') obs = 'Férias';
         else if (rec.observacao === 'feriado-trabalhado') obs = 'Feriado Trab';
         else if (rec.observacao === 'feriado-descanso') obs = 'Feriado';
-        else if (dow === 0 && !rec.entrada) obs = 'Folga';
         
         rows += `<tr>
             <td>${String(d).padStart(2,'0')}/${String(month).padStart(2,'0')}</td>
@@ -1078,20 +1203,67 @@ async function generatePrint(empId, year, month) {
             <td>${minutesToTime(hoursWorked)}</td>
             <td>${minutesToTime(dayBalance)}</td>
             <td>${obs}${rec.manager_intervention ? ' *' : ''}</td>
-        </tr>`;
+        </table>`;
     }
     
     const saldo = banco - neg;
+    const saldoHoras = (saldo / 60).toFixed(2);
+    const testWatermark = isTest ? '<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-45deg);font-size:48pt;color:rgba(255,0,0,0.3);white-space:nowrap;pointer-events:none;z-index:999;">TESTE - TESTE - TESTE</div>' : '';
+    
     const printHtml = `<!DOCTYPE html>
-    <html><head><meta charset="UTF-8"><title>Folha de Ponto - ${emp.nome}</title>
-    <style>body{font-family:'Courier New',monospace;padding:8mm;font-size:10pt}@page{size:A4;margin:8mm}.header{text-align:center;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:15px}.info{display:flex;justify-content:space-between;margin-bottom:15px;font-size:9pt}table{width:100%;border-collapse:collapse;font-size:8pt}th,td{border:1px solid #000;padding:4px;text-align:center}th{background:#f2f2f2}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:15px 0}.summary-box{border:1px solid #000;padding:6px;text-align:center}.signature{display:flex;justify-content:space-between;margin-top:25px}.signature-line{width:180px;border-top:1px solid #000;margin:8px auto}.footer{text-align:center;font-size:7pt;margin-top:15px}.positive{color:#27ae60}.negative{color:#e74c3c}</style>
+    <html><head><meta charset="UTF-8"><title>${isTest ? 'TESTE - ' : ''}Folha de Ponto - ${emp.nome}</title>
+    <style>
+        body{font-family:'Courier New',monospace;padding:8mm;font-size:10pt;margin:0}
+        @page{size:A4;margin:8mm}
+        .header{text-align:center;border-bottom:2px solid #000;padding-bottom:6px;margin-bottom:10px}
+        .header h1{font-size:16pt;margin:0}
+        .header h2{font-size:12pt;font-weight:normal;margin:0}
+        .info{display:flex;justify-content:space-between;margin-bottom:10px;font-size:8pt}
+        table{width:100%;border-collapse:collapse;font-size:7pt}
+        th,td{border:1px solid #000;padding:3px;text-align:center}
+        th{background:#f2f2f2}
+        .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}
+        .summary-box{border:1px solid #000;padding:5px;text-align:center;font-size:8pt}
+        .summary-box strong{display:block;margin-bottom:3px}
+        .signature{display:flex;justify-content:space-between;margin-top:20px}
+        .signature-line{width:160px;border-top:1px solid #000;margin:6px auto}
+        .footer{text-align:center;font-size:6pt;margin-top:10px;border-top:1px solid #ccc;padding-top:5px}
+        .positive{color:#27ae60}
+        .negative{color:#e74c3c}
+    </style>
     </head><body>
-    <div class="header"><h1>MUNDO CAROL</h1><h2>FOLHA DE PONTO</h2></div>
-    <div class="info"><div><strong>Funcionário:</strong> ${emp.nome}<br><strong>CPF:</strong> ${emp.cpf}</div><div><strong>Mês/Ano:</strong> ${months[month-1]}/${year}<br><strong>Jornada:</strong> ${emp.jornada_seg_sex_entrada} às ${emp.jornada_seg_sex_saida}</div></div>
-    <table><thead><tr><th>Data</th><th>Dia</th><th>Entrada</th><th>Saída Alm</th><th>Volta Alm</th><th>Saída</th><th>H.T.</th><th>Saldo</th><th>Obs</th></tr></thead><tbody>${rows}</tbody><table>
-    <div class="summary"><div class="summary-box"><strong>Total Horas</strong><br>${minutesToTime(total)}</div><div class="summary-box"><strong>Banco de Horas</strong><br><span class="positive">${minutesToTime(banco)}</span></div><div class="summary-box"><strong>Horas Extras</strong><br><span class="positive">${minutesToTime(extras)}</span></div><div class="summary-box"><strong>Saldo Final</strong><br><span class="${saldo>=0?'positive':'negative'}">${minutesToTime(saldo)} (${(saldo/60).toFixed(2)}h)</span></div></div>
-    <div class="signature"><div style="text-align:center;"><div class="signature-line"></div>Assinatura do Funcionário</div><div style="text-align:center;"><div class="signature-line"></div>Assinatura do Responsável</div></div>
-    <div class="footer">Documento eletrônico. * = Alterado pelo Gestor.<br>Emitido: ${new Date().toLocaleDateString('pt-BR')}</div>
+    ${testWatermark}
+    <div class="header">
+        <h1>MUNDO CAROL</h1>
+        <h2>FOLHA DE PONTO</h2>
+    </div>
+    <div class="info">
+        <div><strong>Funcionário:</strong> ${emp.nome}<br><strong>CPF:</strong> ${emp.cpf}</div>
+        <div><strong>Mês/Ano:</strong> ${months[month-1]}/${year}<br><strong>Jornada:</strong> ${emp.jornada_seg_sex_entrada} às ${emp.jornada_seg_sex_saida} (Seg-Sex) | ${emp.jornada_sabado_entrada} às ${emp.jornada_sabado_saida} (Sáb)</div>
+    </div>
+    <table><thead><tr><th>Data</th><th>Dia</th><th>Entrada</th><th>Saída Alm</th><th>Volta Alm</th><th>Saída</th><th>H.T.</th><th>Saldo</th><th>Obs</th></tr></thead><tbody>${rows}</tbody></table>
+    
+    <div class="summary">
+        <div class="summary-box"><strong>Total Horas</strong>${minutesToTime(total)}</div>
+        <div class="summary-box"><strong>Banco de Horas</strong><span class="positive"> ${minutesToTime(banco)}</span></div>
+        <div class="summary-box"><strong>Horas Extras</strong><span class="positive"> ${minutesToTime(extras)}</span></div>
+        <div class="summary-box"><strong>Saldo Final</strong><span class="${saldo>=0?'positive':'negative'}"> ${minutesToTime(saldo)} (${saldoHoras}h)</span></div>
+    </div>
+    <div class="summary" style="margin-top:5px;">
+        <div class="summary-box"><strong>Faltas</strong> ${faltas} dia(s)</div>
+        <div class="summary-box"><strong>Folgas</strong> ${folgas} dia(s)</div>
+        <div class="summary-box"><strong>Feriados Trab</strong> ${ferTrab} dia(s)</div>
+        <div class="summary-box"><strong>Intervenções</strong> ${intervs}</div>
+    </div>
+    
+    <div class="signature">
+        <div style="text-align:center;"><div class="signature-line"></div>Assinatura do Funcionário</div>
+        <div style="text-align:center;"><div class="signature-line"></div>Assinatura do Responsável</div>
+    </div>
+    <div class="footer">
+        Documento eletrônico. * = Registro alterado pelo Gestor.<br>
+        Emitido em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}
+    </div>
     <script>window.onload=function(){window.print();};<\/script>
     </body></html>`;
     
@@ -1100,15 +1272,22 @@ async function generatePrint(empId, year, month) {
     win.document.close();
 }
 
-function showBackupModal() {
-    carregarListaBackups();
-    document.getElementById('backupModal').style.display = 'flex';
+// ==================== IMPRESSÃO TESTE ====================
+async function testPrint() {
+    if (employees.length === 0) {
+        showMessage('Nenhum funcionário cadastrado para teste', 'warning');
+        return;
+    }
+    const emp = employees[0];
+    const [year, month] = currentMonthYear.split('-').map(Number);
+    await generatePrint(emp.id, year, month, true);
 }
 
 // ==================== EVENTOS ====================
 document.getElementById('managementBtn')?.addEventListener('click', showManagerModal);
 document.getElementById('backToClockBtn')?.addEventListener('click', backToClock);
 document.getElementById('backupManagerBtn')?.addEventListener('click', showBackupModal);
+document.getElementById('testPrintBtn')?.addEventListener('click', testPrint);
 document.getElementById('addEmployeeBtn')?.addEventListener('click', showAddEmployeeModal);
 document.getElementById('saveEmployeeBtn')?.addEventListener('click', saveEmployee);
 document.getElementById('cancelEmployeeBtn')?.addEventListener('click', () => document.getElementById('employeeModal').style.display = 'none');
