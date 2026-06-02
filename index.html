@@ -6,357 +6,62 @@
     <title>Ponto - Mundo Carol</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 16px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        .clock-screen {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 28px;
-            padding: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-
-        .clock-header {
-            text-align: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .clock-header h1 {
-            color: #2c3e50;
-            font-size: 24px;
-            margin-bottom: 4px;
-        }
-
-        .clock-header h2 {
-            color: #666;
-            font-size: 14px;
-            font-weight: normal;
-        }
-
-        .clock-header .date-time {
-            font-size: 13px;
-            color: #999;
-            margin-top: 8px;
-        }
-
-        .employee-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .employee-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 14px 16px;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .employee-card:active {
-            transform: scale(0.98);
-        }
-
-        .employee-info h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .status-badge {
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.2);
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .clock-screen { max-width: 600px; margin: 0 auto; background: white; border-radius: 28px; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .clock-header { text-align: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #f0f0f0; }
+        .clock-header h1 { color: #2c3e50; font-size: 24px; margin-bottom: 4px; }
+        .clock-header h2 { color: #666; font-size: 14px; font-weight: normal; }
+        .clock-header .date-time { font-size: 13px; color: #999; margin-top: 8px; }
+        .employee-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+        .employee-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 16px; border-radius: 16px; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .employee-card:active { transform: scale(0.98); }
+        .employee-info h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+        .status-badge { font-size: 11px; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.2); }
         .status-complete { background: #27ae60; }
         .status-incomplete { background: #f39c12; color: #333; }
         .status-none { background: #95a5a6; }
-
-        .clock-preview {
-            display: flex;
-            gap: 12px;
-            font-size: 12px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-
-        .clock-preview span {
-            background: rgba(255,255,255,0.15);
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-family: monospace;
-        }
-
-        .management-btn {
-            background: #2c3e50;
-            padding: 12px 24px;
-            font-size: 14px;
-            width: 100%;
-            border-radius: 40px;
-        }
-
-        button {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
-            width: 100%;
-        }
-
+        .clock-preview { display: flex; gap: 12px; font-size: 12px; margin-top: 8px; flex-wrap: wrap; }
+        .clock-preview span { background: rgba(255,255,255,0.15); padding: 4px 8px; border-radius: 20px; font-family: monospace; }
+        .management-btn { background: #2c3e50; padding: 12px 24px; font-size: 14px; width: 100%; border-radius: 40px; }
+        button { background: #3498db; color: white; border: none; padding: 12px 20px; border-radius: 40px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; width: 100%; }
         button:active { transform: scale(0.97); }
         button.danger { background: #e74c3c; }
         button.success { background: #27ae60; }
         button.warning { background: #f39c12; }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 28px 20px;
-            border-radius: 28px;
-            max-width: 320px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .modal-content h2 {
-            font-size: 20px;
-            margin-bottom: 12px;
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: 14px;
-            margin: 16px 0;
-            font-size: 24px;
-            text-align: center;
-            border: 2px solid #ddd;
-            border-radius: 50px;
-            font-family: monospace;
-            letter-spacing: 4px;
-        }
-
-        .fake-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .fake-modal-content {
-            background: white;
-            padding: 32px 24px;
-            border-radius: 28px;
-            max-width: 300px;
-            width: 90%;
-            text-align: center;
-        }
-
-        .fake-modal-content h3 {
-            color: #e74c3c;
-            margin-bottom: 16px;
-        }
-
-        .management-area {
-            display: none;
-            max-width: 100%;
-            background: #f5f7fa;
-            min-height: 100vh;
-            padding: 16px;
-        }
-
-        .management-card {
-            background: white;
-            border-radius: 20px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .management-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .tab {
-            padding: 8px 16px;
-            background: #e9ecef;
-            border-radius: 40px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .tab.active {
-            background: #3498db;
-            color: white;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-            margin: 16px 0;
-        }
-
-        .timesheet-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 11px;
-            min-width: 800px;
-        }
-
-        .timesheet-table th, .timesheet-table td {
-            border: 1px solid #ddd;
-            padding: 8px 4px;
-            text-align: center;
-        }
-
-        .timesheet-table th {
-            background: #f8f9fa;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-        }
-
-        .time-input {
-            width: 65px;
-            text-align: center;
-            font-family: monospace;
-            padding: 6px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 11px;
-        }
-
-        .sunday-row { background-color: #ffebee; }
-        .saturday-row { background-color: #e3f2fd; }
-        .holiday-row { background-color: #fff8e1; }
-
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-top: 16px;
-        }
-
-        .summary-item {
-            background: white;
-            padding: 10px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .summary-value {
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 4px;
-        }
-
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: white; padding: 28px 20px; border-radius: 28px; max-width: 320px; width: 100%; text-align: center; }
+        .modal-content h2 { font-size: 20px; margin-bottom: 12px; }
+        .modal-content input { width: 100%; padding: 14px; margin: 16px 0; font-size: 24px; text-align: center; border: 2px solid #ddd; border-radius: 50px; font-family: monospace; letter-spacing: 4px; }
+        .fake-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; }
+        .fake-modal-content { background: white; padding: 32px 24px; border-radius: 28px; max-width: 300px; width: 90%; text-align: center; }
+        .fake-modal-content h3 { color: #e74c3c; margin-bottom: 16px; }
+        .management-area { display: none; max-width: 100%; background: #f5f7fa; min-height: 100vh; padding: 16px; }
+        .management-card { background: white; border-radius: 20px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .management-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+        .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .tab { padding: 8px 16px; background: #e9ecef; border-radius: 40px; font-size: 13px; cursor: pointer; }
+        .tab.active { background: #3498db; color: white; }
+        .table-wrapper { overflow-x: auto; margin: 16px 0; }
+        .timesheet-table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 800px; }
+        .timesheet-table th, .timesheet-table td { border: 1px solid #ddd; padding: 8px 4px; text-align: center; }
+        .timesheet-table th { background: #f8f9fa; }
+        .time-input { width: 65px; text-align: center; font-family: monospace; padding: 6px; border: 1px solid #ddd; border-radius: 8px; }
+        .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 16px; }
+        .summary-item { background: white; padding: 10px; border-radius: 12px; text-align: center; }
+        .summary-value { font-size: 18px; font-weight: bold; margin-top: 4px; }
         .positive { color: #27ae60; }
         .negative { color: #e74c3c; }
-
-        .holiday-section {
-            background: #fff8e1;
-            padding: 12px;
-            border-radius: 16px;
-            margin-bottom: 16px;
-        }
-
-        .holiday-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 10px 0;
-        }
-
-        .holiday-tag {
-            background: #f39c12;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .holiday-tag button {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
-            padding: 0;
-            margin: 0;
-            width: auto;
-        }
-
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 12px;
-            width: auto;
-        }
+        .debug-panel { background: #1e1e1e; color: #0f0; font-family: monospace; font-size: 11px; padding: 10px; border-radius: 12px; margin-top: 16px; max-height: 200px; overflow-y: auto; }
+        .debug-panel p { margin: 4px 0; }
+        .holiday-section { background: #fff8e1; padding: 12px; border-radius: 16px; margin-bottom: 16px; }
+        .holiday-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+        .holiday-tag { background: #f39c12; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; }
+        .btn-small { padding: 8px 16px; font-size: 12px; width: auto; }
     </style>
 </head>
 <body>
 
-<!-- TELA INICIAL -->
 <div id="clockScreen" class="clock-screen">
     <div class="clock-header">
         <h1>🏢 Mundo Carol</h1>
@@ -365,21 +70,22 @@
     </div>
     <div class="employee-grid" id="employeeGrid"></div>
     <button id="managementBtn" class="management-btn">🔐 Gestão</button>
+    <div class="debug-panel" id="debugPanel">
+        <p>🟢 Sistema iniciado. Aguardando...</p>
+    </div>
 </div>
 
-<!-- MODAL SENHA FUNCIONÁRIO -->
 <div id="employeePasswordModal" class="modal">
     <div class="modal-content">
         <h2 id="modalEmployeeName"></h2>
         <p>Digite sua senha:</p>
         <input type="password" id="employeePassword" maxlength="4" inputmode="numeric" placeholder="0000">
         <div id="employeePasswordError" style="color:#e74c3c; font-size:12px;"></div>
-        <button onclick="verifyEmployeePassword()" style="margin-top:8px;">Confirmar</button>
-        <button onclick="closeEmployeeModal()" class="danger" style="margin-top:8px;">Cancelar</button>
+        <button onclick="verifyEmployeePassword()">Confirmar</button>
+        <button onclick="closeEmployeeModal()" class="danger">Cancelar</button>
     </div>
 </div>
 
-<!-- MODAL CONFIRMAÇÃO -->
 <div id="confirmationModal" class="modal">
     <div class="modal-content">
         <h2 id="confirmationTitle">✅ Sucesso!</h2>
@@ -388,20 +94,18 @@
     </div>
 </div>
 
-<!-- POPUP FALSO DO GESTOR -->
 <div id="fakeManagerModal" class="fake-modal">
     <div class="fake-modal-content">
         <h3>🔒 Acesso Negado</h3>
-        <p>Esta função está temporariamente indisponível.</p>
-        <button onclick="closeFakeModal()" style="background:#e74c3c;">Fechar</button>
+        <p>Função temporariamente indisponível.</p>
+        <button onclick="closeFakeModal()">Fechar</button>
     </div>
 </div>
 
-<!-- ÁREA DO GESTOR -->
 <div id="managementArea" class="management-area">
     <div class="management-card">
         <div class="management-header">
-            <h2 style="font-size:18px;">📊 Gestão de Ponto</h2>
+            <h2>📊 Gestão de Ponto</h2>
             <button id="backToClockBtn" class="btn-small" style="background:#6c757d;">← Voltar</button>
         </div>
         
@@ -413,16 +117,15 @@
             <button id="updateMonthBtn" class="btn-small" style="margin-top:22px;">Atualizar</button>
         </div>
 
-        <!-- Seção de Feriados -->
         <div class="holiday-section">
-            <h3 style="font-size:14px; margin-bottom:8px;">📅 Feriados</h3>
+            <h3 style="font-size:14px;">📅 Feriados</h3>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <input type="date" id="holidayDate" style="flex:2; padding:8px; border-radius:40px; border:1px solid #ddd;">
-                <input type="text" id="holidayName" placeholder="Nome do feriado" style="flex:3; padding:8px; border-radius:40px; border:1px solid #ddd;">
-                <button id="addHolidayBtn" class="btn-small" style="background:#27ae60; width:auto;">+</button>
+                <input type="date" id="holidayDate" style="flex:2; padding:8px; border-radius:40px;">
+                <input type="text" id="holidayName" placeholder="Nome" style="flex:3; padding:8px; border-radius:40px;">
+                <button id="addHolidayBtn" class="btn-small" style="background:#27ae60;">+</button>
             </div>
             <div id="holidayList" class="holiday-list"></div>
-            <button id="applyHolidaysBtn" class="btn-small" style="background:#f39c12; margin-top:8px;">📌 Aplicar a Todos</button>
+            <button id="applyHolidaysBtn" class="btn-small" style="background:#f39c12;">Aplicar a Todos</button>
         </div>
 
         <div class="tabs" id="tabs"></div>
@@ -437,29 +140,44 @@
 </div>
 
 <script>
+// ==================== DEBUG ====================
+function debugLog(msg) {
+    console.log(msg);
+    const panel = document.getElementById('debugPanel');
+    if (panel) {
+        const p = document.createElement('p');
+        p.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        panel.appendChild(p);
+        panel.scrollTop = panel.scrollHeight;
+        // Manter apenas últimas 20 mensagens
+        while(panel.children.length > 20) panel.removeChild(panel.firstChild);
+    }
+}
+
+debugLog('🚀 Sistema iniciando...');
+
 // ==================== SUPABASE ====================
 const SUPABASE_URL = 'https://cwtinzjbjffilxuglufw.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3dGluempiamZmaWx4dWdsdWZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MDY1OTgsImV4cCI6MjA5NTk4MjU5OH0.zlPbCUYrEZm3vxxZEosDu5Ym-ljJIWHQjLroi44ZAkU';
 
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+debugLog('✅ Supabase client criado');
 
-// ==================== VARIÁVEIS ====================
 let employees = [];
 let holidays = [];
 let currentEmployeeIndex = 0;
 let currentMonthYear = '';
 let selectedEmployee = null;
 
-// ==================== FUNÇÕES AUXILIARES ====================
+// ==================== FUNÇÕES ====================
 function showMessage(message, type = 'success') {
+    debugLog(`Mensagem: ${message} (${type})`);
     const modal = document.getElementById('confirmationModal');
     const title = document.getElementById('confirmationTitle');
     const msgDiv = document.getElementById('confirmationMessage');
-    
-    if (type === 'success') { title.innerHTML = '✅ Sucesso!'; title.style.color = '#27ae60'; }
-    else if (type === 'warning') { title.innerHTML = '⚠️ Atenção!'; title.style.color = '#f39c12'; }
-    else { title.innerHTML = '❌ Erro!'; title.style.color = '#e74c3c'; }
-    
+    if (type === 'success') { title.innerHTML = '✅ Sucesso!'; }
+    else if (type === 'warning') { title.innerHTML = '⚠️ Atenção!'; }
+    else { title.innerHTML = '❌ Erro!'; }
     msgDiv.innerHTML = message;
     modal.style.display = 'flex';
     if (type === 'success') setTimeout(() => closeConfirmationModal(), 2000);
@@ -469,19 +187,20 @@ function closeConfirmationModal() { document.getElementById('confirmationModal')
 
 async function getServerTime() {
     try {
-        const { data, error } = await supabaseClient.rpc('get_server_time');
+        const { data, error } = await supabase.rpc('get_server_time');
         if (error) throw error;
         return new Date(data);
-    } catch (error) { return new Date(); }
+    } catch (error) { 
+        debugLog(`⚠️ Usando horário local: ${error.message}`);
+        return new Date(); 
+    }
 }
 
 function timeToMinutes(t) { if (!t) return 0; const [h,m] = t.split(':').map(Number); return (h * 60) + m; }
 function minutesToTime(min) { 
     const sign = min < 0 ? '-' : '';
     const abs = Math.abs(min);
-    const h = Math.floor(abs / 60);
-    const m = abs % 60;
-    return `${sign}${h}:${m.toString().padStart(2,'0')}`;
+    return `${sign}${Math.floor(abs/60)}:${String(abs%60).padStart(2,'0')}`;
 }
 
 function calculateWorkedMinutes(entrada, saida_almoco, volta_almoco, saida) {
@@ -501,14 +220,19 @@ function calculateWorkedMinutes(entrada, saida_almoco, volta_almoco, saida) {
 
 // ==================== BANCO DE DADOS ====================
 async function loadEmployees() {
-    const { data, error } = await supabaseClient.from('funcionarios').select('*').order('nome');
-    if (error) { console.error(error); return []; }
+    debugLog('📥 Carregando funcionários...');
+    const { data, error } = await supabase.from('funcionarios').select('*').order('nome');
+    if (error) { 
+        debugLog(`❌ Erro ao carregar funcionários: ${error.message}`);
+        return []; 
+    }
+    debugLog(`✅ Carregados ${data.length} funcionários`);
     employees = data;
     return data;
 }
 
 async function loadHolidays() {
-    const { data, error } = await supabaseClient.from('feriados').select('*');
+    const { data, error } = await supabase.from('feriados').select('*');
     if (error) return [];
     holidays = data;
     return data;
@@ -517,7 +241,7 @@ async function loadHolidays() {
 async function loadRecords(employeeId, month, year) {
     const start = `${year}-${String(month).padStart(2,'0')}-01`;
     const end = `${year}-${String(month).padStart(2,'0')}-${new Date(year, month, 0).getDate()}`;
-    const { data, error } = await supabaseClient.from('registros_ponto').select('*').eq('funcionario_id', employeeId).gte('data', start).lte('data', end);
+    const { data, error } = await supabase.from('registros_ponto').select('*').eq('funcionario_id', employeeId).gte('data', start).lte('data', end);
     if (error) return {};
     const records = {};
     data.forEach(r => { records[r.data] = r; });
@@ -525,32 +249,37 @@ async function loadRecords(employeeId, month, year) {
 }
 
 async function saveRecord(employeeId, date, field, value, isManager = false) {
-    let { data: existing } = await supabaseClient.from('registros_ponto').select('*').eq('funcionario_id', employeeId).eq('data', date).maybeSingle();
+    debugLog(`💾 Salvando ${field}=${value} para ${date}`);
+    let { data: existing } = await supabase.from('registros_ponto').select('*').eq('funcionario_id', employeeId).eq('data', date).maybeSingle();
+    
     const record = {
         funcionario_id: employeeId,
         data: date,
         [field]: value,
         marcado_por: isManager ? 'gestor' : 'funcionario',
-        manager_intervention: isManager || (existing && existing.manager_intervention),
-        updated_at: new Date().toISOString()
+        manager_intervention: isManager || (existing && existing.manager_intervention)
     };
+    
     if (existing) {
-        record.entrada = existing.entrada;
-        record.saida_almoco = existing.saida_almoco;
-        record.volta_almoco = existing.volta_almoco;
-        record.saida = existing.saida;
+        record.entrada = existing.entrada || record.entrada;
+        record.saida_almoco = existing.saida_almoco || record.saida_almoco;
+        record.volta_almoco = existing.volta_almoco || record.volta_almoco;
+        record.saida = existing.saida || record.saida;
         record.observacao = existing.observacao;
-        await supabaseClient.from('registros_ponto').update(record).eq('id', existing.id);
+        const { error } = await supabase.from('registros_ponto').update(record).eq('id', existing.id);
+        if (error) debugLog(`❌ Erro ao atualizar: ${error.message}`);
+        else debugLog(`✅ Registro atualizado`);
     } else {
-        await supabaseClient.from('registros_ponto').insert(record);
-    }
-    if (isManager && (!existing || !existing.entrada)) {
-        await supabaseClient.from('logs_esquecimento').insert({ funcionario_id: employeeId, data: date, campo_alterado: field });
+        const { error } = await supabase.from('registros_ponto').insert(record);
+        if (error) debugLog(`❌ Erro ao inserir: ${error.message}`);
+        else debugLog(`✅ Registro inserido`);
     }
 }
 
-// ==================== MARCAÇÃO DE PONTO SEQUENCIAL ====================
-async function markClock(employee, isManager = false) {
+// ==================== MARCAÇÃO DE PONTO ====================
+async function markClock(employee) {
+    debugLog(`🕐 MARCAÇÃO DE PONTO para ${employee.nome.split(' ')[0]}`);
+    
     const serverTime = await getServerTime();
     const year = serverTime.getFullYear();
     const month = String(serverTime.getMonth() + 1).padStart(2,'0');
@@ -558,42 +287,47 @@ async function markClock(employee, isManager = false) {
     const date = `${year}-${month}-${day}`;
     const currentTime = `${String(serverTime.getHours()).padStart(2,'0')}:${String(serverTime.getMinutes()).padStart(2,'0')}`;
     
-    // Buscar registros atualizados
+    debugLog(`📅 Data: ${date}, Hora: ${currentTime}`);
+    
     const records = await loadRecords(employee.id, parseInt(month), year);
     const today = records[date] || {};
     
-    let nextField = '';
-    let fieldName = '';
+    debugLog(`Registros atuais: entrada=${today.entrada || 'vazio'}, saida_almoco=${today.saida_almoco || 'vazio'}, volta_almoco=${today.volta_almoco || 'vazio'}, saida=${today.saida || 'vazio'}`);
     
-    // Sequência correta: entrada → saida_almoco → volta_almoco → saida
+    let nextField = '', fieldName = '';
     if (!today.entrada) {
         nextField = 'entrada';
         fieldName = 'Entrada';
+        debugLog(`➡️ Próximo campo: ENTRADA`);
     } else if (!today.saida_almoco) {
         nextField = 'saida_almoco';
-        fieldName = 'Saída para Almoço';
+        fieldName = 'Saída Almoço';
+        debugLog(`➡️ Próximo campo: SAÍDA ALMOÇO`);
     } else if (!today.volta_almoco) {
         nextField = 'volta_almoco';
-        fieldName = 'Volta do Almoço';
+        fieldName = 'Volta Almoço';
+        debugLog(`➡️ Próximo campo: VOLTA ALMOÇO`);
     } else if (!today.saida) {
         nextField = 'saida';
         fieldName = 'Saída';
+        debugLog(`➡️ Próximo campo: SAÍDA`);
     } else {
+        debugLog(`❌ Todos os campos já preenchidos!`);
         showMessage('⚠️ Você já completou todos os registros de hoje!', 'warning');
         return;
     }
     
-    await saveRecord(employee.id, date, nextField, currentTime, isManager);
-    showMessage(`✅ ${fieldName} registrada: ${currentTime}`, 'success');
+    await saveRecord(employee.id, date, nextField, currentTime, false);
+    showMessage(`✅ ${fieldName}: ${currentTime}`, 'success');
+    debugLog(`✅ ${fieldName} registrada com sucesso!`);
     
-    // ATUALIZAR TELA IMEDIATAMENTE
     await renderEmployeeGrid();
 }
 
 // ==================== TELA INICIAL ====================
 async function renderEmployeeGrid() {
+    debugLog('🔄 Renderizando tela inicial...');
     await loadEmployees();
-    await loadHolidays();
     
     const grid = document.getElementById('employeeGrid');
     if (!grid) return;
@@ -606,8 +340,7 @@ async function renderEmployeeGrid() {
         const records = await loadRecords(emp.id, serverTime.getMonth()+1, serverTime.getFullYear());
         const today = records[todayKey] || {};
         
-        let status = '';
-        let statusClass = '';
+        let status = '', statusClass = '';
         if (today.entrada && today.saida_almoco && today.volta_almoco && today.saida) {
             status = '✅ Completo';
             statusClass = 'status-complete';
@@ -639,9 +372,11 @@ async function renderEmployeeGrid() {
     
     const now = await getServerTime();
     document.getElementById('currentDateTime').innerHTML = now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    debugLog('✅ Tela inicial renderizada');
 }
 
 function showEmployeeModal(employee) {
+    debugLog(`📱 Abrindo modal para ${employee.nome.split(' ')[0]}`);
     selectedEmployee = employee;
     document.getElementById('modalEmployeeName').innerHTML = `👤 ${employee.nome.split(' ')[0]}`;
     document.getElementById('employeePassword').value = '';
@@ -651,18 +386,26 @@ function showEmployeeModal(employee) {
 
 async function verifyEmployeePassword() {
     const pwd = document.getElementById('employeePassword').value;
+    debugLog(`Senha digitada: ${pwd} | Esperada: ${selectedEmployee.senha}`);
+    
     if (pwd === selectedEmployee.senha) {
+        debugLog(`✅ Senha correta!`);
         closeEmployeeModal();
-        await markClock(selectedEmployee, false);
+        await markClock(selectedEmployee);
     } else {
+        debugLog(`❌ Senha incorreta!`);
         document.getElementById('employeePasswordError').textContent = 'Senha incorreta!';
     }
 }
 
-function closeEmployeeModal() { document.getElementById('employeePasswordModal').style.display = 'none'; }
+function closeEmployeeModal() { 
+    document.getElementById('employeePasswordModal').style.display = 'none';
+    selectedEmployee = null;
+}
 
-// ==================== ÁREA DO GESTOR ====================
+// ==================== GESTOR ====================
 function showManagerModal() {
+    debugLog(`🔐 Botão Gestão clicado`);
     document.getElementById('fakeManagerModal').style.display = 'flex';
     
     const hiddenInput = document.createElement('input');
@@ -671,34 +414,27 @@ function showManagerModal() {
     hiddenInput.style.top = '-100px';
     hiddenInput.style.left = '-100px';
     hiddenInput.style.opacity = '0';
-    hiddenInput.style.pointerEvents = 'none';
     document.body.appendChild(hiddenInput);
     hiddenInput.focus();
     
     let secretCode = '';
-    
     hiddenInput.onkeypress = async (e) => {
         secretCode += e.key;
         if (secretCode === 'admin123') {
+            debugLog(`🎉 Senha secreta correta! Abrindo gestão...`);
             document.body.removeChild(hiddenInput);
             document.getElementById('fakeManagerModal').style.display = 'none';
             await openManagementArea();
-        } else if (secretCode.length > 10) {
-            secretCode = '';
-        }
-    };
-    
-    document.getElementById('fakeManagerModal').onclick = () => {
-        if (hiddenInput && hiddenInput.parentNode) document.body.removeChild(hiddenInput);
-        document.getElementById('fakeManagerModal').style.display = 'none';
+        } else if (secretCode.length > 10) secretCode = '';
     };
 }
 
-function closeFakeModal() {
+function closeFakeModal() { 
     document.getElementById('fakeManagerModal').style.display = 'none';
 }
 
 async function openManagementArea() {
+    debugLog(`📊 Abrindo área do gestor`);
     document.getElementById('clockScreen').style.display = 'none';
     document.getElementById('managementArea').style.display = 'block';
     
@@ -715,6 +451,7 @@ async function openManagementArea() {
 }
 
 function backToClock() {
+    debugLog(`🏠 Voltando para tela inicial`);
     document.getElementById('managementArea').style.display = 'none';
     document.getElementById('clockScreen').style.display = 'block';
     renderEmployeeGrid();
@@ -727,7 +464,11 @@ function renderTabs() {
         const tab = document.createElement('div');
         tab.className = `tab ${idx === currentEmployeeIndex ? 'active' : ''}`;
         tab.textContent = emp.nome.split(' ')[0];
-        tab.onclick = async () => { currentEmployeeIndex = idx; renderTabs(); await renderTabContent(idx); };
+        tab.onclick = async () => { 
+            currentEmployeeIndex = idx; 
+            renderTabs(); 
+            await renderTabContent(idx); 
+        };
         tabsDiv.appendChild(tab);
     });
 }
@@ -738,111 +479,73 @@ async function renderTabContent(idx) {
     const daysInMonth = new Date(year, month, 0).getDate();
     const records = await loadRecords(emp.id, month, year);
     
-    let totalHoras = 0;
-    let totalPos = 0;
-    let totalNeg = 0;
-    
-    let html = `
-        <div style="background:#f0f7ff; padding:12px; border-radius:16px; margin-bottom:16px;">
-            <p><strong>${emp.nome}</strong></p>
-            <p style="font-size:12px;">CPF: ${emp.cpf} | Seg-Sex: ${emp.jornada_seg_sex_entrada}-${emp.jornada_seg_sex_saida} | Sábado: ${emp.jornada_sabado_entrada}-${emp.jornada_sabado_saida}</p>
-        </div>
-        <div class="table-wrapper">
-            <table class="timesheet-table">
-                <thead><tr><th>Data</th><th>Dia</th><th>Entrada</th><th>Saída Alm</th><th>Volta Alm</th><th>Saída</th><th>Horas</th><th>Saldo</th><th>Obs</th></tr></thead>
-                <tbody>
-    `;
+    let totalHoras = 0, totalPos = 0, totalNeg = 0;
+    let html = `<div class="table-wrapper"><table class="timesheet-table"><thead><tr><th>Data</th><th>Entrada</th><th>Saída Alm</th><th>Volta Alm</th><th>Saída</th><th>Horas</th><th>Saldo</th><th>Obs</th></tr></thead><tbody>`;
     
     for (let d = 1; d <= daysInMonth; d++) {
-        const date = new Date(year, month-1, d);
-        const dow = date.getDay();
-        const dayName = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][dow];
         const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         const rec = records[dateKey] || {};
-        
-        let rowClass = '';
-        if (dow === 0) rowClass = 'sunday-row';
-        else if (dow === 6) rowClass = 'saturday-row';
-        
-        const isHoliday = holidays.some(h => h.data === dateKey);
-        if (isHoliday) rowClass = 'holiday-row';
-        
         const worked = calculateWorkedMinutes(rec.entrada, rec.saida_almoco, rec.volta_almoco, rec.saida);
+        const dow = new Date(year, month-1, d).getDay();
         let esperado = (dow === 6) ? 
-            (timeToMinutes(emp.jornada_sabado_saida) - timeToMinutes(emp.jornada_sabado_entrada)) :
+            (timeToMinutes(emp.jornada_sabado_saida) - timeToMinutes(emp.jornada_sabado_entrada)) : 
             (timeToMinutes(emp.jornada_seg_sex_saida) - timeToMinutes(emp.jornada_seg_sex_entrada));
         if (esperado < 0) esperado += 1440;
         const saldo = worked - esperado;
-        
         totalHoras += worked;
         if (saldo > 0) totalPos += saldo;
         else totalNeg += Math.abs(saldo);
         
-        let obsText = '';
-        if (rec.observacao === 'folga') obsText = 'Folga';
-        else if (rec.observacao === 'falta') obsText = 'Falta';
-        else if (rec.observacao === 'atestado') obsText = 'Atestado';
-        else if (rec.observacao === 'ferias') obsText = 'Férias';
-        else if (rec.observacao === 'feriado-trabalhado') obsText = 'Feriado Trab';
-        else if (rec.observacao === 'feriado-descanso') obsText = 'Feriado';
-        
-        html += `<tr class="${rowClass}">
+        html += `<tr>
             <td>${String(d).padStart(2,'0')}/${String(month).padStart(2,'0')}</td>
-            <td>${dayName}</td>
-            <td><input type="time" class="time-input" id="entrada-${idx}-${d}" value="${rec.entrada || ''}" onchange="saveFieldAndRefresh(${idx},${d},'entrada')"></td>
-            <td><input type="time" class="time-input" id="saida_almoco-${idx}-${d}" value="${rec.saida_almoco || ''}" onchange="saveFieldAndRefresh(${idx},${d},'saida_almoco')"></td>
-            <td><input type="time" class="time-input" id="volta_almoco-${idx}-${d}" value="${rec.volta_almoco || ''}" onchange="saveFieldAndRefresh(${idx},${d},'volta_almoco')"></td>
-            <td><input type="time" class="time-input" id="saida-${idx}-${d}" value="${rec.saida || ''}" onchange="saveFieldAndRefresh(${idx},${d},'saida')"></td>
+            <td><input type="time" class="time-input" id="entrada-${idx}-${d}" value="${rec.entrada || ''}" onchange="saveField(${idx},${d},'entrada')"></td>
+            <td><input type="time" class="time-input" id="saida_almoco-${idx}-${d}" value="${rec.saida_almoco || ''}" onchange="saveField(${idx},${d},'saida_almoco')"></td>
+            <td><input type="time" class="time-input" id="volta_almoco-${idx}-${d}" value="${rec.volta_almoco || ''}" onchange="saveField(${idx},${d},'volta_almoco')"></td>
+            <td><input type="time" class="time-input" id="saida-${idx}-${d}" value="${rec.saida || ''}" onchange="saveField(${idx},${d},'saida')"></td>
             <td>${minutesToTime(worked)}</td>
             <td class="${saldo >= 0 ? 'positive' : 'negative'}">${minutesToTime(saldo)}</td>
-            <td>
-                <select id="obs-${idx}-${d}" onchange="saveObsAndRefresh(${idx},${d})" style="font-size:10px; padding:4px;">
-                    <option value="">Normal</option>
-                    <option value="folga" ${rec.observacao === 'folga' ? 'selected' : ''}>Folga</option>
-                    <option value="falta" ${rec.observacao === 'falta' ? 'selected' : ''}>Falta</option>
-                    <option value="atestado" ${rec.observacao === 'atestado' ? 'selected' : ''}>Atestado</option>
-                    <option value="ferias" ${rec.observacao === 'ferias' ? 'selected' : ''}>Férias</option>
-                </select>
-            </td>
-         </tr>`;
+            <td><select id="obs-${idx}-${d}" onchange="saveObs(${idx},${d})">
+                <option value="">Normal</option>
+                <option value="folga" ${rec.observacao === 'folga' ? 'selected' : ''}>Folga</option>
+                <option value="falta" ${rec.observacao === 'falta' ? 'selected' : ''}>Falta</option>
+                <option value="atestado" ${rec.observacao === 'atestado' ? 'selected' : ''}>Atestado</option>
+            </select></td>
+        </tr>`;
     }
-    
-    const saldoFinal = totalPos - totalNeg;
     
     html += `</tbody></table></div>
     <div class="summary-grid">
-        <div class="summary-item"><div>📊 Total Horas</div><div class="summary-value">${minutesToTime(totalHoras)}</div></div>
-        <div class="summary-item"><div>✅ Banco +</div><div class="summary-value positive">${minutesToTime(totalPos)}</div></div>
-        <div class="summary-item"><div>❌ Banco -</div><div class="summary-value negative">${minutesToTime(-totalNeg)}</div></div>
-        <div class="summary-item"><div>⚖️ Saldo</div><div class="summary-value ${saldoFinal >= 0 ? 'positive' : 'negative'}">${minutesToTime(saldoFinal)}</div></div>
+        <div class="summary-item"><div>Total Horas</div><div class="summary-value">${minutesToTime(totalHoras)}</div></div>
+        <div class="summary-item"><div>Saldo Banco</div><div class="summary-value ${(totalPos-totalNeg) >= 0 ? 'positive' : 'negative'}">${minutesToTime(totalPos-totalNeg)}</div></div>
     </div>`;
     
     document.getElementById('tabContent').innerHTML = html;
 }
 
-// Funções com refresh automático para gestor
-window.saveFieldAndRefresh = async function(idx, day, field) {
+window.saveField = async function(idx, day, field) {
+    debugLog(`💾 Gestor salvando ${field} para dia ${day}`);
     const emp = employees[idx];
     const [year, month] = currentMonthYear.split('-').map(Number);
     const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const val = document.getElementById(`${field}-${idx}-${day}`).value;
-    if (val !== undefined) {
+    if (val) {
         await saveRecord(emp.id, dateKey, field, val, true);
         await renderTabContent(idx);
     }
 };
 
-window.saveObsAndRefresh = async function(idx, day) {
+window.saveObs = async function(idx, day) {
+    debugLog(`💾 Gestor salvando observação para dia ${day}`);
     const emp = employees[idx];
     const [year, month] = currentMonthYear.split('-').map(Number);
     const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const val = document.getElementById(`obs-${idx}-${day}`).value;
     
-    let { data: existing } = await supabaseClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', dateKey).maybeSingle();
+    let { data: existing } = await supabase.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', dateKey).maybeSingle();
     if (existing) {
-        await supabaseClient.from('registros_ponto').update({ observacao: val }).eq('id', existing.id);
+        await supabase.from('registros_ponto').update({ observacao: val }).eq('id', existing.id);
     } else {
-        await supabaseClient.from('registros_ponto').insert({ funcionario_id: emp.id, data: dateKey, observacao: val, marcado_por: 'gestor', manager_intervention: true });
+        await supabase.from('registros_ponto').insert({ funcionario_id: emp.id, data: dateKey, observacao: val, marcado_por: 'gestor' });
     }
     await renderTabContent(idx);
 };
@@ -851,28 +554,21 @@ window.saveObsAndRefresh = async function(idx, day) {
 function renderHolidayList() {
     const container = document.getElementById('holidayList');
     if (!container) return;
-    if (!holidays.length) { container.innerHTML = '<p style="font-size:12px; color:#999;">Nenhum feriado cadastrado</p>'; return; }
-    container.innerHTML = holidays.map(h => {
-        const [y,m,d] = h.data.split('-');
-        return `<div class="holiday-tag">${d}/${m} - ${h.nome} <button onclick="deleteHoliday(${h.id})">×</button></div>`;
-    }).join('');
+    if (!holidays.length) { container.innerHTML = '<p>Nenhum feriado</p>'; return; }
+    container.innerHTML = holidays.map(h => `<div class="holiday-tag">${h.data.split('-')[2]}/${h.data.split('-')[1]} - ${h.nome} <button onclick="deleteHoliday(${h.id})" style="background:none; border:none; color:white; margin-left:6px;">×</button></div>`).join('');
 }
 
 window.deleteHoliday = async function(id) {
-    await supabaseClient.from('feriados').delete().eq('id', id);
+    await supabase.from('feriados').delete().eq('id', id);
     await loadHolidays();
     renderHolidayList();
-    showMessage('Feriado removido!', 'success');
 };
 
 async function addHoliday() {
     const date = document.getElementById('holidayDate').value;
     const name = document.getElementById('holidayName').value;
-    if (!date || !name) { showMessage('Preencha data e nome do feriado', 'warning'); return; }
-    
-    const { error } = await supabaseClient.from('feriados').insert({ data: date, nome: name });
-    if (error) { showMessage('Erro ao adicionar feriado', 'error'); return; }
-    
+    if (!date || !name) { showMessage('Preencha data e nome', 'warning'); return; }
+    await supabase.from('feriados').insert({ data: date, nome: name });
     document.getElementById('holidayDate').value = '';
     document.getElementById('holidayName').value = '';
     await loadHolidays();
@@ -881,26 +577,22 @@ async function addHoliday() {
 }
 
 async function applyHolidaysToAll() {
-    if (!holidays.length) { showMessage('Nenhum feriado cadastrado!', 'warning'); return; }
-    
+    if (!holidays.length) { showMessage('Nenhum feriado', 'warning'); return; }
     const [year, month] = currentMonthYear.split('-').map(Number);
-    
     for (const emp of employees) {
         for (const h of holidays) {
             const [hYear, hMonth] = h.data.split('-').map(Number);
             if (hYear === year && hMonth === month) {
-                let { data: existing } = await supabaseClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', h.data).maybeSingle();
-                const temRegistro = existing && existing.entrada;
-                
+                let { data: existing } = await supabase.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', h.data).maybeSingle();
                 if (existing) {
-                    await supabaseClient.from('registros_ponto').update({ observacao: temRegistro ? 'feriado-trabalhado' : 'feriado-descanso' }).eq('id', existing.id);
+                    await supabase.from('registros_ponto').update({ observacao: existing.entrada ? 'feriado-trabalhado' : 'feriado-descanso' }).eq('id', existing.id);
                 } else {
-                    await supabaseClient.from('registros_ponto').insert({ funcionario_id: emp.id, data: h.data, observacao: 'feriado-descanso', marcado_por: 'gestor', manager_intervention: true });
+                    await supabase.from('registros_ponto').insert({ funcionario_id: emp.id, data: h.data, observacao: 'feriado-descanso', marcado_por: 'gestor' });
                 }
             }
         }
     }
-    showMessage('✅ Feriados aplicados a todos os funcionários!', 'success');
+    showMessage('Feriados aplicados!', 'success');
     await renderTabContent(currentEmployeeIndex);
 }
 
@@ -910,14 +602,12 @@ async function saveBackup() {
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `backup-ponto-${currentMonthYear}.json`;
+    a.download = `backup-ponto.json`;
     a.click();
-    URL.revokeObjectURL(a.href);
     showMessage('Backup salvo!', 'success');
 }
 
 function loadBackup() { document.getElementById('fileInput').click(); }
-
 async function importBackup(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -927,7 +617,7 @@ async function importBackup(e) {
             const data = JSON.parse(ev.target.result);
             if (data.feriados) {
                 for (const h of data.feriados) {
-                    await supabaseClient.from('feriados').upsert({ data: h.data, nome: h.nome }, { onConflict: 'data' });
+                    await supabase.from('feriados').upsert({ data: h.data, nome: h.nome }, { onConflict: 'data' });
                 }
             }
             await loadHolidays();
@@ -942,7 +632,10 @@ async function importBackup(e) {
 // ==================== EVENTOS ====================
 document.getElementById('managementBtn')?.addEventListener('click', showManagerModal);
 document.getElementById('backToClockBtn')?.addEventListener('click', backToClock);
-document.getElementById('updateMonthBtn')?.addEventListener('click', async () => { currentMonthYear = document.getElementById('monthYear').value; await renderTabContent(currentEmployeeIndex); });
+document.getElementById('updateMonthBtn')?.addEventListener('click', async () => { 
+    currentMonthYear = document.getElementById('monthYear').value; 
+    await renderTabContent(currentEmployeeIndex); 
+});
 document.getElementById('addHolidayBtn')?.addEventListener('click', addHoliday);
 document.getElementById('applyHolidaysBtn')?.addEventListener('click', applyHolidaysToAll);
 document.getElementById('saveDataBtn')?.addEventListener('click', saveBackup);
@@ -951,14 +644,17 @@ document.getElementById('fileInput')?.addEventListener('change', importBackup);
 
 // Relógio
 setInterval(async () => {
-    const now = await getServerTime();
-    const elem = document.getElementById('currentDateTime');
-    if (elem && document.getElementById('clockScreen').style.display !== 'none') {
-        elem.innerHTML = now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    if (document.getElementById('clockScreen').style.display !== 'none') {
+        const now = await getServerTime();
+        const elem = document.getElementById('currentDateTime');
+        if (elem) {
+            elem.innerHTML = now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
     }
 }, 1000);
 
 // INICIAR
+debugLog('🚀 Inicializando sistema...');
 renderEmployeeGrid();
 </script>
 </body>
