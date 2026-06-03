@@ -15,14 +15,9 @@
         .clock-header h2 { color: #666; font-size: 12px; font-weight: normal; }
         .clock-header .date-time { font-size: 11px; color: #999; margin-top: 6px; }
         
-        .server-time { background: #e8f4fd; border-radius: 12px; padding: 8px; margin-top: 8px; text-align: center; }
-        .server-time-label { font-size: 10px; color: #27ae60; font-weight: bold; }
-        .server-time-value { font-size: 14px; font-weight: bold; color: #2c3e50; font-family: monospace; }
-        
         .employee-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
         .employee-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px; border-radius: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .employee-card:active { transform: scale(0.98); }
-        .employee-card.inactive { opacity: 0.5; background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%); }
         .employee-info h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
         .clock-preview { display: flex; gap: 8px; font-size: 10px; flex-wrap: wrap; }
         .clock-preview span { background: rgba(255,255,255,0.2); padding: 3px 6px; border-radius: 16px; font-family: monospace; }
@@ -30,7 +25,6 @@
         .status-complete { background: #27ae60; }
         .status-incomplete { background: #f39c12; color: #333; }
         .status-none { background: #95a5a6; }
-        .status-inactive { background: #e74c3c; }
         
         .management-btn { background: #2c3e50; padding: 10px 20px; font-size: 14px; width: 100%; border-radius: 40px; border: none; color: white; cursor: pointer; }
         button { background: #3498db; color: white; border: none; padding: 12px 20px; border-radius: 40px; cursor: pointer; font-size: 14px; font-weight: 500; width: 100%; }
@@ -38,19 +32,15 @@
         button.danger { background: #e74c3c; }
         button.success { background: #27ae60; }
         button.warning { background: #f39c12; }
-        button.secondary { background: #95a5a6; }
+        button.secondary { background: #6c757d; }
         
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: white; padding: 24px 20px; border-radius: 24px; max-width: 400px; width: 100%; text-align: center; max-height: 85vh; overflow-y: auto; }
+        .modal-content { background: white; padding: 24px 20px; border-radius: 24px; max-width: 500px; width: 100%; text-align: center; max-height: 90vh; overflow-y: auto; }
         .modal-content h2 { font-size: 18px; margin-bottom: 10px; }
-        .modal-content input, .modal-content select { width: 100%; padding: 10px; margin: 8px 0; font-size: 14px; border: 1px solid #ddd; border-radius: 40px; }
-        .modal-content .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .modal-content .form-row > div { flex: 1; }
+        .modal-content input, .modal-content select { width: 100%; padding: 12px; margin: 12px 0; font-size: 16px; border: 2px solid #ddd; border-radius: 50px; font-family: monospace; }
         
         .fake-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; }
-        .fake-modal-content { background: white; padding: 28px 20px; border-radius: 24px; max-width: 320px; width: 90%; text-align: center; }
-        .fake-modal-content h3 { color: #e74c3c; margin-bottom: 12px; font-size: 18px; }
-        .fake-modal-content input { width: 100%; padding: 12px; margin: 12px 0; font-size: 22px; text-align: center; border: 2px solid #ddd; border-radius: 50px; font-family: monospace; letter-spacing: 4px; }
+        .fake-modal-content { background: white; padding: 28px 20px; border-radius: 24px; max-width: 280px; width: 90%; text-align: center; }
         
         .management-area { display: none; max-width: 100%; background: #f5f7fa; min-height: 100vh; padding: 12px; }
         .management-card { background: white; border-radius: 20px; padding: 12px; margin-bottom: 12px; }
@@ -58,17 +48,20 @@
         .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
         .tab { padding: 6px 12px; background: #e9ecef; border-radius: 30px; font-size: 12px; cursor: pointer; }
         .tab.active { background: #3498db; color: white; }
-        .tab.inactive-tab { background: #e74c3c; color: white; opacity: 0.6; }
+        .inactive-tab { background: #95a5a6; color: white; opacity: 0.6; }
         .table-wrapper { overflow-x: auto; margin: 12px 0; }
-        .timesheet-table { width: 100%; border-collapse: collapse; font-size: 10px; min-width: 800px; }
+        .timesheet-table { width: 100%; border-collapse: collapse; font-size: 10px; min-width: 750px; }
         .timesheet-table th, .timesheet-table td { border: 1px solid #ddd; padding: 6px 3px; text-align: center; }
         .time-input { width: 60px; text-align: center; font-family: monospace; padding: 4px; border: 1px solid #ddd; border-radius: 6px; font-size: 10px; }
-        .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 12px; margin-bottom: 12px; }
-        .summary-item { background: white; padding: 8px; border-radius: 12px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 11px; }
+        .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 12px; margin-bottom: 12px; }
+        .summary-item { background: white; padding: 8px; border-radius: 12px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 11px; cursor: pointer; transition: transform 0.2s; }
+        .summary-item:hover { transform: scale(1.02); background: #f0f0f0; }
         .summary-value { font-size: 16px; font-weight: bold; margin-top: 4px; }
+        .summary-small { font-size: 10px; color: #666; margin-top: 2px; }
         .positive { color: #27ae60; }
         .negative { color: #e74c3c; }
         .holiday-section { background: #fff8e1; padding: 10px; border-radius: 16px; margin-bottom: 12px; }
+        .holiday-section h3 { cursor: pointer; display: flex; align-items: center; gap: 8px; }
         .holiday-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
         .holiday-tag { background: #f39c12; color: white; padding: 3px 10px; border-radius: 20px; font-size: 10px; display: inline-flex; align-items: center; gap: 5px; }
         .btn-small { padding: 6px 12px; font-size: 11px; width: auto; }
@@ -77,29 +70,51 @@
         .holiday-row { background-color: #fff8e1; }
         .jornada-edit { background: #e8f4fd; padding: 10px; border-radius: 14px; margin-bottom: 12px; }
         .jornada-edit h4 { font-size: 12px; margin-bottom: 6px; }
-        .jornada-input { width: 65px; text-align: center; padding: 5px; border: 1px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 11px; }
-        .print-btn-container { text-align: center; margin: 12px 0; }
-        .employee-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        .print-btn-container { text-align: center; margin: 12px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
         .missing-days-list { max-height: 250px; overflow-y: auto; text-align: left; margin: 12px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; }
         .missing-day-item { padding: 4px; border-bottom: 1px solid #ddd; font-size: 12px; }
-        .backup-list { max-height: 300px; overflow-y: auto; margin: 12px 0; }
-        .backup-item { padding: 10px; border-bottom: 1px solid #ddd; cursor: pointer; text-align: left; }
-        .backup-item:hover { background: #f5f5f5; }
-        .backup-date { font-weight: bold; }
-        .backup-info { font-size: 11px; color: #666; }
-        .backup-buttons { display: flex; gap: 8px; margin-top: 12px; }
+        .employee-list { max-height: 300px; overflow-y: auto; }
+        .employee-list-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eee; }
+        .employee-list-item.inactive { opacity: 0.5; background: #f5f5f5; }
+        .status-badge-employee { font-size: 10px; padding: 2px 8px; border-radius: 20px; }
+        .active-badge { background: #27ae60; color: white; }
+        .inactive-badge { background: #95a5a6; color: white; }
+        
+        .logs-list { max-height: 400px; overflow-y: auto; text-align: left; margin: 12px 0; }
+        .log-item { padding: 8px; border-bottom: 1px solid #eee; font-size: 11px; }
+        .log-item strong { color: #2c3e50; }
+        .log-date { color: #999; font-size: 9px; margin-bottom: 4px; }
+        .log-field { background: #f0f0f0; padding: 2px 6px; border-radius: 12px; font-family: monospace; font-size: 9px; display: inline-block; margin-bottom: 4px; }
+        .log-changed { color: #e74c3c; text-decoration: line-through; }
+        .log-new { color: #27ae60; font-weight: bold; }
+        
+        .info-message { background: #e8f4fd; padding: 10px; border-radius: 12px; margin-bottom: 12px; font-size: 11px; color: #2c3e50; text-align: center; }
         
         @media (max-width: 480px) {
             body { padding: 8px; }
             .clock-preview span { font-size: 9px; padding: 2px 5px; }
             .employee-info h3 { font-size: 13px; }
             .status-badge { font-size: 9px; padding: 3px 6px; }
+            .summary-grid { grid-template-columns: repeat(2, 1fr); }
         }
         
         @media print {
             .no-print { display: none !important; }
             body { background: white; padding: 0; margin: 0; }
-            .clock-screen, .management-area { display: none !important; }
+        }
+        
+        .sql-modal-content { max-width: 600px; width: 90%; text-align: left; }
+        .test-result { margin-top: 12px; padding: 10px; border-radius: 8px; font-size: 11px; }
+        .test-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .test-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .form-group { margin-bottom: 12px; text-align: left; }
+        .form-group label { font-size: 12px; font-weight: bold; display: block; margin-bottom: 4px; }
+        
+        .clickable { cursor: pointer; }
+        
+        .time-input-error {
+            border-color: #e74c3c !important;
+            background-color: #ffe6e6 !important;
         }
     </style>
 </head>
@@ -109,12 +124,9 @@
     <div class="clock-header">
         <h1>🏢 Mundo Carol</h1>
         <h2>📅 Ponto Eletrônico</h2>
-        <div class="server-time" id="serverTimeDisplay">
-            <div class="server-time-label">🕐 Horário do Servidor</div>
-            <div class="server-time-value" id="serverTimeValue">Carregando...</div>
-        </div>
         <div class="date-time" id="currentDateTime"></div>
     </div>
+    <div id="dayTypeInfo" class="info-message" style="display: none;"></div>
     <div class="employee-grid" id="employeeGrid"></div>
     <button id="managementBtn" class="management-btn">🔐 Gestão</button>
 </div>
@@ -148,47 +160,21 @@
     </div>
 </div>
 
-<div id="employeeModal" class="modal">
-    <div class="modal-content">
-        <h2 id="employeeModalTitle">👤 Funcionário</h2>
-        <input type="text" id="empNome" placeholder="Nome completo">
-        <input type="text" id="empCpf" placeholder="CPF (apenas números)">
-        <input type="password" id="empSenha" maxlength="4" placeholder="Senha (4 dígitos)">
-        <div class="form-row">
-            <div><label style="font-size:11px;">Seg-Sex Entrada</label><input type="time" id="empEntradaSegSex"></div>
-            <div><label style="font-size:11px;">Seg-Sex Saída</label><input type="time" id="empSaidaSegSex"></div>
-        </div>
-        <div class="form-row">
-            <div><label style="font-size:11px;">Sábado Entrada</label><input type="time" id="empEntradaSab"></div>
-            <div><label style="font-size:11px;">Sábado Saída</label><input type="time" id="empSaidaSab"></div>
-        </div>
-        <div class="employee-actions">
-            <button id="saveEmployeeBtn" class="success">💾 Salvar</button>
-            <button id="cancelEmployeeBtn" class="danger">Cancelar</button>
-        </div>
-    </div>
-</div>
-
-<div id="backupModal" class="modal">
-    <div class="modal-content">
-        <h2>💾 Backup e Recuperação</h2>
-        <div class="backup-list" id="backupList"></div>
-        <div class="backup-buttons">
-            <button onclick="createBackupNow()" class="success">📀 Criar Backup</button>
-            <button onclick="restoreFromBackup()" class="warning" id="restoreBtn" disabled>📂 Restaurar</button>
-            <button onclick="closeBackupModal()" class="danger">Cancelar</button>
-        </div>
+<div id="logsModal" class="modal">
+    <div class="modal-content" style="max-width: 550px;">
+        <h2>📋 Intervenções do Gestor</h2>
+        <div id="logsList" class="logs-list"></div>
+        <button onclick="closeLogsModal()" class="danger">Fechar</button>
     </div>
 </div>
 
 <div id="fakeManagerModal" class="fake-modal">
     <div class="fake-modal-content">
         <h3>🔒 Acesso Negado</h3>
-        <p>Digite a senha de acesso:</p>
-        <input type="password" id="managerPasswordInput" maxlength="4" inputmode="numeric" placeholder="****" autofocus>
-        <div id="managerPasswordError" style="color:#e74c3c; font-size:12px;"></div>
-        <button onclick="verifyManagerPassword()">Acessar</button>
-        <button onclick="closeFakeModal()" class="danger">Fechar</button>
+        <p>Digite a senha de gestor (8301)</p>
+        <input type="password" id="managerPassword" maxlength="4" inputmode="numeric" placeholder="****" style="width:100%; padding:10px; margin:10px 0; border-radius:40px; border:1px solid #ddd; text-align:center;">
+        <button onclick="verifyManagerPassword()">Confirmar</button>
+        <button onclick="closeFakeModal()">Cancelar</button>
     </div>
 </div>
 
@@ -196,10 +182,9 @@
     <div class="management-card">
         <div class="management-header">
             <h2>📊 Gestão</h2>
-            <div style="display: flex; gap: 8px;">
-                <button id="testPrintBtn" class="btn-small" style="background:#9b59b6;">🖨️ Teste</button>
-                <button id="backupManagerBtn" class="btn-small" style="background:#6c757d;">💾 Backup</button>
-                <button id="addEmployeeBtn" class="btn-small" style="background:#27ae60;">👤 Novo</button>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button id="addEmployeeBtn" class="btn-small" style="background:#27ae60;">➕ Novo Funcionário</button>
+                <button id="testPrintBtn" class="btn-small" style="background:#6c757d;">🖨️ IMPRESSÃO TESTE</button>
                 <button id="backToClockBtn" class="btn-small" style="background:#6c757d;">← Voltar</button>
             </div>
         </div>
@@ -209,11 +194,13 @@
                 <input type="month" id="monthYear" style="width:100%; padding:8px; border-radius:40px; border:1px solid #ddd; font-size:12px;">
             </div>
             <button id="updateMonthBtn" class="btn-small">Atualizar</button>
+            <button id="testConnectionBtn" class="btn-small" style="background:#8e44ad;">🔌 Testar BD</button>
+            <button id="toggleHolidayBtn" class="btn-small" style="background:#f39c12;">📅 Feriados</button>
         </div>
 
-        <div class="holiday-section">
-            <h3 style="font-size:13px;">📅 Feriados</h3>
-            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <div id="holidaySection" class="holiday-section" style="display: none;">
+            <h3>📅 Feriados</h3>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;">
                 <input type="date" id="holidayDate" style="flex:2; padding:6px; border-radius:40px; font-size:11px;">
                 <input type="text" id="holidayName" placeholder="Nome" style="flex:2; padding:6px; border-radius:40px; font-size:11px;">
                 <button id="addHolidayBtn" class="btn-small" style="background:#27ae60;">+</button>
@@ -223,6 +210,23 @@
 
         <div class="tabs" id="tabs"></div>
         <div id="tabContent"></div>
+    </div>
+</div>
+
+<!-- Modal de Funcionário -->
+<div id="employeeModal" class="modal">
+    <div class="modal-content" style="max-width: 450px;">
+        <h2 id="employeeModalTitle">Novo Funcionário</h2>
+        <div id="employeeModalBody"></div>
+    </div>
+</div>
+
+<!-- Modal de Teste SQL -->
+<div id="sqlTestModal" class="modal">
+    <div class="modal-content sql-modal-content">
+        <h2>🔧 Teste de Banco de Dados</h2>
+        <div id="sqlTestResult"></div>
+        <button onclick="closeSqlTestModal()">Fechar</button>
     </div>
 </div>
 
@@ -238,335 +242,363 @@ let holidays = [];
 let currentEmployeeIndex = 0;
 let currentMonthYear = '';
 let selectedEmployee = null;
-let editingEmployeeId = null;
-let inactiveEmployeeIds = [];
-let selectedBackupDate = null;
 
-const SENHA_GESTOR = '8301';
-const ALMOCO_PADRAO_MINUTOS = 120;
-
-const NOMES_ABREVIADOS = {
-    'Janne': 'Janne A.', 'Telma': 'Telma G.', 'Danielle': 'Danielle D.',
-    'Bianca': 'Bianca S.', 'Royle': 'Royle L.', 'Nicolas': 'Nicolas V.',
-    'Izac': 'Izac C.', 'Daniel': 'Daniel J.', 'Hugo': 'Hugo W.'
-};
-
-const HORARIOS_CHEGADA = {
-    'Janne': '06:30', 'Bianca': '06:30', 'Royle': '07:00',
-    'Izac': '08:00', 'Hugo': '08:00', 'Telma': '08:30',
-    'Danielle': '08:30', 'Nicolas': '10:00', 'Daniel': '10:00'
-};
-
-function timeToCompare(t) { if (!t) return 0; const [h,m] = t.split(':').map(Number); return h * 60 + m; }
 function timeToMinutes(t) { if (!t) return 0; const [h,m] = t.split(':').map(Number); return (h * 60) + m; }
 function minutesToTime(min) { 
     const sign = min < 0 ? '-' : '';
-    const abs = Math.abs(min);
+    const abs = Math.min(Math.abs(min), 9999);
     return `${sign}${Math.floor(abs/60)}:${String(abs%60).padStart(2,'0')}`;
+}
+
+function minutesToDecimal(min) {
+    return (min / 60).toFixed(2);
 }
 
 function showMessage(msg, type) {
     const modal = document.getElementById('confirmationModal');
     document.getElementById('confirmationMessage').innerHTML = msg;
     modal.style.display = 'flex';
-    if (type === 'success') setTimeout(() => { modal.style.display = 'none'; }, 2000);
+    setTimeout(() => { modal.style.display = 'none'; }, 2000);
 }
 
 function closeConfirmationModal() { document.getElementById('confirmationModal').style.display = 'none'; }
 function closeValidationModal() { document.getElementById('validationModal').style.display = 'none'; }
-function closeBackupModal() { document.getElementById('backupModal').style.display = 'none'; }
+function closeSqlTestModal() { document.getElementById('sqlTestModal').style.display = 'none'; }
+function closeEmployeeModalGestor() { document.getElementById('employeeModal').style.display = 'none'; }
+function closeLogsModal() { document.getElementById('logsModal').style.display = 'none'; }
 
 async function getServerTime() {
     try {
-        const { data, error } = await sbClient.rpc('get_server_time');
-        if (error) throw error;
-        const timeElem = document.getElementById('serverTimeValue');
-        if (timeElem) {
-            timeElem.innerHTML = new Date(data).toLocaleDateString('pt-BR', { 
-                weekday: 'long', day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit', second: '2-digit' 
-            });
-        }
+        const { data } = await sbClient.rpc('get_server_time');
         return new Date(data);
-    } catch(error) { 
-        const timeElem = document.getElementById('serverTimeValue');
-        if (timeElem) {
-            timeElem.innerHTML = '⚠️ Usando horário local';
-            timeElem.style.color = '#e74c3c';
-        }
+    } catch(e) { 
         return new Date(); 
     }
 }
 
-function updateDateTime() {
-    const now = new Date();
-    const elem = document.getElementById('currentDateTime');
-    if (elem) {
-        elem.innerHTML = now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-    }
-}
-
-// ==================== CÁLCULO DE HORAS ====================
-function calculateWorkedMinutes(entrada, saida_almoco, volta_almoco, saida) {
-    if (!entrada || !saida) return 0;
-    
-    let entradaMin = timeToMinutes(entrada);
-    let saidaMin = timeToMinutes(saida);
-    
-    if (saidaMin < entradaMin) {
-        saidaMin += 1440;
-    }
-    
-    let worked = saidaMin - entradaMin;
-    
-    if (saida_almoco && volta_almoco) {
-        let almocoOut = timeToMinutes(saida_almoco);
-        let almocoIn = timeToMinutes(volta_almoco);
-        if (almocoIn < almocoOut) almocoIn += 1440;
-        worked -= (almocoIn - almocoOut);
-    } else {
-        worked -= ALMOCO_PADRAO_MINUTOS;
-    }
-    
-    return Math.max(0, worked);
-}
-
-function calculateExpectedMinutes(employee, dayOfWeek) {
-    let entrada, saida;
-    if (dayOfWeek === 6) {
-        entrada = employee.jornada_sabado_entrada;
-        saida = employee.jornada_sabado_saida;
-    } else {
-        entrada = employee.jornada_seg_sex_entrada;
-        saida = employee.jornada_seg_sex_saida;
-    }
-    if (!entrada || !saida) return 0;
-    
-    let entradaMin = timeToMinutes(entrada);
-    let saidaMin = timeToMinutes(saida);
-    if (saidaMin < entradaMin) saidaMin += 1440;
-    let jornadaBruta = saidaMin - entradaMin;
-    
-    if (dayOfWeek === 6) return jornadaBruta;
-    return jornadaBruta - ALMOCO_PADRAO_MINUTOS;
-}
-
-function calculateDayBalance(record, employee, dayOfWeek) {
-    // Domingo: só calcula se tiver ponto, senão retorna zero
-    if (dayOfWeek === 0 && !record.entrada) {
-        return { hoursWorked: 0, dayBalance: 0 };
-    }
-    
-    // Observações especiais zeram o saldo (DOMINGO NUNCA É MARCADO COMO FOLGA AUTOMATICAMENTE)
-    if (record.observacao === 'folga' || record.observacao === 'feriado-descanso' || 
-        record.observacao === 'falta' || record.observacao === 'atestado' || record.observacao === 'ferias') {
-        return { hoursWorked: 0, dayBalance: 0 };
-    }
-    
-    let workedMinutes = calculateWorkedMinutes(record.entrada, record.saida_almoco, record.volta_almoco, record.saida);
-    let expectedMinutes = calculateExpectedMinutes(employee, dayOfWeek);
-    let balanceMinutes = workedMinutes - expectedMinutes;
-    
-    return { hoursWorked: workedMinutes, dayBalance: Math.round(balanceMinutes) };
-}
-
-// ==================== FUNÇÃO PARA ATUALIZAR OBSERVAÇÃO AUTOMÁTICA ====================
-async function atualizarObservacaoAutomatica(employeeId, date, dayOfWeek) {
-    let { data: record } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', employeeId).eq('data', date).maybeSingle();
-    if (!record) return;
-    
-    const isHoliday = holidays.some(h => h.data === date);
-    let novaObs = record.observacao || '';
-    
-    // REGRA 1: FERIADO - só altera se não for observação manual
-    const observacoesManuais = ['falta', 'atestado', 'ferias', 'folga'];
-    if (isHoliday && !observacoesManuais.includes(record.observacao)) {
-        if (record.entrada) {
-            novaObs = 'feriado-trabalhado';
-        } else {
-            novaObs = 'feriado-descanso';
-        }
-    }
-    
-    // REGRA 2: DOMINGO - NUNCA marca como folga, mantém o que está (Normal)
-    // Não faz nenhuma alteração automática para domingo
-    
-    // Salvar se houver mudança
-    if (novaObs !== record.observacao) {
-        await sbClient.from('registros_ponto').update({ observacao: novaObs }).eq('id', record.id);
-        console.log(`🔄 Observação atualizada para ${date}: ${novaObs || 'Normal'}`);
-    }
-}
-
-// ==================== SUPABASE OPERATIONS ====================
 async function loadEmployees() {
     const { data, error } = await sbClient.from('funcionarios').select('*').order('nome');
-    if (error) { console.error('Erro:', error); return []; }
-    employees = data;
-    
-    const savedInactive = localStorage.getItem('inactiveEmployees');
-    if (savedInactive) {
-        inactiveEmployeeIds = JSON.parse(savedInactive);
+    if (error) {
+        console.error('Erro ao carregar funcionários:', error);
+        return [];
     }
+    employees = data.filter(e => e.ativo !== false);
     return employees;
+}
+
+async function loadAllEmployees() {
+    const { data, error } = await sbClient.from('funcionarios').select('*').order('nome');
+    if (error) return [];
+    return data || [];
 }
 
 async function loadHolidays() {
     const { data, error } = await sbClient.from('feriados').select('*');
-    if (error) return [];
+    if (error) {
+        console.error('Erro ao carregar feriados:', error);
+        return [];
+    }
     holidays = data || [];
     return holidays;
 }
 
-async function loadRecords(employeeId, month, year) {
+async function loadRecords(empId, month, year) {
     const start = `${year}-${String(month).padStart(2,'0')}-01`;
     const end = `${year}-${String(month).padStart(2,'0')}-${new Date(year, month, 0).getDate()}`;
-    const { data, error } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', employeeId).gte('data', start).lte('data', end);
-    if (error) return {};
+    const { data, error } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', empId).gte('data', start).lte('data', end);
+    if (error) {
+        console.error('Erro ao carregar registros:', error);
+        return {};
+    }
     const records = {};
     if (data) data.forEach(r => { records[r.data] = r; });
     return records;
 }
 
-async function saveRecord(employeeId, date, field, val, isManager) {
-    let { data: existing } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', employeeId).eq('data', date).maybeSingle();
-    const record = { funcionario_id: employeeId, data: date, [field]: val, marcado_por: isManager ? 'gestor' : 'funcionario', manager_intervention: isManager };
-    if (existing) {
-        record.entrada = existing.entrada;
-        record.saida_almoco = existing.saida_almoco;
-        record.volta_almoco = existing.volta_almoco;
-        record.saida = existing.saida;
-        record.observacao = existing.observacao;
-        await sbClient.from('registros_ponto').update(record).eq('id', existing.id);
-    } else {
-        await sbClient.from('registros_ponto').insert(record);
-    }
+// Verificar se é dia de jornada reduzida (sábado ou feriado)
+async function isReducedDay(date) {
+    const dow = date.getDay();
+    const isSaturday = dow === 6;
+    const dateKey = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    const isHoliday = holidays.some(h => h.data === dateKey);
+    return isSaturday || isHoliday;
 }
 
-// ==================== BACKUP ====================
-async function criarBackupAutomatico() {
+// FUNÇÃO PARA REGISTRAR LOG DO GESTOR
+async function registrarLogGestor(funcionarioId, funcionarioNome, dataAlteracao, campo, valorAntigo, valorNovo) {
     try {
-        const { data: funcionarios } = await sbClient.from('funcionarios').select('*');
-        const { data: feriadosData } = await sbClient.from('feriados').select('*');
-        const { data: registros } = await sbClient.from('registros_ponto').select('*');
-        
-        const backupData = {
-            funcionarios: funcionarios || [],
-            feriados: feriadosData || [],
-            registros: registros || [],
-            data_backup: new Date().toISOString().split('T')[0]
+        const logData = {
+            funcionario_id: funcionarioId,
+            funcionario_nome: funcionarioNome,
+            data_registro: new Date().toISOString(),
+            data_alteracao: dataAlteracao,
+            campo: campo,
+            valor_antigo: valorAntigo || null,
+            valor_novo: valorNovo || null
         };
         
-        const { error } = await sbClient.from('backups_ponto').upsert({ 
-            data_backup: backupData.data_backup, 
-            dados: backupData, 
-            resumo: `Backup - Func: ${funcionarios?.length || 0}, Registros: ${registros?.length || 0}`
-        }, { onConflict: 'data_backup' });
+        const { data, error } = await sbClient
+            .from('logs_gestor')
+            .insert(logData)
+            .select();
         
-        if (error) throw error;
-    } catch(e) { console.error('Erro backup:', e); }
-}
-
-async function createBackupNow() {
-    showMessage('📀 Criando backup...', 'warning');
-    await criarBackupAutomatico();
-    showMessage('✅ Backup criado!', 'success');
-    await carregarListaBackups();
-}
-
-async function carregarListaBackups() {
-    const { data, error } = await sbClient.from('backups_ponto').select('*').order('data_backup', { ascending: false });
-    const listaDiv = document.getElementById('backupList');
-    const restoreBtn = document.getElementById('restoreBtn');
-    
-    if (error || !data || data.length === 0) {
-        listaDiv.innerHTML = '<p style="text-align:center;">Nenhum backup encontrado</p>';
-        restoreBtn.disabled = true;
-        return;
+        if (error) {
+            console.error('Erro ao salvar log:', error);
+            return false;
+        }
+        
+        return true;
+    } catch (error) {
+        console.error('Exceção ao registrar log:', error);
+        return false;
     }
-    
-    listaDiv.innerHTML = data.map(backup => `
-        <div class="backup-item" onclick="selecionarBackup('${backup.data_backup}')" data-date="${backup.data_backup}">
-            <div class="backup-date">📅 ${new Date(backup.data_backup).toLocaleDateString('pt-BR')}</div>
-            <div class="backup-info">${backup.resumo || 'Backup do sistema'}</div>
-        </div>
-    `).join('');
-    restoreBtn.disabled = true;
 }
 
-window.selecionarBackup = function(date) {
-    selectedBackupDate = date;
-    document.querySelectorAll('.backup-item').forEach(item => {
-        item.style.backgroundColor = item.getAttribute('data-date') === date ? '#e3f2fd' : '';
-    });
-    document.getElementById('restoreBtn').disabled = false;
-};
-
-async function restoreFromBackup() {
-    if (!selectedBackupDate) { showMessage('Selecione um backup', 'warning'); return; }
-    if (!confirm(`⚠️ Restaurar backup de ${new Date(selectedBackupDate).toLocaleDateString('pt-BR')}? Isso substituirá todos os dados atuais.`)) return;
-    
-    showMessage('🔄 Restaurando...', 'warning');
+// FUNÇÃO CORRIGIDA PARA SALVAR REGISTRO (sem erro de duplicate key)
+async function saveRecord(empId, date, field, val, isManager) {
     try {
-        const { data, error } = await sbClient.from('backups_ponto').select('dados').eq('data_backup', selectedBackupDate).single();
-        if (error) throw error;
+        // Primeiro, tentar buscar o registro existente
+        let { data: existing, error: selectError } = await sbClient
+            .from('registros_ponto')
+            .select('*')
+            .eq('funcionario_id', empId)
+            .eq('data', date)
+            .maybeSingle();
         
-        const backup = data.dados;
-        if (backup.funcionarios) {
-            await sbClient.from('funcionarios').delete().neq('id', 0);
-            for (const func of backup.funcionarios) await sbClient.from('funcionarios').insert(func);
-        }
-        if (backup.feriados) {
-            await sbClient.from('feriados').delete().neq('id', 0);
-            for (const fer of backup.feriados) await sbClient.from('feriados').insert(fer);
-        }
-        if (backup.registros) {
-            await sbClient.from('registros_ponto').delete().neq('id', 0);
-            for (const reg of backup.registros) await sbClient.from('registros_ponto').insert(reg);
+        if (selectError) throw selectError;
+        
+        const valorAntigo = existing ? existing[field] : null;
+        
+        // Se o valor não mudou, não faz nada
+        if (valorAntigo === val && existing) {
+            return true;
         }
         
-        showMessage('✅ Backup restaurado!', 'success');
-        closeBackupModal();
-        await loadEmployees();
-        await loadHolidays();
-        await renderEmployeeGrid();
-        if (document.getElementById('managementArea').style.display === 'block') {
-            renderTabs();
-            await renderTabContent(currentEmployeeIndex);
+        let saveSuccess = false;
+        
+        if (existing) {
+            // ATUALIZAR registro existente
+            const updateData = {
+                [field]: val || null,
+                marcado_por: isManager ? 'gestor' : 'funcionario',
+                manager_intervention: isManager || existing.manager_intervention
+            };
+            
+            // Manter os outros campos
+            if (field !== 'entrada') updateData.entrada = existing.entrada || null;
+            if (field !== 'saida_almoco') updateData.saida_almoco = existing.saida_almoco || null;
+            if (field !== 'volta_almoco') updateData.volta_almoco = existing.volta_almoco || null;
+            if (field !== 'saida') updateData.saida = existing.saida || null;
+            if (field !== 'observacao') updateData.observacao = existing.observacao || null;
+            
+            const { error: updateError } = await sbClient
+                .from('registros_ponto')
+                .update(updateData)
+                .eq('id', existing.id);
+            
+            if (updateError) throw updateError;
+            saveSuccess = true;
+        } else {
+            // INSERIR novo registro
+            const insertData = {
+                funcionario_id: empId,
+                data: date,
+                entrada: null,
+                saida_almoco: null,
+                volta_almoco: null,
+                saida: null,
+                observacao: null,
+                marcado_por: isManager ? 'gestor' : 'funcionario',
+                manager_intervention: isManager
+            };
+            
+            insertData[field] = val || null;
+            
+            const { error: insertError } = await sbClient
+                .from('registros_ponto')
+                .insert(insertData);
+            
+            if (insertError) throw insertError;
+            saveSuccess = true;
         }
-    } catch(e) { showMessage('❌ Erro ao restaurar', 'error'); }
+        
+        // Registrar log se foi ação do gestor e houve mudança
+        if (saveSuccess && isManager && valorAntigo !== val) {
+            const funcionario = employees.find(e => e.id === empId);
+            const nomeCampo = {
+                'entrada': 'Entrada',
+                'saida_almoco': 'Saída Almoço',
+                'volta_almoco': 'Volta Almoço',
+                'saida': 'Saída',
+                'observacao': 'Observação'
+            }[field] || field;
+            
+            await registrarLogGestor(empId, funcionario?.nome || 'Desconhecido', date, nomeCampo, valorAntigo, val);
+        }
+        
+        return true;
+    } catch (error) {
+        console.error('Erro ao salvar registro:', error);
+        if (error.code === '23505') {
+            showMessage(`❌ Erro: Registro já existe para esta data. Tente novamente.`, 'error');
+        } else {
+            showMessage(`❌ Erro ao salvar: ${error.message}`, 'error');
+        }
+        return false;
+    }
 }
 
-// ==================== MARCAÇÃO DE PONTO ====================
 async function markClock(employee) {
     const t = await getServerTime();
     const date = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
     const now = `${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
-    const dayOfWeek = t.getDay();
     
     const records = await loadRecords(employee.id, t.getMonth()+1, t.getFullYear());
     const today = records[date] || {};
     
+    // Verificar se é dia de jornada reduzida (sábado ou feriado)
+    const isReduced = await isReducedDay(t);
+    
     let field = '', name = '';
-    if (!today.entrada) { field = 'entrada'; name = 'Entrada'; }
-    else if (!today.saida_almoco) { field = 'saida_almoco'; name = 'Saída Alm'; }
-    else if (!today.volta_almoco) { field = 'volta_almoco'; name = 'Volta Alm'; }
-    else if (!today.saida) { field = 'saida'; name = 'Saída'; }
-    else { showMessage('⚠️ Dia completo!', 'warning'); return; }
     
-    await saveRecord(employee.id, date, field, now, false);
+    if (isReduced) {
+        // Dias reduzidos: apenas Entrada e Saída
+        if (!today.entrada) {
+            field = 'entrada';
+            name = 'Entrada';
+        } else if (!today.saida) {
+            field = 'saida';
+            name = 'Saída';
+        } else {
+            showMessage('⚠️ Dia completo! (Jornada reduzida - sem almoço)', 'warning');
+            return;
+        }
+    } else {
+        // Dias normais: Entrada → Saída Almoço → Volta Almoço → Saída
+        if (!today.entrada) {
+            field = 'entrada';
+            name = 'Entrada';
+        } else if (!today.saida_almoco) {
+            field = 'saida_almoco';
+            name = 'Saída para Almoço';
+        } else if (!today.volta_almoco) {
+            field = 'volta_almoco';
+            name = 'Volta do Almoço';
+        } else if (!today.saida) {
+            field = 'saida';
+            name = 'Saída';
+        } else {
+            showMessage('⚠️ Dia completo!', 'warning');
+            return;
+        }
+    }
     
-    // ATUALIZAR OBSERVAÇÃO AUTOMÁTICA
-    await atualizarObservacaoAutomatica(employee.id, date, dayOfWeek);
-    
-    showMessage(`✅ ${name}: ${now}`, 'success');
-    await renderEmployeeGrid();
-    
-    if (Math.random() < 0.1) await criarBackupAutomatico();
+    const success = await saveRecord(employee.id, date, field, now, false);
+    if (success) {
+        const tipoDia = isReduced ? ' (Jornada reduzida)' : '';
+        showMessage(`✅ ${name}: ${now}${tipoDia}`, 'success');
+        await renderEmployeeGrid();
+    }
 }
 
-// ==================== TELA INICIAL ====================
+function isDayCompleteForPrint(rec, dow, isHoliday) {
+    const isSaturday = dow === 6;
+    const isSunday = dow === 0;
+    const isSpecialDay = isSunday || isSaturday || isHoliday;
+    
+    if (isSpecialDay) {
+        return rec.entrada && rec.saida;
+    }
+    
+    const hasObservacao = rec.observacao && ['folga','falta','atestado','ferias','feriado-trabalhado','feriado-descanso'].includes(rec.observacao);
+    if (hasObservacao) return true;
+    
+    return rec.entrada && rec.saida_almoco && rec.volta_almoco && rec.saida;
+}
+
+function calculateWorked(ent, sAlm, vAlm, sai, isReducedDay) {
+    let worked = 0;
+    
+    if (ent && sai) {
+        let eMin = timeToMinutes(ent);
+        let sMin = timeToMinutes(sai);
+        if (sMin < eMin) sMin += 1440;
+        worked = sMin - eMin;
+        
+        // Só subtrai almoço se NÃO for dia reduzido
+        if (!isReducedDay && sAlm && vAlm) {
+            let outMin = timeToMinutes(sAlm);
+            let inMin = timeToMinutes(vAlm);
+            if (inMin < outMin) inMin += 1440;
+            worked -= (inMin - outMin);
+        } else if (!isReducedDay && worked > 360) {
+            worked -= 60;
+        }
+    }
+    
+    return Math.max(0, worked);
+}
+
+function calculateDayBalance(worked, dow, isHoliday, obs) {
+    if (obs === 'folga' || obs === 'atestado' || obs === 'ferias') {
+        return { balance: 0, bank: 0, extra: 0 };
+    }
+    
+    if (obs === 'falta') {
+        if (dow === 0 || isHoliday) return { balance: 0, bank: 0, extra: 0 };
+        if (dow === 6) return { balance: -240, bank: 0, extra: 0 };
+        return { balance: -480, bank: 0, extra: 0 };
+    }
+    
+    // Domingo ou Feriado: não gera saldo (considerado dia de descanso)
+    if (dow === 0 || isHoliday) {
+        return { balance: 0, bank: 0, extra: 0 };
+    }
+    
+    let baseHour = (dow === 6) ? 240 : 480;
+    let diff = worked - baseHour;
+    
+    let bank = 0;
+    let extra = 0;
+    let balance = diff;
+    
+    if (diff > 0) {
+        if (diff <= 120) {
+            bank = diff;
+            extra = 0;
+        } else {
+            bank = 120;
+            extra = diff - 120;
+        }
+    } else if (diff < 0) {
+        bank = diff;
+        extra = 0;
+    }
+    
+    return { balance: diff, bank: bank, extra: extra };
+}
+
+function getObservationText(rec, dow, isHoliday, temHorario) {
+    const obs = rec.observacao;
+    const isSunday = dow === 0;
+    
+    if (obs === 'folga') return 'Folga';
+    if (obs === 'falta') return 'Falta';
+    if (obs === 'atestado') return 'Atestado';
+    if (obs === 'ferias') return 'Férias';
+    
+    if (isHoliday && temHorario) return 'Feriado Trab';
+    if (isHoliday && !temHorario) return 'Feriado Desc';
+    
+    if (isSunday && temHorario) return 'Domingo Trab';
+    if (isSunday && !temHorario && !obs) return 'Domingo';
+    
+    return 'Normal';
+}
+
 async function renderEmployeeGrid() {
     await loadEmployees();
+    await loadHolidays();
     const grid = document.getElementById('employeeGrid');
     if (!grid) return;
     grid.innerHTML = '';
@@ -574,61 +606,76 @@ async function renderEmployeeGrid() {
     const t = await getServerTime();
     const todayKey = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
     
-    const sortedEmployees = [...employees].sort((a,b) => {
-        const horaA = HORARIOS_CHEGADA[a.nome.split(' ')[0]] || '12:00';
-        const horaB = HORARIOS_CHEGADA[b.nome.split(' ')[0]] || '12:00';
-        return timeToCompare(horaA) - timeToCompare(horaB);
-    });
+    // Mostrar informação sobre o tipo de dia atual
+    const isTodayReduced = await isReducedDay(t);
+    const dayTypeInfo = document.getElementById('dayTypeInfo');
+    if (isTodayReduced) {
+        dayTypeInfo.style.display = 'block';
+        dayTypeInfo.innerHTML = '📌 <strong>Hoje é dia de jornada reduzida!</strong> (Sábado ou Feriado) - Apenas <strong>Entrada</strong> e <strong>Saída</strong> serão registrados.';
+        dayTypeInfo.style.background = '#fff3e0';
+        dayTypeInfo.style.color = '#e67e22';
+    } else {
+        dayTypeInfo.style.display = 'block';
+        dayTypeInfo.innerHTML = '📌 <strong>Dia útil normal</strong> - Registre: Entrada → Saída Almoço → Volta Almoço → Saída';
+        dayTypeInfo.style.background = '#e8f4fd';
+        dayTypeInfo.style.color = '#2980b9';
+    }
     
-    for (const emp of sortedEmployees) {
-        const isActive = !inactiveEmployeeIds.includes(emp.id);
+    for (const emp of employees) {
+        if (emp.ativo === false) continue;
         const records = await loadRecords(emp.id, t.getMonth()+1, t.getFullYear());
         const today = records[todayKey] || {};
-        const nome = NOMES_ABREVIADOS[emp.nome.split(' ')[0]] || emp.nome.split(' ')[0];
+        const nome = emp.nome.split(' ')[0];
         
         let status = '', sClass = '';
-        if (!isActive) {
-            status = '⛔ Inativo';
-            sClass = 'status-inactive';
-        } else if (today.entrada && today.saida_almoco && today.volta_almoco && today.saida) {
-            status = '✅ Completo';
-            sClass = 'status-complete';
-        } else if (today.entrada) {
-            status = '🟡 Andamento';
-            sClass = 'status-incomplete';
+        const isReduced = await isReducedDay(t);
+        
+        if (isReduced) {
+            if (today.entrada && today.saida) {
+                status = '✅ Completo'; sClass = 'status-complete';
+            } else if (today.entrada) {
+                status = '🟡 Aguardando Saída'; sClass = 'status-incomplete';
+            } else {
+                status = '⚪ Pendente'; sClass = 'status-none';
+            }
         } else {
-            status = '⚪ Pendente';
-            sClass = 'status-none';
+            if (today.entrada && today.saida_almoco && today.volta_almoco && today.saida) {
+                status = '✅ Completo'; sClass = 'status-complete';
+            } else if (today.entrada) {
+                status = '🟡 Andamento'; sClass = 'status-incomplete';
+            } else {
+                status = '⚪ Pendente'; sClass = 'status-none';
+            }
         }
         
+        const previewHtml = isReduced ? `
+            <span>⏰ ${today.entrada || '--:--'}</span>
+            <span>🏠 ${today.saida || '--:--'}</span>
+        ` : `
+            <span>⏰ ${today.entrada || '--:--'}</span>
+            <span>🍽️ ${today.saida_almoco || '--:--'}</span>
+            <span>🍽️ ${today.volta_almoco || '--:--'}</span>
+            <span>🏠 ${today.saida || '--:--'}</span>
+        `;
+        
         const card = document.createElement('div');
-        card.className = `employee-card ${!isActive ? 'inactive' : ''}`;
+        card.className = 'employee-card';
         card.innerHTML = `
             <div class="employee-info">
-                <h3>${nome} ${!isActive ? '<small>(Inativo)</small>' : ''}</h3>
+                <h3>${nome}</h3>
                 <div class="clock-preview">
-                    <span>⏰ ${today.entrada || '--:--'}</span>
-                    <span>🍽️ ${today.saida_almoco || '--:--'}</span>
-                    <span>🍽️ ${today.volta_almoco || '--:--'}</span>
-                    <span>🏠 ${today.saida || '--:--'}</span>
+                    ${previewHtml}
                 </div>
             </div>
             <div class="status-badge ${sClass}">${status}</div>
         `;
-        if (isActive) card.onclick = () => showEmployeeModal(emp);
+        card.onclick = () => { selectedEmployee = emp; document.getElementById('modalEmployeeName').innerHTML = `👤 ${nome}`; document.getElementById('employeePasswordModal').style.display = 'flex'; };
         grid.appendChild(card);
     }
     
-    updateDateTime();
-}
-
-function showEmployeeModal(employee) {
-    selectedEmployee = employee;
-    const nome = employee.nome.split(' ')[0];
-    document.getElementById('modalEmployeeName').innerHTML = `👤 ${nome}`;
-    document.getElementById('employeePassword').value = '';
-    document.getElementById('employeePasswordError').textContent = '';
-    document.getElementById('employeePasswordModal').style.display = 'flex';
+    const now = await getServerTime();
+    const dateElem = document.getElementById('currentDateTime');
+    if (dateElem) dateElem.innerHTML = now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 }
 
 async function verifyEmployeePassword() {
@@ -636,6 +683,8 @@ async function verifyEmployeePassword() {
     if (pwd === selectedEmployee.senha) {
         document.getElementById('employeePasswordModal').style.display = 'none';
         await markClock(selectedEmployee);
+        document.getElementById('employeePassword').value = '';
+        document.getElementById('employeePasswordError').textContent = '';
     } else {
         document.getElementById('employeePasswordError').textContent = 'Senha incorreta!';
     }
@@ -643,30 +692,74 @@ async function verifyEmployeePassword() {
 
 function closeEmployeeModal() { 
     document.getElementById('employeePasswordModal').style.display = 'none';
+    document.getElementById('employeePassword').value = '';
+    document.getElementById('employeePasswordError').textContent = '';
+}
+
+// FUNÇÃO PARA BUSCAR LOGS DO GESTOR
+async function loadGestorLogs(empId, year, month) {
+    const startDate = `${year}-${String(month).padStart(2,'0')}-01`;
+    const endDate = `${year}-${String(month).padStart(2,'0')}-${new Date(year, month, 0).getDate()}`;
+    
+    try {
+        const { data, error } = await sbClient
+            .from('logs_gestor')
+            .select('*')
+            .eq('funcionario_id', empId)
+            .gte('data_alteracao', startDate)
+            .lte('data_alteracao', endDate)
+            .order('data_registro', { ascending: false });
+        
+        if (error) {
+            console.error('Erro ao carregar logs:', error);
+            return [];
+        }
+        return data || [];
+    } catch (error) {
+        console.error('Exceção ao carregar logs:', error);
+        return [];
+    }
+}
+
+async function showLogsModal(empId, year, month) {
+    const logs = await loadGestorLogs(empId, year, month);
+    const logsDiv = document.getElementById('logsList');
+    
+    if (logs.length === 0) {
+        logsDiv.innerHTML = '<div style="text-align:center; padding:20px;">📭 Nenhuma intervenção do gestor registrada neste mês.</div>';
+    } else {
+        logsDiv.innerHTML = logs.map(log => `
+            <div class="log-item">
+                <div class="log-date">📅 ${new Date(log.data_registro).toLocaleString('pt-BR')}</div>
+                <div><span class="log-field">${log.campo}</span> em ${log.data_alteracao.split('-')[2]}/${log.data_alteracao.split('-')[1]}</div>
+                <div>✏️ De: <span class="log-changed">${log.valor_antigo || '—'}</span> → Para: <span class="log-new">${log.valor_novo || '—'}</span></div>
+            </div>
+        `).join('');
+    }
+    
+    document.getElementById('logsModal').style.display = 'flex';
 }
 
 // ==================== GESTOR ====================
 function showManagerModal() {
     document.getElementById('fakeManagerModal').style.display = 'flex';
-    document.getElementById('managerPasswordInput').value = '';
-    document.getElementById('managerPasswordError').textContent = '';
-    setTimeout(() => { document.getElementById('managerPasswordInput').focus(); }, 100);
+    document.getElementById('managerPassword').value = '';
+    document.getElementById('managerPassword').focus();
 }
 
-async function verifyManagerPassword() {
-    const pwd = document.getElementById('managerPasswordInput').value;
-    if (pwd === SENHA_GESTOR) {
+function verifyManagerPassword() {
+    const pwd = document.getElementById('managerPassword').value;
+    if (pwd === '8301') {
         document.getElementById('fakeManagerModal').style.display = 'none';
-        await openManagementArea();
+        openManagementArea();
     } else {
-        document.getElementById('managerPasswordError').textContent = 'Senha incorreta!';
-        document.getElementById('managerPasswordInput').value = '';
-        document.getElementById('managerPasswordInput').focus();
+        showMessage('❌ Senha de gestor incorreta!', 'error');
     }
 }
 
 function closeFakeModal() { 
     document.getElementById('fakeManagerModal').style.display = 'none';
+    document.getElementById('managerPassword').value = '';
 }
 
 async function openManagementArea() {
@@ -674,11 +767,9 @@ async function openManagementArea() {
     document.getElementById('managementArea').style.display = 'block';
     await loadEmployees();
     await loadHolidays();
-    
     const today = new Date();
     document.getElementById('monthYear').value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}`;
     currentMonthYear = document.getElementById('monthYear').value;
-    
     renderTabs();
     await renderTabContent(0);
     renderHolidayList();
@@ -693,445 +784,355 @@ function backToClock() {
 function renderTabs() {
     const div = document.getElementById('tabs');
     div.innerHTML = '';
-    const activeEmployees = employees.filter(e => !inactiveEmployeeIds.includes(e.id));
-    const inactiveEmployeesList = employees.filter(e => inactiveEmployeeIds.includes(e.id));
-    const allDisplay = [...activeEmployees, ...inactiveEmployeesList];
-    
-    allDisplay.forEach((e, idx) => {
-        const originalIdx = employees.findIndex(emp => emp.id === e.id);
-        const isActive = !inactiveEmployeeIds.includes(e.id);
-        const nome = NOMES_ABREVIADOS[e.nome.split(' ')[0]] || e.nome.split(' ')[0];
+    employees.forEach((e, i) => {
+        const nome = e.nome.split(' ')[0];
         const tab = document.createElement('div');
-        tab.className = `tab ${currentEmployeeIndex === originalIdx ? 'active' : ''} ${!isActive ? 'inactive-tab' : ''}`;
-        tab.textContent = isActive ? nome : `${nome} (I)`;
-        tab.onclick = async () => { 
-            currentEmployeeIndex = originalIdx; 
-            renderTabs(); 
-            await renderTabContent(originalIdx); 
-        };
+        tab.className = `tab ${i === currentEmployeeIndex ? 'active' : ''}`;
+        tab.textContent = nome;
+        tab.onclick = async () => { currentEmployeeIndex = i; renderTabs(); await renderTabContent(i); };
         div.appendChild(tab);
     });
+    
+    const manageBtn = document.createElement('div');
+    manageBtn.className = 'tab';
+    manageBtn.textContent = '👥 Gerenciar';
+    manageBtn.style.background = '#27ae60';
+    manageBtn.style.color = 'white';
+    manageBtn.onclick = () => showEmployeeManager();
+    div.appendChild(manageBtn);
 }
 
-// ==================== FUNÇÃO SAVE FIELD ====================
-window.saveField = async function(idx, day, field) {
-    const emp = employees[idx];
-    const [year, month] = currentMonthYear.split('-').map(Number);
-    const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const inputElement = document.getElementById(`${field}-${idx}-${day}`);
-    let val = inputElement.value;
-    const dateObj = new Date(dateKey);
-    const dayOfWeek = dateObj.getDay();
+async function showEmployeeManager() {
+    const allEmps = await loadAllEmployees();
+    const modal = document.getElementById('employeeModal');
+    const modalBody = document.getElementById('employeeModalBody');
     
-    let { data: existing } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', dateKey).maybeSingle();
+    let html = `<div class="employee-list">`;
+    for (const emp of allEmps) {
+        const statusClass = emp.ativo !== false ? 'active-badge' : 'inactive-badge';
+        const statusText = emp.ativo !== false ? 'Ativo' : 'Inativo';
+        html += `
+            <div class="employee-list-item ${emp.ativo === false ? 'inactive' : ''}">
+                <div><strong>${emp.nome}</strong><br><small>${emp.cpf || 'Sem CPF'}</small></div>
+                <div style="display: flex; gap: 5px; align-items: center;">
+                    <span class="status-badge-employee ${statusClass}">${statusText}</span>
+                    <button onclick="editEmployee(${emp.id})" class="btn-small" style="background:#3498db;">✏️</button>
+                    <button onclick="toggleEmployeeStatus(${emp.id})" class="btn-small" style="background:#f39c12;">${emp.ativo !== false ? '🔴' : '🟢'}</button>
+                    <button onclick="deleteEmployee(${emp.id})" class="btn-small" style="background:#e74c3c;">🗑️</button>
+                </div>
+            </div>
+        `;
+    }
+    html += `</div><button onclick="showAddEmployeeForm()" class="success" style="margin-top:10px;">➕ Novo Funcionário</button>
+             <button onclick="closeEmployeeModalGestor()" class="danger" style="margin-top:5px;">Fechar</button>`;
     
-    if (val === '') {
-        if (existing) {
-            const updatedRecord = {
-                entrada: existing.entrada || null,
-                saida_almoco: existing.saida_almoco || null,
-                volta_almoco: existing.volta_almoco || null,
-                saida: existing.saida || null,
-                observacao: existing.observacao,
-                marcado_por: 'gestor',
-                manager_intervention: true
-            };
-            updatedRecord[field] = null;
-            await sbClient.from('registros_ponto').update(updatedRecord).eq('id', existing.id);
-            showMessage(`✅ ${field} removido!`, 'success');
-        }
-    } else {
-        if (existing) {
-            const updatedRecord = {
-                entrada: existing.entrada,
-                saida_almoco: existing.saida_almoco,
-                volta_almoco: existing.volta_almoco,
-                saida: existing.saida,
-                observacao: existing.observacao,
-                [field]: val,
-                marcado_por: 'gestor',
-                manager_intervention: true
-            };
-            await sbClient.from('registros_ponto').update(updatedRecord).eq('id', existing.id);
-            showMessage(`✅ ${field} alterado para ${val}`, 'success');
-        } else {
-            const newRecord = {
-                funcionario_id: emp.id,
-                data: dateKey,
-                [field]: val,
-                marcado_por: 'gestor',
-                manager_intervention: true
-            };
-            await sbClient.from('registros_ponto').insert(newRecord);
-            showMessage(`✅ ${field} adicionado: ${val}`, 'success');
-        }
+    document.getElementById('employeeModalTitle').innerHTML = '👥 Gerenciar Funcionários';
+    modalBody.innerHTML = html;
+    modal.style.display = 'flex';
+}
+
+function showAddEmployeeForm() {
+    const modalBody = document.getElementById('employeeModalBody');
+    modalBody.innerHTML = `
+        <div class="form-group"><label>Nome Completo</label><input type="text" id="empNome" placeholder="Ex: Bianca Silva"></div>
+        <div class="form-group"><label>CPF</label><input type="text" id="empCpf" placeholder="000.000.000-00"></div>
+        <div class="form-group"><label>Senha (4 dígitos)</label><input type="password" id="empSenha" maxlength="4" placeholder="****"></div>
+        <div class="form-group"><label>Horário Seg-Sex Entrada (referência)</label><input type="time" id="empSegSexEntrada"></div>
+        <div class="form-group"><label>Horário Seg-Sex Saída (referência)</label><input type="time" id="empSegSexSaida"></div>
+        <div class="form-group"><label>Horário Sábado Entrada (referência)</label><input type="time" id="empSabadoEntrada"></div>
+        <div class="form-group"><label>Horário Sábado Saída (referência)</label><input type="time" id="empSabadoSaida"></div>
+        <button onclick="saveNewEmployee()" class="success">Salvar</button>
+        <button onclick="showEmployeeManager()" class="danger">Cancelar</button>
+    `;
+    document.getElementById('employeeModalTitle').innerHTML = '➕ Novo Funcionário';
+}
+
+async function saveNewEmployee() {
+    const nome = document.getElementById('empNome')?.value;
+    const cpf = document.getElementById('empCpf')?.value;
+    const senha = document.getElementById('empSenha')?.value;
+    const segSexEntrada = document.getElementById('empSegSexEntrada')?.value;
+    const segSexSaida = document.getElementById('empSegSexSaida')?.value;
+    const sabadoEntrada = document.getElementById('empSabadoEntrada')?.value;
+    const sabadoSaida = document.getElementById('empSabadoSaida')?.value;
+    
+    if (!nome || !senha) {
+        showMessage('❌ Nome e senha são obrigatórios', 'error');
+        return;
     }
     
-    // ATUALIZAR OBSERVAÇÃO AUTOMÁTICA
-    await atualizarObservacaoAutomatica(emp.id, dateKey, dayOfWeek);
-    await renderTabContent(idx);
-};
-
-// ==================== FUNÇÃO SAVE OBS ====================
-window.saveObs = async function(idx, day) {
-    const emp = employees[idx];
-    const [year, month] = currentMonthYear.split('-').map(Number);
-    const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const val = document.getElementById(`obs-${idx}-${day}`).value;
-    const dateObj = new Date(dateKey);
-    const dayOfWeek = dateObj.getDay();
-    
-    let { data: existing } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', dateKey).maybeSingle();
-    if (existing) {
-        await sbClient.from('registros_ponto').update({ observacao: val, marcado_por: 'gestor', manager_intervention: true }).eq('id', existing.id);
-    } else {
-        await sbClient.from('registros_ponto').insert({ 
-            funcionario_id: emp.id, data: dateKey, observacao: val, marcado_por: 'gestor', manager_intervention: true 
+    try {
+        const { error } = await sbClient.from('funcionarios').insert({
+            nome: nome,
+            cpf: cpf,
+            senha: senha,
+            jornada_seg_sex_entrada: segSexEntrada,
+            jornada_seg_sex_saida: segSexSaida,
+            jornada_sabado_entrada: sabadoEntrada,
+            jornada_sabado_saida: sabadoSaida,
+            ativo: true
         });
+        if (error) throw error;
+        showMessage('✅ Funcionário adicionado!', 'success');
+        await loadEmployees();
+        await showEmployeeManager();
+        renderTabs();
+        await renderTabContent(0);
+    } catch (error) {
+        showMessage(`❌ Erro: ${error.message}`, 'error');
     }
-    showMessage(`✅ Observação salva`, 'success');
+}
+
+window.editEmployee = async function(id) {
+    const allEmps = await loadAllEmployees();
+    const emp = allEmps.find(e => e.id === id);
+    if (!emp) return;
     
-    // ATUALIZAR OBSERVAÇÃO AUTOMÁTICA (para garantir consistência)
-    await atualizarObservacaoAutomatica(emp.id, dateKey, dayOfWeek);
-    await renderTabContent(idx);
+    const modalBody = document.getElementById('employeeModalBody');
+    modalBody.innerHTML = `
+        <div class="form-group"><label>Nome Completo</label><input type="text" id="empNome" value="${emp.nome || ''}"></div>
+        <div class="form-group"><label>CPF</label><input type="text" id="empCpf" value="${emp.cpf || ''}"></div>
+        <div class="form-group"><label>Senha (4 dígitos)</label><input type="password" id="empSenha" value="${emp.senha || ''}" maxlength="4"></div>
+        <div class="form-group"><label>Horário Seg-Sex Entrada (referência)</label><input type="time" id="empSegSexEntrada" value="${emp.jornada_seg_sex_entrada || ''}"></div>
+        <div class="form-group"><label>Horário Seg-Sex Saída (referência)</label><input type="time" id="empSegSexSaida" value="${emp.jornada_seg_sex_saida || ''}"></div>
+        <div class="form-group"><label>Horário Sábado Entrada (referência)</label><input type="time" id="empSabadoEntrada" value="${emp.jornada_sabado_entrada || ''}"></div>
+        <div class="form-group"><label>Horário Sábado Saída (referência)</label><input type="time" id="empSabadoSaida" value="${emp.jornada_sabado_saida || ''}"></div>
+        <input type="hidden" id="editEmpId" value="${emp.id}">
+        <button onclick="updateEmployee(${emp.id})" class="success">Salvar</button>
+        <button onclick="showEmployeeManager()" class="danger">Cancelar</button>
+    `;
+    document.getElementById('employeeModalTitle').innerHTML = '✏️ Editar Funcionário';
 };
 
-// ==================== FUNÇÃO UPDATE JORNADA ====================
-window.updateJornada = async function(id, field, val) {
-    await sbClient.from('funcionarios').update({ [field]: val }).eq('id', id);
-    await loadEmployees();
-    await renderTabContent(currentEmployeeIndex);
-    showMessage('✅ Jornada atualizada!', 'success');
-};
+async function updateEmployee(id) {
+    const nome = document.getElementById('empNome')?.value;
+    const cpf = document.getElementById('empCpf')?.value;
+    const senha = document.getElementById('empSenha')?.value;
+    const segSexEntrada = document.getElementById('empSegSexEntrada')?.value;
+    const segSexSaida = document.getElementById('empSegSexSaida')?.value;
+    const sabadoEntrada = document.getElementById('empSabadoEntrada')?.value;
+    const sabadoSaida = document.getElementById('empSabadoSaida')?.value;
+    
+    try {
+        const { error } = await sbClient.from('funcionarios').update({
+            nome: nome,
+            cpf: cpf,
+            senha: senha,
+            jornada_seg_sex_entrada: segSexEntrada,
+            jornada_seg_sex_saida: segSexSaida,
+            jornada_sabado_entrada: sabadoEntrada,
+            jornada_sabado_saida: sabadoSaida
+        }).eq('id', id);
+        if (error) throw error;
+        showMessage('✅ Funcionário atualizado!', 'success');
+        await loadEmployees();
+        await showEmployeeManager();
+        renderTabs();
+        await renderTabContent(currentEmployeeIndex);
+    } catch (error) {
+        showMessage(`❌ Erro: ${error.message}`, 'error');
+    }
+}
 
-// ==================== FUNÇÃO RENDERTABCONTENT ====================
+async function toggleEmployeeStatus(id) {
+    const allEmps = await loadAllEmployees();
+    const emp = allEmps.find(e => e.id === id);
+    const novoStatus = emp.ativo === false ? true : false;
+    try {
+        const { error } = await sbClient.from('funcionarios').update({ ativo: novoStatus }).eq('id', id);
+        if (error) throw error;
+        showMessage(`✅ Funcionário ${novoStatus ? 'reativado' : 'inativado'}!`, 'success');
+        await loadEmployees();
+        await showEmployeeManager();
+        renderTabs();
+        await renderTabContent(0);
+    } catch (error) {
+        showMessage(`❌ Erro: ${error.message}`, 'error');
+    }
+}
+
+async function deleteEmployee(id) {
+    if (confirm('Tem certeza que deseja excluir este funcionário? Todos os registros serão perdidos!')) {
+        try {
+            try {
+                await sbClient.from('logs_gestor').delete().eq('funcionario_id', id);
+            } catch(e) { console.log('Erro ao deletar logs:', e); }
+            
+            await sbClient.from('registros_ponto').delete().eq('funcionario_id', id);
+            const { error } = await sbClient.from('funcionarios').delete().eq('id', id);
+            if (error) throw error;
+            showMessage('✅ Funcionário excluído!', 'success');
+            await loadEmployees();
+            await showEmployeeManager();
+            renderTabs();
+            await renderTabContent(0);
+        } catch (error) {
+            showMessage(`❌ Erro: ${error.message}`, 'error');
+        }
+    }
+}
+
 async function renderTabContent(idx) {
     const emp = employees[idx];
+    if (!emp) return;
     const [year, month] = currentMonthYear.split('-').map(Number);
     const days = new Date(year, month, 0).getDate();
     const records = await loadRecords(emp.id, month, year);
-    const isActive = !inactiveEmployeeIds.includes(emp.id);
     
-    let html = `<div class="jornada-edit"><h4>✏️ Jornada</h4><div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <div><label style="font-size:10px;">Seg-Sex:</label><br><input type="time" class="jornada-input" value="${emp.jornada_seg_sex_entrada}" ${!isActive ? 'disabled' : ''} onchange="updateJornada(${emp.id},'jornada_seg_sex_entrada',this.value)"> 
-        <input type="time" class="jornada-input" value="${emp.jornada_seg_sex_saida}" ${!isActive ? 'disabled' : ''} onchange="updateJornada(${emp.id},'jornada_seg_sex_saida',this.value)"></div>
-        <div><label style="font-size:10px;">Sábado:</label><br><input type="time" class="jornada-input" value="${emp.jornada_sabado_entrada}" ${!isActive ? 'disabled' : ''} onchange="updateJornada(${emp.id},'jornada_sabado_entrada',this.value)"> 
-        <input type="time" class="jornada-input" value="${emp.jornada_sabado_saida}" ${!isActive ? 'disabled' : ''} onchange="updateJornada(${emp.id},'jornada_sabado_saida',this.value)"></div>
-    </div></div>
-    <div class="employee-actions" style="margin-bottom:12px;">
-        ${isActive ? `<button onclick="editEmployee(${emp.id})" class="btn-small" style="background:#3498db;">✏️ Editar</button>
-        <button onclick="toggleEmployeeActive(${emp.id}, false)" class="btn-small" style="background:#e74c3c;">⛔ Inativar</button>` :
-        `<button onclick="toggleEmployeeActive(${emp.id}, true)" class="btn-small" style="background:#27ae60;">✅ Reativar</button>
-        <button onclick="deleteEmployee(${emp.id})" class="btn-small" style="background:#e74c3c;">🗑️ Excluir</button>`}
-        <button onclick="showBackupModal()" class="btn-small" style="background:#6c757d;">💾 Backup</button>
-    </div>`;
-    
-    if (!isActive) {
-        html += `<div style="background:#ffebee; padding:10px; border-radius:12px; margin-bottom:12px; text-align:center;">
-            ⚠️ Funcionário INATIVO - Não pode marcar ponto e não é considerado nos cálculos
-        </div>`;
-    }
-    
-    html += `<div class="table-wrapper"><table class="timesheet-table"><thead><tr><th>Data</th><th>Dia</th><th>Ent</th><th>Sai Alm</th><th>Vol Alm</th><th>Sai</th><th>H.T.</th><th>Saldo</th><th>Obs</th></tr></thead><tbody>`;
+    let html = `<div class="jornada-edit"><h4>📋 Horários de Referência</h4>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; font-size:11px;">
+            <div><strong>Seg-Sex:</strong> ${emp.jornada_seg_sex_entrada || '--:--'} às ${emp.jornada_seg_sex_saida || '--:--'} (8h/dia)</div>
+            <div><strong>Sábado:</strong> ${emp.jornada_sabado_entrada || '--:--'} às ${emp.jornada_sabado_saida || '--:--'} (4h/dia - sem almoço)</div>
+        </div>
+        <small style="color:#666;">* Sábado: base 4h sem intervalo | Segunda a Sexta: base 8h com 1h almoço | Banco de horas: até 2h/dia</small>
+    </div><div class="table-wrapper"><table class="timesheet-table"><thead><tr><th>Data</th><th>Dia</th><th>Ent</th><th>Sai Alm</th><th>Vol Alm</th><th>Sai</th><th>H.T.</th><th>Saldo</th><th>Obs</th></tr></thead><tbody>`;
     
     for (let d = 1; d <= days; d++) {
         const date = new Date(year, month-1, d);
         const dow = date.getDay();
-        const dayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][dow];
+        const dayName = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][dow];
         const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         let rec = records[dateKey] || {};
         const isHoliday = holidays.some(h => h.data === dateKey);
-        
-        // Se não tem observação, calcular automaticamente (sem forçar folga em domingo)
-        if (!rec.observacao) {
-            if (isHoliday) {
-                if (rec.entrada) {
-                    rec.observacao = 'feriado-trabalhado';
-                } else {
-                    rec.observacao = 'feriado-descanso';
-                }
-            }
-            // DOMINGO: NÃO força nada, mantém como Normal (vazio)
-        }
-        
-        const { hoursWorked, dayBalance } = calculateDayBalance(rec, emp, dow);
+        const isReduced = (dow === 6 || isHoliday);
+        const temHorario = rec.entrada || rec.saida_almoco || rec.volta_almoco || rec.saida;
         
         let obsVal = rec.observacao || '';
-        let obsText = '';
         
-        // Lógica para DOMINGO - NUNCA marca como folga
-        if (dow === 0 && !obsVal) {
-            obsVal = ''; // Normal
+        if (dow === 0 && temHorario && !obsVal && !isHoliday) {
+            obsVal = 'domingo-trabalhado';
         }
         
-        // Lógica para FERIADO
-        if (isHoliday && !obsVal) {
-            obsVal = rec.entrada ? 'feriado-trabalhado' : 'feriado-descanso';
+        if (isHoliday && !obsVal && !['folga','falta','atestado','ferias'].includes(obsVal)) {
+            obsVal = temHorario ? 'feriado-trabalhado' : 'feriado-descanso';
         }
         
-        if (obsVal === 'folga') obsText = 'Folga';
-        else if (obsVal === 'falta') obsText = 'Falta';
-        else if (obsVal === 'atestado') obsText = 'Atestado';
-        else if (obsVal === 'ferias') obsText = 'Férias';
-        else if (obsVal === 'feriado-trabalhado') obsText = 'Feriado Trabalhado';
-        else if (obsVal === 'feriado-descanso') obsText = 'Feriado Descanso';
-        else obsText = 'Normal';
+        const worked = calculateWorked(rec.entrada, rec.saida_almoco, rec.volta_almoco, rec.saida, isReduced);
+        const { balance } = calculateDayBalance(worked, dow, isHoliday, obsVal);
+        const obsText = getObservationText({...rec, observacao: obsVal}, dow, isHoliday, temHorario);
         
         let rowClass = '';
         if (dow === 0) rowClass = 'sunday-row';
         else if (dow === 6) rowClass = 'saturday-row';
         if (isHoliday) rowClass = 'holiday-row';
         
+        // Para dias reduzidos, desabilitar campos de almoço
+        const almocoDisabled = isReduced ? 'disabled' : '';
+        const almocoStyle = isReduced ? 'background:#f5f5f5;' : '';
+        
         html += `<tr class="${rowClass}">
-            <td>${String(d).padStart(2,'0')}/${String(month).padStart(2,'0')}</td><td style="font-size:9px;">${dayName}</td>
-            <td><input type="time" class="time-input" id="entrada-${idx}-${d}" value="${rec.entrada || ''}" ${!isActive ? 'disabled' : ''} onchange="saveField(${idx},${d},'entrada')"></td>
-            <td><input type="time" class="time-input" id="saida_almoco-${idx}-${d}" value="${rec.saida_almoco || ''}" ${!isActive ? 'disabled' : ''} onchange="saveField(${idx},${d},'saida_almoco')"></td>
-            <td><input type="time" class="time-input" id="volta_almoco-${idx}-${d}" value="${rec.volta_almoco || ''}" ${!isActive ? 'disabled' : ''} onchange="saveField(${idx},${d},'volta_almoco')"></td>
-            <td><input type="time" class="time-input" id="saida-${idx}-${d}" value="${rec.saida || ''}" ${!isActive ? 'disabled' : ''} onchange="saveField(${idx},${d},'saida')"></td>
-            <td>${minutesToTime(hoursWorked)}</td>
-            <td class="${dayBalance >= 0 ? 'positive' : 'negative'}">${minutesToTime(dayBalance)}</td>
-            <td><select id="obs-${idx}-${d}" onchange="saveObs(${idx},${d})" ${!isActive ? 'disabled' : ''}>
-                <option value="" ${obsVal === '' ? 'selected' : ''}>Normal</option>
+            <td>${String(d).padStart(2,'0')}/${String(month).padStart(2,'0')}</td>
+            <td>${dayName}</td>
+            <td><input type="time" class="time-input" id="entrada-${idx}-${d}" value="${rec.entrada || ''}" onchange="saveField(${idx},${d},'entrada')"></td>
+            <td><input type="time" class="time-input" id="saida_almoco-${idx}-${d}" value="${rec.saida_almoco || ''}" ${almocoDisabled} style="${almocoStyle}" onchange="saveField(${idx},${d},'saida_almoco')"></td>
+            <td><input type="time" class="time-input" id="volta_almoco-${idx}-${d}" value="${rec.volta_almoco || ''}" ${almocoDisabled} style="${almocoStyle}" onchange="saveField(${idx},${d},'volta_almoco')"></td>
+            <td><input type="time" class="time-input" id="saida-${idx}-${d}" value="${rec.saida || ''}" onchange="saveField(${idx},${d},'saida')"></td>
+            <td>${minutesToTime(worked)}</td>
+            <td class="${balance >= 0 ? 'positive' : 'negative'}">${minutesToTime(balance)}</td>
+            <td><select id="obs-${idx}-${d}" onchange="saveObs(${idx},${d})" style="font-size:9px; padding:3px;">
+                <option value="" ${!obsVal ? 'selected' : ''}>Normal</option>
                 <option value="folga" ${obsVal === 'folga' ? 'selected' : ''}>Folga</option>
                 <option value="falta" ${obsVal === 'falta' ? 'selected' : ''}>Falta</option>
                 <option value="atestado" ${obsVal === 'atestado' ? 'selected' : ''}>Atestado</option>
                 <option value="ferias" ${obsVal === 'ferias' ? 'selected' : ''}>Férias</option>
+                <option value="feriado-trabalhado" ${obsVal === 'feriado-trabalhado' ? 'selected' : ''}>Feriado Trab</option>
+                <option value="feriado-descanso" ${obsVal === 'feriado-descanso' ? 'selected' : ''}>Feriado Desc</option>
+                <option value="domingo-trabalhado" ${obsVal === 'domingo-trabalhado' ? 'selected' : ''}>Domingo Trab</option>
             </select></td>
         </tr>`;
     }
     
     html += `</tbody></table></div>`;
     
-    // Cálculo dos totais
-    let totalHoras = 0, banco = 0, extras = 0, neg = 0, faltas = 0, folgas = 0, ferTrab = 0, intervs = 0;
+    let totalHoras = 0, totalBancoPositivo = 0, totalBancoNegativo = 0, totalHorasExtras = 0, saldoFinal = 0;
+    let faltas = 0, folgas = 0, feriadosTrab = 0, feriadosDesc = 0;
     
     for (let d = 1; d <= days; d++) {
-        const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        const rec = records[dateKey] || {};
         const date = new Date(year, month-1, d);
-        const { hoursWorked, dayBalance } = calculateDayBalance(rec, emp, date.getDay());
+        const dow = date.getDay();
+        const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        let rec = records[dateKey] || {};
+        const isHoliday = holidays.some(h => h.data === dateKey);
+        const isReduced = (dow === 6 || isHoliday);
+        const temHorario = rec.entrada || rec.saida_almoco || rec.volta_almoco || rec.saida;
         
-        if (isActive) {
-            totalHoras += hoursWorked;
-            if (dayBalance > 0) {
-                if (dayBalance <= 120) banco += dayBalance;
-                else { banco += 120; extras += (dayBalance - 120); }
-            } else if (dayBalance < 0) neg += Math.abs(dayBalance);
+        let obsVal = rec.observacao || '';
+        if (dow === 0 && temHorario && !obsVal && !isHoliday) obsVal = 'domingo-trabalhado';
+        if (isHoliday && !obsVal && !['folga','falta','atestado','ferias'].includes(obsVal)) {
+            obsVal = temHorario ? 'feriado-trabalhado' : 'feriado-descanso';
         }
         
-        if (rec.observacao === 'falta') faltas++;
-        if (rec.observacao === 'folga') folgas++;
-        if (rec.observacao === 'feriado-trabalhado') ferTrab++;
-        if (rec.manager_intervention) intervs++;
+        const worked = calculateWorked(rec.entrada, rec.saida_almoco, rec.volta_almoco, rec.saida, isReduced);
+        const { bank, extra } = calculateDayBalance(worked, dow, isHoliday, obsVal);
+        
+        totalHoras += worked;
+        
+        if (bank > 0) totalBancoPositivo += bank;
+        else if (bank < 0) totalBancoNegativo += Math.abs(bank);
+        
+        totalHorasExtras += extra;
+        
+        if (obsVal === 'falta') faltas++;
+        if (obsVal === 'folga') folgas++;
+        if (obsVal === 'feriado-trabalhado') feriadosTrab++;
+        if (obsVal === 'feriado-descanso') feriadosDesc++;
     }
     
-    const saldoFinal = banco - neg;
+    saldoFinal = totalBancoPositivo - totalBancoNegativo;
+    
+    const logsReais = await loadGestorLogs(emp.id, year, month);
+    const totalIntervencoes = logsReais.length;
+    
     html += `<div class="summary-grid">
-        <div class="summary-item"><div>📊 Total Horas</div><div class="summary-value">${minutesToTime(totalHoras)}</div></div>
-        <div class="summary-item"><div>💰 Banco (+)</div><div class="summary-value positive">${minutesToTime(banco)}</div></div>
-        <div class="summary-item"><div>📉 Banco (-)</div><div class="summary-value negative">${minutesToTime(-neg)}</div></div>
-        <div class="summary-item"><div>⭐ H. Extras</div><div class="summary-value positive">${minutesToTime(extras)}</div></div>
-    </div><div class="summary-grid">
-        <div class="summary-item"><div>⚖️ Saldo Final</div><div class="summary-value ${saldoFinal >= 0 ? 'positive' : 'negative'}">${minutesToTime(saldoFinal)}<br><small>(${(saldoFinal/60).toFixed(2)}h)</small></div></div>
+        <div class="summary-item"><div>📊 Total Horas</div><div class="summary-value">${minutesToTime(totalHoras)}</div><div class="summary-small">${minutesToDecimal(totalHoras)}h</div></div>
+        <div class="summary-item"><div>🏦 Banco Positivo</div><div class="summary-value positive">${minutesToTime(totalBancoPositivo)}</div><div class="summary-small">${minutesToDecimal(totalBancoPositivo)}h</div></div>
+        <div class="summary-item"><div>📉 Banco Negativo</div><div class="summary-value negative">${minutesToTime(-totalBancoNegativo)}</div><div class="summary-small">${minutesToDecimal(-totalBancoNegativo)}h</div></div>
+        <div class="summary-item"><div>⭐ Horas Extras</div><div class="summary-value positive">${minutesToTime(totalHorasExtras)}</div><div class="summary-small">${minutesToDecimal(totalHorasExtras)}h</div></div>
+        <div class="summary-item"><div>⚖️ Saldo Final</div><div class="summary-value ${saldoFinal >= 0 ? 'positive' : 'negative'}">${minutesToTime(saldoFinal)}</div><div class="summary-small">${minutesToDecimal(saldoFinal)}h</div></div>
         <div class="summary-item"><div>📅 Faltas</div><div class="summary-value">${faltas}</div></div>
         <div class="summary-item"><div>🏖️ Folgas</div><div class="summary-value">${folgas}</div></div>
-        <div class="summary-item"><div>👤 Interv.</div><div class="summary-value">${intervs}</div></div>
-    </div><div class="print-btn-container">
-        <button onclick="validateAndPrint('${emp.id}',${year},${month})" class="success" style="width:auto; padding:8px 20px;">🖨️ Imprimir</button>
+        <div class="summary-item"><div>📆 Feriados Trab</div><div class="summary-value">${feriadosTrab}</div></div>
+        <div class="summary-item"><div>📆 Feriados Desc</div><div class="summary-value">${feriadosDesc}</div></div>
+        <div class="summary-item clickable" onclick="showLogsModal(${emp.id},${year},${month})" title="Clique para ver as intervenções do gestor">
+            <div>👤 Interv. Gestor</div>
+            <div class="summary-value">${totalIntervencoes}</div>
+            <div class="summary-small">🔍 Clique para detalhes</div>
+        </div>
+    </div>
+    <div class="print-btn-container">
+        <button onclick="validateAndPrint('${emp.id}',${year},${month}, false)" class="success" style="width:auto; padding:8px 20px;">🖨️ Imprimir</button>
     </div>`;
     
     document.getElementById('tabContent').innerHTML = html;
 }
 
-// ==================== FUNÇÃO ADDHOLIDAY ====================
-async function addHoliday() {
-    const date = document.getElementById('holidayDate').value;
-    const name = document.getElementById('holidayName').value;
-    if (!date || !name) { showMessage('Preencha data e nome', 'warning'); return; }
-    
-    await sbClient.from('feriados').insert({ data: date, nome: name });
-    
+window.saveField = async function(idx, day, field) {
+    const emp = employees[idx];
     const [year, month] = currentMonthYear.split('-').map(Number);
-    const [hYear, hMonth] = date.split('-').map(Number);
-    const dateObj = new Date(date);
-    const dayOfWeek = dateObj.getDay();
+    const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const val = document.getElementById(`${field}-${idx}-${day}`).value;
     
-    if (hYear === year && hMonth === month) {
-        for (const emp of employees) {
-            let { data: existing } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', date).maybeSingle();
-            
-            if (existing) {
-                if (existing.entrada) {
-                    await sbClient.from('registros_ponto').update({ observacao: 'feriado-trabalhado' }).eq('id', existing.id);
-                } else {
-                    await sbClient.from('registros_ponto').update({ observacao: 'feriado-descanso' }).eq('id', existing.id);
-                }
-            } else {
-                // Se não existe registro, cria com feriado-descanso (não bateu ponto)
-                await sbClient.from('registros_ponto').insert({ 
-                    funcionario_id: emp.id, 
-                    data: date, 
-                    observacao: 'feriado-descanso', 
-                    marcado_por: 'gestor', 
-                    manager_intervention: true 
-                });
-            }
-        }
-    }
-    
-    document.getElementById('holidayDate').value = '';
-    document.getElementById('holidayName').value = '';
-    await loadHolidays();
-    renderHolidayList();
-    await renderTabContent(currentEmployeeIndex);
-    showMessage('✅ Feriado adicionado!', 'success');
-}
-
-// ==================== FUNÇÃO DELETEHOLIDAY ====================
-window.deleteHoliday = async function(id) {
-    const holidayToDelete = holidays.find(h => h.id == id);
-    const holidayDate = holidayToDelete ? holidayToDelete.data : null;
-    
-    await sbClient.from('feriados').delete().eq('id', id);
-    await loadHolidays();
-    renderHolidayList();
-    
-    if (holidayDate) {
-        const [year, month] = currentMonthYear.split('-').map(Number);
-        const [hYear, hMonth] = holidayDate.split('-').map(Number);
-        
-        if (hYear === year && hMonth === month) {
-            for (const emp of employees) {
-                let { data: existing } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', holidayDate).maybeSingle();
-                if (existing) {
-                    await sbClient.from('registros_ponto').update({ observacao: '' }).eq('id', existing.id);
-                }
-            }
-        }
-    }
-    
-    await renderTabContent(currentEmployeeIndex);
-    showMessage('✅ Feriado removido!', 'success');
-};
-
-// ==================== FUNÇÃO RENDER HOLIDAY LIST ====================
-function renderHolidayList() {
-    const div = document.getElementById('holidayList');
-    if (!div) return;
-    if (!holidays.length) { div.innerHTML = '<p>Nenhum feriado cadastrado</p>'; return; }
-    div.innerHTML = holidays.map(h => `<div class="holiday-tag">${h.data.split('-')[2]}/${h.data.split('-')[1]} - ${h.nome} <button onclick="deleteHoliday('${h.id}')">×</button></div>`).join('');
-}
-
-// ==================== FUNÇÕES DE GERENCIAMENTO DE FUNCIONÁRIOS ====================
-function showAddEmployeeModal() {
-    editingEmployeeId = null;
-    document.getElementById('employeeModalTitle').innerHTML = '👤 Novo Funcionário';
-    document.getElementById('empNome').value = '';
-    document.getElementById('empCpf').value = '';
-    document.getElementById('empSenha').value = '';
-    document.getElementById('empEntradaSegSex').value = '08:00';
-    document.getElementById('empSaidaSegSex').value = '17:30';
-    document.getElementById('empEntradaSab').value = '08:00';
-    document.getElementById('empSaidaSab').value = '13:00';
-    document.getElementById('employeeModal').style.display = 'flex';
-}
-
-window.editEmployee = async function(id) {
-    const emp = employees.find(e => e.id == id);
-    editingEmployeeId = id;
-    document.getElementById('employeeModalTitle').innerHTML = '✏️ Editar Funcionário';
-    document.getElementById('empNome').value = emp.nome;
-    document.getElementById('empCpf').value = emp.cpf;
-    document.getElementById('empSenha').value = emp.senha;
-    document.getElementById('empEntradaSegSex').value = emp.jornada_seg_sex_entrada;
-    document.getElementById('empSaidaSegSex').value = emp.jornada_seg_sex_saida;
-    document.getElementById('empEntradaSab').value = emp.jornada_sabado_entrada;
-    document.getElementById('empSaidaSab').value = emp.jornada_sabado_saida;
-    document.getElementById('employeeModal').style.display = 'flex';
-};
-
-async function saveEmployee() {
-    const employee = {
-        nome: document.getElementById('empNome').value,
-        cpf: document.getElementById('empCpf').value,
-        senha: document.getElementById('empSenha').value,
-        jornada_seg_sex_entrada: document.getElementById('empEntradaSegSex').value,
-        jornada_seg_sex_saida: document.getElementById('empSaidaSegSex').value,
-        jornada_sabado_entrada: document.getElementById('empEntradaSab').value,
-        jornada_sabado_saida: document.getElementById('empSaidaSab').value
-    };
-    
-    if (!employee.nome || !employee.cpf || !employee.senha) {
-        showMessage('Preencha todos os campos!', 'warning');
-        return;
-    }
-    
-    if (editingEmployeeId) {
-        employee.id = editingEmployeeId;
-        await sbClient.from('funcionarios').update(employee).eq('id', editingEmployeeId);
-        showMessage('✅ Funcionário atualizado!', 'success');
-    } else {
-        const { error } = await sbClient.from('funcionarios').insert(employee);
-        if (error) { showMessage('Erro ao adicionar', 'error'); return; }
-        showMessage('✅ Funcionário adicionado!', 'success');
-    }
-    
-    document.getElementById('employeeModal').style.display = 'none';
-    await loadEmployees();
-    await renderEmployeeGrid();
-    if (document.getElementById('managementArea').style.display === 'block') {
-        renderTabs();
-        await renderTabContent(employees.length - 1);
-    }
-}
-
-window.toggleEmployeeActive = async function(id, isActive) {
-    if (isActive) {
-        inactiveEmployeeIds = inactiveEmployeeIds.filter(i => i !== id);
-        showMessage('✅ Funcionário reativado!', 'success');
-    } else {
-        if (!inactiveEmployeeIds.includes(id)) {
-            inactiveEmployeeIds.push(id);
-        }
-        showMessage('⛔ Funcionário inativado!', 'warning');
-    }
-    localStorage.setItem('inactiveEmployees', JSON.stringify(inactiveEmployeeIds));
-    await renderEmployeeGrid();
-    if (document.getElementById('managementArea').style.display === 'block') {
-        renderTabs();
-        await renderTabContent(currentEmployeeIndex);
+    const success = await saveRecord(emp.id, dateKey, field, val || null, true);
+    if (success) {
+        await renderTabContent(idx);
+        showMessage(`✅ ${field} alterado com sucesso!`, 'success');
     }
 };
 
-window.deleteEmployee = async function(id) {
-    if (!confirm('⚠️ Tem certeza? Isso excluirá PERMANENTEMENTE todos os dados deste funcionário!')) return;
+window.saveObs = async function(idx, day) {
+    const emp = employees[idx];
+    const [year, month] = currentMonthYear.split('-').map(Number);
+    const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const val = document.getElementById(`obs-${idx}-${day}`).value;
     
-    await sbClient.from('registros_ponto').delete().eq('funcionario_id', id);
-    await sbClient.from('funcionarios').delete().eq('id', id);
-    inactiveEmployeeIds = inactiveEmployeeIds.filter(i => i !== id);
-    localStorage.setItem('inactiveEmployees', JSON.stringify(inactiveEmployeeIds));
-    
-    await loadEmployees();
-    await renderEmployeeGrid();
-    if (document.getElementById('managementArea').style.display === 'block') {
-        if (employees.length > 0) {
-            currentEmployeeIndex = 0;
-            renderTabs();
-            await renderTabContent(0);
-        } else {
-            document.getElementById('tabContent').innerHTML = '<div style="text-align:center;padding:40px;">Nenhum funcionário cadastrado.<br>Clique em "Novo" para adicionar.</div>';
-        }
+    const success = await saveRecord(emp.id, dateKey, 'observacao', val, true);
+    if (success) {
+        await renderTabContent(idx);
+        showMessage(`✅ Observação alterada com sucesso!`, 'success');
     }
-    showMessage('✅ Funcionário excluído!', 'success');
 };
 
-function showBackupModal() {
-    carregarListaBackups();
-    document.getElementById('backupModal').style.display = 'flex';
-}
-
-// ==================== IMPRESSÃO ====================
-async function validateAndPrint(empId, year, month, isTest = false) {
+async function validateAndPrint(empId, year, month, isTest) {
     const emp = employees.find(e => e.id == empId);
     const records = await loadRecords(emp.id, month, year);
     const days = new Date(year, month, 0).getDate();
@@ -1140,131 +1141,153 @@ async function validateAndPrint(empId, year, month, isTest = false) {
     if (!isTest) {
         for (let d = 1; d <= days; d++) {
             const date = new Date(year, month-1, d);
-            if (date.getDay() === 0) continue;
+            const dow = date.getDay();
+            const isHoliday = holidays.some(h => {
+                const [hY, hM, hD] = h.data.split('-').map(Number);
+                return hY === year && hM === month && hD === d;
+            });
             const key = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
             const rec = records[key] || {};
-            const temHorario = rec.entrada || rec.saida_almoco || rec.volta_almoco || rec.saida;
-            const obsOk = ['folga','falta','atestado','ferias','feriado-descanso','feriado-trabalhado'].includes(rec.observacao);
-            if (!temHorario && !obsOk) missing.push(`${d}/${month}`);
+            
+            if (!isDayCompleteForPrint(rec, dow, isHoliday)) {
+                missing.push(`${d}/${month} - ${['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][dow]}`);
+            }
         }
-        
         if (missing.length) {
             document.getElementById('missingDaysList').innerHTML = missing.map(m => `<div class="missing-day-item">📅 ${m}</div>`).join('');
             document.getElementById('validationModal').style.display = 'flex';
             return;
         }
     }
-    
     await generatePrint(empId, year, month, isTest);
 }
 
-async function generatePrint(empId, year, month, isTest = false) {
+async function generatePrint(empId, year, month, isTest) {
     const emp = employees.find(e => e.id == empId);
     const records = await loadRecords(emp.id, month, year);
     const days = new Date(year, month, 0).getDate();
     const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-    let total = 0, banco = 0, extras = 0, neg = 0, faltas = 0, folgas = 0, ferTrab = 0, intervs = 0;
+    let totalHoras = 0, totalBancoPositivo = 0, totalBancoNegativo = 0, totalHorasExtras = 0;
+    let faltas = 0, folgas = 0, feriadosTrab = 0, feriadosDesc = 0;
     let rows = '';
+    
+    const logsReais = await loadGestorLogs(emp.id, year, month);
+    const totalIntervencoes = logsReais.length;
     
     for (let d = 1; d <= days; d++) {
         const date = new Date(year, month-1, d);
         const dow = date.getDay();
         const dayName = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][dow];
         const key = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        const rec = records[key] || {};
-        const { hoursWorked, dayBalance } = calculateDayBalance(rec, emp, dow);
-        total += hoursWorked;
+        let rec = records[key] || {};
+        const isHoliday = holidays.some(h => h.data === key);
+        const isReduced = (dow === 6 || isHoliday);
+        const temHorario = rec.entrada || rec.saida_almoco || rec.volta_almoco || rec.saida;
         
-        if (dayBalance > 0) {
-            if (dayBalance <= 120) banco += dayBalance;
-            else { banco += 120; extras += (dayBalance - 120); }
-        } else if (dayBalance < 0) neg += Math.abs(dayBalance);
+        let obsVal = rec.observacao || '';
+        if (dow === 0 && temHorario && !obsVal && !isHoliday) obsVal = 'domingo-trabalhado';
+        if (isHoliday && !obsVal && !['folga','falta','atestado','ferias'].includes(obsVal)) {
+            obsVal = temHorario ? 'feriado-trabalhado' : 'feriado-descanso';
+        }
         
-        if (rec.observacao === 'falta') faltas++;
-        if (rec.observacao === 'folga') folgas++;
-        if (rec.observacao === 'feriado-trabalhado') ferTrab++;
-        if (rec.manager_intervention) intervs++;
+        const worked = calculateWorked(rec.entrada, rec.saida_almoco, rec.volta_almoco, rec.saida, isReduced);
+        const { balance, bank, extra } = calculateDayBalance(worked, dow, isHoliday, obsVal);
         
-        let obs = '';
-        if (rec.observacao === 'folga') obs = 'Folga';
-        else if (rec.observacao === 'falta') obs = 'Falta';
-        else if (rec.observacao === 'atestado') obs = 'Atestado';
-        else if (rec.observacao === 'ferias') obs = 'Férias';
-        else if (rec.observacao === 'feriado-trabalhado') obs = 'Feriado Trab';
-        else if (rec.observacao === 'feriado-descanso') obs = 'Feriado';
+        totalHoras += worked;
+        if (bank > 0) totalBancoPositivo += bank;
+        else if (bank < 0) totalBancoNegativo += Math.abs(bank);
+        totalHorasExtras += extra;
+        
+        if (obsVal === 'falta') faltas++;
+        if (obsVal === 'folga') folgas++;
+        if (obsVal === 'feriado-trabalhado') feriadosTrab++;
+        if (obsVal === 'feriado-descanso') feriadosDesc++;
+        
+        const obsText = getObservationText({...rec, observacao: obsVal}, dow, isHoliday, temHorario);
         
         rows += `<tr>
             <td>${String(d).padStart(2,'0')}/${String(month).padStart(2,'0')}</td>
             <td>${dayName}</td>
             <td>${rec.entrada || '—'}</td>
-            <td>${rec.saida_almoco || '—'}</td>
-            <td>${rec.volta_almoco || '—'}</td>
+            <td>${isReduced ? '—' : (rec.saida_almoco || '—')}</td>
+            <td>${isReduced ? '—' : (rec.volta_almoco || '—')}</td>
             <td>${rec.saida || '—'}</td>
-            <td>${minutesToTime(hoursWorked)}</td>
-            <td>${minutesToTime(dayBalance)}</td>
-            <td>${obs}${rec.manager_intervention ? ' *' : ''}</td>
-        </table>`;
+            <td>${minutesToTime(worked)}</td>
+            <td>${minutesToTime(balance)}</td>
+            <td>${obsText}${rec.manager_intervention ? ' *' : ''}</td>
+        </tr>`;
     }
     
-    const saldo = banco - neg;
-    const saldoHoras = (saldo / 60).toFixed(2);
-    const testWatermark = isTest ? '<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-45deg);font-size:48pt;color:rgba(255,0,0,0.3);white-space:nowrap;pointer-events:none;z-index:999;">TESTE - TESTE - TESTE</div>' : '';
+    const saldoFinal = totalBancoPositivo - totalBancoNegativo;
+    const printTitle = isTest ? '📋 VISUALIZAÇÃO TESTE' : 'FOLHA DE PONTO';
+    const watermark = isTest ? '<div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) rotate(-45deg); font-size:80px; color:rgba(0,0,0,0.1); white-space:nowrap; pointer-events:none;">TESTE - APENAS VISUALIZAÇÃO</div>' : '';
     
     const printHtml = `<!DOCTYPE html>
     <html><head><meta charset="UTF-8"><title>${isTest ? 'TESTE - ' : ''}Folha de Ponto - ${emp.nome}</title>
     <style>
-        body{font-family:'Courier New',monospace;padding:8mm;font-size:10pt;margin:0}
+        body{font-family:'Courier New',monospace;padding:8mm;font-size:10pt;position:relative;}
         @page{size:A4;margin:8mm}
-        .header{text-align:center;border-bottom:2px solid #000;padding-bottom:6px;margin-bottom:10px}
-        .header h1{font-size:16pt;margin:0}
-        .header h2{font-size:12pt;font-weight:normal;margin:0}
-        .info{display:flex;justify-content:space-between;margin-bottom:10px;font-size:8pt}
-        table{width:100%;border-collapse:collapse;font-size:7pt}
-        th,td{border:1px solid #000;padding:3px;text-align:center}
+        .header{text-align:center;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:15px}
+        .test-badge{background:#f39c12;color:white;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:10px;}
+        .info{display:flex;justify-content:space-between;margin-bottom:15px;font-size:9pt}
+        table{width:100%;border-collapse:collapse;font-size:8pt}
+        th,td{border:1px solid #000;padding:4px;text-align:center}
         th{background:#f2f2f2}
-        .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}
-        .summary-box{border:1px solid #000;padding:5px;text-align:center;font-size:8pt}
-        .summary-box strong{display:block;margin-bottom:3px}
-        .signature{display:flex;justify-content:space-between;margin-top:20px}
-        .signature-line{width:160px;border-top:1px solid #000;margin:6px auto}
-        .footer{text-align:center;font-size:6pt;margin-top:10px;border-top:1px solid #ccc;padding-top:5px}
+        .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:15px 0}
+        .summary-box{border:1px solid #000;padding:6px;text-align:center}
+        .summary-box-small{font-size:8pt;color:#555;margin-top:2px}
+        .signature{display:flex;justify-content:space-between;margin-top:25px}
+        .signature-line{width:180px;border-top:1px solid #000;margin:8px auto}
+        .footer{text-align:center;font-size:7pt;margin-top:15px}
         .positive{color:#27ae60}
         .negative{color:#e74c3c}
+        .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0;font-size:8pt}
+        .stat-item{text-align:center;padding:4px;background:#f8f9fa;border-radius:4px}
     </style>
-    </head><body>
-    ${testWatermark}
+    </head>
+    <body>
+    ${watermark}
     <div class="header">
+        ${isTest ? '<div class="test-badge">🔧 MODO TESTE - APENAS VISUALIZAÇÃO</div>' : ''}
         <h1>MUNDO CAROL</h1>
-        <h2>FOLHA DE PONTO</h2>
+        <h2>${printTitle}</h2>
     </div>
     <div class="info">
-        <div><strong>Funcionário:</strong> ${emp.nome}<br><strong>CPF:</strong> ${emp.cpf}</div>
-        <div><strong>Mês/Ano:</strong> ${months[month-1]}/${year}<br><strong>Jornada:</strong> ${emp.jornada_seg_sex_entrada} às ${emp.jornada_seg_sex_saida} (Seg-Sex) | ${emp.jornada_sabado_entrada} às ${emp.jornada_sabado_saida} (Sáb)</div>
+        <div><strong>Funcionário:</strong> ${emp.nome}<br><strong>CPF:</strong> ${emp.cpf || '---'}</div>
+        <div><strong>Mês/Ano:</strong> ${months[month-1]}/${year}<br><strong>Jornada Ref:</strong> ${emp.jornada_seg_sex_entrada || '--:--'} às ${emp.jornada_seg_sex_saida || '--:--'}</div>
     </div>
-    <table><thead><tr><th>Data</th><th>Dia</th><th>Entrada</th><th>Saída Alm</th><th>Volta Alm</th><th>Saída</th><th>H.T.</th><th>Saldo</th><th>Obs</th></tr></thead><tbody>${rows}</tbody></table>
-    
+    <div class="stats-grid" style="grid-template-columns: repeat(6,1fr);">
+        <div class="stat-item"><strong>Faltas</strong><br>${faltas}</div>
+        <div class="stat-item"><strong>Folgas</strong><br>${folgas}</div>
+        <div class="stat-item"><strong>Feriados Trab</strong><br>${feriadosTrab}</div>
+        <div class="stat-item"><strong>Feriados Desc</strong><br>${feriadosDesc}</div>
+        <div class="stat-item"><strong>Interv. Gestor</strong><br>${totalIntervencoes}</div>
+    </div>
     <div class="summary">
-        <div class="summary-box"><strong>Total Horas</strong>${minutesToTime(total)}</div>
-        <div class="summary-box"><strong>Banco de Horas</strong><span class="positive"> ${minutesToTime(banco)}</span></div>
-        <div class="summary-box"><strong>Horas Extras</strong><span class="positive"> ${minutesToTime(extras)}</span></div>
-        <div class="summary-box"><strong>Saldo Final</strong><span class="${saldo>=0?'positive':'negative'}"> ${minutesToTime(saldo)} (${saldoHoras}h)</span></div>
+        <div class="summary-box"><strong>Total Horas</strong><br>${minutesToTime(totalHoras)}<div class="summary-box-small">${minutesToDecimal(totalHoras)}h</div></div>
+        <div class="summary-box"><strong>Banco Positivo</strong><br><span class="positive">${minutesToTime(totalBancoPositivo)}</span><div class="summary-box-small">${minutesToDecimal(totalBancoPositivo)}h</div></div>
+        <div class="summary-box"><strong>Banco Negativo</strong><br><span class="negative">${minutesToTime(-totalBancoNegativo)}</span><div class="summary-box-small">${minutesToDecimal(-totalBancoNegativo)}h</div></div>
+        <div class="summary-box"><strong>Horas Extras</strong><br><span class="positive">${minutesToTime(totalHorasExtras)}</span><div class="summary-box-small">${minutesToDecimal(totalHorasExtras)}h</div></div>
+        <div class="summary-box"><strong>Saldo Final</strong><br><span class="${saldoFinal>=0?'positive':'negative'}">${minutesToTime(saldoFinal)}</span><div class="summary-box-small">${minutesToDecimal(saldoFinal)}h</div></div>
     </div>
-    <div class="summary" style="margin-top:5px;">
-        <div class="summary-box"><strong>Faltas</strong> ${faltas} dia(s)</div>
-        <div class="summary-box"><strong>Folgas</strong> ${folgas} dia(s)</div>
-        <div class="summary-box"><strong>Feriados Trab</strong> ${ferTrab} dia(s)</div>
-        <div class="summary-box"><strong>Intervenções</strong> ${intervs}</div>
-    </div>
-    
+    <table>
+        <thead>
+            <tr><th>Data</th><th>Dia</th><th>Entrada</th><th>Saída Alm</th><th>Volta Alm</th><th>Saída</th><th>H.T.</th><th>Saldo</th><th>Obs</th></tr>
+        </thead>
+        <tbody>${rows}</tbody>
+    </table>
     <div class="signature">
         <div style="text-align:center;"><div class="signature-line"></div>Assinatura do Funcionário</div>
         <div style="text-align:center;"><div class="signature-line"></div>Assinatura do Responsável</div>
     </div>
     <div class="footer">
-        Documento eletrônico. * = Registro alterado pelo Gestor.<br>
-        Emitido em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}
+        Sábados e feriados: jornada reduzida (sem intervalo de almoço)<br>
+        Dias úteis: 8h com 1h de almoço | Banco de horas: até 2h/dia<br>
+        Documento eletrônico. * = Alterado pelo Gestor.<br>
+        Emitido: ${new Date().toLocaleDateString('pt-BR')}
+        ${isTest ? '<br><strong style="color:#f39c12;">IMPRESSÃO TESTE - NÃO VÁLIDA COMO REGISTRO OFICIAL</strong>' : ''}
     </div>
-    <script>window.onload=function(){window.print();};<\/script>
+    ${!isTest ? '<script>window.onload=function(){window.print();};<\/script>' : ''}
     </body></html>`;
     
     const win = window.open('', '_blank');
@@ -1272,41 +1295,184 @@ async function generatePrint(empId, year, month, isTest = false) {
     win.document.close();
 }
 
-// ==================== IMPRESSÃO TESTE ====================
-async function testPrint() {
-    if (employees.length === 0) {
-        showMessage('Nenhum funcionário cadastrado para teste', 'warning');
-        return;
-    }
-    const emp = employees[0];
-    const [year, month] = currentMonthYear.split('-').map(Number);
-    await generatePrint(emp.id, year, month, true);
+function renderHolidayList() {
+    const div = document.getElementById('holidayList');
+    if (!div) return;
+    if (!holidays.length) { div.innerHTML = '<p>Nenhum feriado</p>'; return; }
+    div.innerHTML = holidays.map(h => `<div class="holiday-tag">${h.data.split('-')[2]}/${h.data.split('-')[1]} - ${h.nome} <button onclick="deleteHoliday('${h.id}','${h.data}')">×</button></div>`).join('');
 }
 
-// ==================== EVENTOS ====================
+window.deleteHoliday = async function(id, date) {
+    if (!confirm('Tem certeza que deseja excluir este feriado?')) return;
+    
+    try {
+        const { error } = await sbClient.from('feriados').delete().eq('id', id);
+        if (error) throw error;
+        
+        await loadHolidays();
+        const [year, month] = currentMonthYear.split('-').map(Number);
+        const [hY, hM] = date.split('-').map(Number);
+        
+        if (hY === year && hM === month) {
+            for (const emp of employees) {
+                let { data: ex } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', date).maybeSingle();
+                if (ex && (ex.observacao === 'feriado-trabalhado' || ex.observacao === 'feriado-descanso')) {
+                    await sbClient.from('registros_ponto').update({ observacao: null }).eq('id', ex.id);
+                }
+            }
+        }
+        renderHolidayList();
+        await renderTabContent(currentEmployeeIndex);
+        showMessage('✅ Feriado removido!', 'success');
+    } catch (error) {
+        console.error('Erro ao deletar feriado:', error);
+        showMessage(`❌ Erro: ${error.message}`, 'error');
+    }
+};
+
+async function addHoliday() {
+    const date = document.getElementById('holidayDate').value;
+    const name = document.getElementById('holidayName').value;
+    if (!date || !name) { showMessage('Preencha data e nome', 'warning'); return; }
+    
+    try {
+        const { error } = await sbClient.from('feriados').insert({ data: date, nome: name });
+        if (error) throw error;
+        
+        const [year, month] = currentMonthYear.split('-').map(Number);
+        const [hY, hM] = date.split('-').map(Number);
+        
+        if (hY === year && hM === month) {
+            for (const emp of employees) {
+                let { data: ex } = await sbClient.from('registros_ponto').select('*').eq('funcionario_id', emp.id).eq('data', date).maybeSingle();
+                if (ex) {
+                    const temHorario = ex.entrada || ex.saida_almoco || ex.volta_almoco || ex.saida;
+                    const auto = temHorario ? 'feriado-trabalhado' : 'feriado-descanso';
+                    await sbClient.from('registros_ponto').update({ observacao: auto }).eq('id', ex.id);
+                } else {
+                    await sbClient.from('registros_ponto').insert({ 
+                        funcionario_id: emp.id, 
+                        data: date, 
+                        observacao: 'feriado-descanso', 
+                        marcado_por: 'gestor' 
+                    });
+                }
+            }
+        }
+        document.getElementById('holidayDate').value = '';
+        document.getElementById('holidayName').value = '';
+        await loadHolidays();
+        renderHolidayList();
+        await renderTabContent(currentEmployeeIndex);
+        showMessage('✅ Feriado adicionado!', 'success');
+    } catch (error) {
+        console.error('Erro ao adicionar feriado:', error);
+        showMessage(`❌ Erro: ${error.message}`, 'error');
+    }
+}
+
+async function testDatabaseConnection() {
+    const resultDiv = document.getElementById('sqlTestResult');
+    resultDiv.innerHTML = '<div style="text-align:center;">🔄 Testando conexão...</div>';
+    document.getElementById('sqlTestModal').style.display = 'flex';
+    
+    try {
+        const { data: funcs, error: funcError } = await sbClient.from('funcionarios').select('count');
+        if (funcError) throw new Error(`Erro: ${funcError.message}`);
+        
+        let logsOk = false;
+        try {
+            const { data: logsData, error: logsError } = await sbClient.from('logs_gestor').select('count');
+            if (!logsError) logsOk = true;
+        } catch(e) { }
+        
+        resultDiv.innerHTML = `
+            <div class="test-result test-success">
+                <strong>✅ CONEXÃO OK!</strong><br>
+                Banco de dados funcionando corretamente.<br>
+                Tabela logs_gestor: ${logsOk ? '✅ Disponível' : '⚠️ Não encontrada (execute o SQL para criar)'}
+            </div>
+        `;
+    } catch (error) {
+        resultDiv.innerHTML = `
+            <div class="test-result test-error">
+                <strong>❌ ERRO!</strong><br>
+                ${error.message}
+            </div>
+        `;
+    }
+}
+
+// SQL para criar a tabela de logs
+async function criarTabelaLogs() {
+    const sql = `
+    CREATE TABLE IF NOT EXISTS logs_gestor (
+        id SERIAL PRIMARY KEY,
+        funcionario_id INTEGER NOT NULL,
+        funcionario_nome TEXT NOT NULL,
+        data_registro TIMESTAMP DEFAULT NOW(),
+        data_alteracao DATE NOT NULL,
+        campo TEXT NOT NULL,
+        valor_antigo TEXT,
+        valor_novo TEXT
+    );
+    ALTER TABLE logs_gestor DISABLE ROW LEVEL SECURITY;
+    `;
+    console.log('Para criar a tabela de logs, execute o SQL acima no Supabase SQL Editor');
+}
+
+// Event Listeners
 document.getElementById('managementBtn')?.addEventListener('click', showManagerModal);
 document.getElementById('backToClockBtn')?.addEventListener('click', backToClock);
-document.getElementById('backupManagerBtn')?.addEventListener('click', showBackupModal);
-document.getElementById('testPrintBtn')?.addEventListener('click', testPrint);
-document.getElementById('addEmployeeBtn')?.addEventListener('click', showAddEmployeeModal);
-document.getElementById('saveEmployeeBtn')?.addEventListener('click', saveEmployee);
-document.getElementById('cancelEmployeeBtn')?.addEventListener('click', () => document.getElementById('employeeModal').style.display = 'none');
-document.getElementById('updateMonthBtn')?.addEventListener('click', async () => { currentMonthYear = document.getElementById('monthYear').value; await renderTabContent(currentEmployeeIndex); });
+document.getElementById('updateMonthBtn')?.addEventListener('click', async () => { 
+    currentMonthYear = document.getElementById('monthYear').value; 
+    await renderTabContent(currentEmployeeIndex); 
+});
 document.getElementById('addHolidayBtn')?.addEventListener('click', addHoliday);
+document.getElementById('testPrintBtn')?.addEventListener('click', async () => {
+    if (employees.length > 0 && currentMonthYear) {
+        const [year, month] = currentMonthYear.split('-').map(Number);
+        await validateAndPrint(employees[currentEmployeeIndex]?.id, year, month, true);
+    } else {
+        showMessage('❌ Selecione um funcionário e mês primeiro', 'error');
+    }
+});
+document.getElementById('testConnectionBtn')?.addEventListener('click', testDatabaseConnection);
+document.getElementById('addEmployeeBtn')?.addEventListener('click', showEmployeeManager);
+
+let holidayVisible = false;
+document.getElementById('toggleHolidayBtn')?.addEventListener('click', () => {
+    const section = document.getElementById('holidaySection');
+    holidayVisible = !holidayVisible;
+    section.style.display = holidayVisible ? 'block' : 'none';
+});
 
 setInterval(async () => {
-    if (document.getElementById('clockScreen').style.display !== 'none') {
-        await getServerTime();
-        updateDateTime();
+    const cs = document.getElementById('clockScreen');
+    if (cs && cs.style.display !== 'none') {
+        const now = await getServerTime();
+        const elem = document.getElementById('currentDateTime');
+        if (elem) elem.innerHTML = now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        
+        // Atualizar info do dia a cada minuto
+        if (document.getElementById('dayTypeInfo')) {
+            const t = new Date();
+            const isTodayReduced = await isReducedDay(t);
+            const dayTypeInfo = document.getElementById('dayTypeInfo');
+            if (isTodayReduced) {
+                dayTypeInfo.innerHTML = '📌 <strong>Hoje é dia de jornada reduzida!</strong> (Sábado ou Feriado) - Apenas <strong>Entrada</strong> e <strong>Saída</strong> serão registrados.';
+                dayTypeInfo.style.background = '#fff3e0';
+                dayTypeInfo.style.color = '#e67e22';
+            } else {
+                dayTypeInfo.innerHTML = '📌 <strong>Dia útil normal</strong> - Registre: Entrada → Saída Almoço → Volta Almoço → Saída';
+                dayTypeInfo.style.background = '#e8f4fd';
+                dayTypeInfo.style.color = '#2980b9';
+            }
+        }
     }
-}, 1000);
+}, 60000); // Atualizar a cada minuto
 
-setTimeout(() => criarBackupAutomatico(), 5000);
-setInterval(() => {
-    const now = new Date();
-    if (now.getHours() === 23 && now.getMinutes() >= 55) criarBackupAutomatico();
-}, 60000);
-
+criarTabelaLogs();
 renderEmployeeGrid();
 </script>
 </body>
