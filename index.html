@@ -282,14 +282,8 @@ async function loadEmployees() {
         console.error('Erro ao carregar funcionários:', error);
         return [];
     }
-    // Filtrar apenas ativos para a tela principal, mas manter todos para gestão
-    employees = data;
+    employees = data.filter(e => e.ativo !== false);
     return employees;
-}
-
-async function loadActiveEmployees() {
-    await loadEmployees();
-    return employees.filter(e => e.ativo !== false);
 }
 
 async function loadAllEmployees() {
@@ -603,7 +597,7 @@ function getObservationText(rec, dow, isHoliday, temHorario) {
 }
 
 async function renderEmployeeGrid() {
-    const activeEmployees = await loadActiveEmployees();
+    await loadEmployees();
     await loadHolidays();
     const grid = document.getElementById('employeeGrid');
     if (!grid) return;
@@ -627,7 +621,8 @@ async function renderEmployeeGrid() {
         dayTypeInfo.style.color = '#2980b9';
     }
     
-    for (const emp of activeEmployees) {
+    for (const emp of employees) {
+        if (emp.ativo === false) continue;
         const records = await loadRecords(emp.id, t.getMonth()+1, t.getFullYear());
         const today = records[todayKey] || {};
         const nome = emp.nome.split(' ')[0];
@@ -789,12 +784,11 @@ function backToClock() {
 function renderTabs() {
     const div = document.getElementById('tabs');
     div.innerHTML = '';
-    // Mostrar todos os funcionários (ativos e inativos) na gestão
     employees.forEach((e, i) => {
         const nome = e.nome.split(' ')[0];
         const tab = document.createElement('div');
-        tab.className = `tab ${i === currentEmployeeIndex ? 'active' : ''} ${e.ativo === false ? 'inactive-tab' : ''}`;
-        tab.textContent = e.ativo === false ? `🚫 ${nome}` : nome;
+        tab.className = `tab ${i === currentEmployeeIndex ? 'active' : ''}`;
+        tab.textContent = nome;
         tab.onclick = async () => { currentEmployeeIndex = i; renderTabs(); await renderTabContent(i); };
         div.appendChild(tab);
     });
@@ -823,7 +817,7 @@ async function showEmployeeManager() {
                 <div style="display: flex; gap: 5px; align-items: center;">
                     <span class="status-badge-employee ${statusClass}">${statusText}</span>
                     <button onclick="editEmployee(${emp.id})" class="btn-small" style="background:#3498db;">✏️</button>
-                    <button onclick="toggleEmployeeStatus(${emp.id})" class="btn-small" style="background:#f39c12;">${emp.ativo !== false ? '🔴 Inativar' : '🟢 Ativar'}</button>
+                    <button onclick="toggleEmployeeStatus(${emp.id})" class="btn-small" style="background:#f39c12;">${emp.ativo !== false ? '🔴' : '🟢'}</button>
                     <button onclick="deleteEmployee(${emp.id})" class="btn-small" style="background:#e74c3c;">🗑️</button>
                 </div>
             </div>
@@ -940,42 +934,20 @@ async function updateEmployee(id) {
     }
 }
 
-// FUNÇÃO CORRIGIDA PARA INATIVAR/ATIVAR FUNCIONÁRIO
 async function toggleEmployeeStatus(id) {
+    const allEmps = await loadAllEmployees();
+    const emp = allEmps.find(e => e.id === id);
+    const novoStatus = emp.ativo === false ? true : false;
     try {
-        // Buscar o funcionário atual
-        const { data: emp, error: fetchError } = await sbClient
-            .from('funcionarios')
-            .select('ativo')
-            .eq('id', id)
-            .single();
-        
-        if (fetchError) throw fetchError;
-        
-        const novoStatus = emp.ativo === false ? true : false;
-        const statusTexto = novoStatus ? 'ativado' : 'inativado';
-        
-        // Atualizar o status usando PATCH com a coluna correta
-        const { data, error } = await sbClient
-            .from('funcionarios')
-            .update({ ativo: novoStatus })
-            .eq('id', id);
-        
+        const { error } = await sbClient.from('funcionarios').update({ ativo: novoStatus }).eq('id', id);
         if (error) throw error;
-        
-        showMessage(`✅ Funcionário ${statusTexto} com sucesso!`, 'success');
+        showMessage(`✅ Funcionário ${novoStatus ? 'reativado' : 'inativado'}!`, 'success');
         await loadEmployees();
         await showEmployeeManager();
         renderTabs();
         await renderTabContent(0);
-        
-        // Recarregar a lista se estiver na tela principal
-        if (document.getElementById('clockScreen').style.display !== 'none') {
-            await renderEmployeeGrid();
-        }
     } catch (error) {
-        console.error('Erro detalhado:', error);
-        showMessage(`❌ Erro ao alterar status: ${error.message}`, 'error');
+        showMessage(`❌ Erro: ${error.message}`, 'error');
     }
 }
 
@@ -1012,7 +984,7 @@ async function renderTabContent(idx) {
             <div><strong>Seg-Sex:</strong> ${emp.jornada_seg_sex_entrada || '--:--'} às ${emp.jornada_seg_sex_saida || '--:--'} (8h/dia)</div>
             <div><strong>Sábado:</strong> ${emp.jornada_sabado_entrada || '--:--'} às ${emp.jornada_sabado_saida || '--:--'} (4h/dia - sem almoço)</div>
         </div>
-        <small style="color:#666;">* Sábado: base 4h sem intervalo | Segunda a Sexta: base 8h com 1h almoço | Banco de horas: até 2h/dia</small>
+        <small style="color:#666;">* Sábado: base 4h sem intervalo | Segunda a Sexta: base 8h com 2h almoço | Banco de horas: até 2h/dia</small>
     </div><div class="table-wrapper"><table class="timesheet-table"><thead><tr><th>Data</th><th>Dia</th><th>Ent</th><th>Sai Alm</th><th>Vol Alm</th><th>Sai</th><th>H.T.</th><th>Saldo</th><th>Obs</th></tr></thead><tbody>`;
     
     for (let d = 1; d <= days; d++) {
@@ -1431,6 +1403,24 @@ async function testDatabaseConnection() {
     }
 }
 
+// SQL para criar a tabela de logs
+async function criarTabelaLogs() {
+    const sql = `
+    CREATE TABLE IF NOT EXISTS logs_gestor (
+        id SERIAL PRIMARY KEY,
+        funcionario_id INTEGER NOT NULL,
+        funcionario_nome TEXT NOT NULL,
+        data_registro TIMESTAMP DEFAULT NOW(),
+        data_alteracao DATE NOT NULL,
+        campo TEXT NOT NULL,
+        valor_antigo TEXT,
+        valor_novo TEXT
+    );
+    ALTER TABLE logs_gestor DISABLE ROW LEVEL SECURITY;
+    `;
+    console.log('Para criar a tabela de logs, execute o SQL acima no Supabase SQL Editor');
+}
+
 // Event Listeners
 document.getElementById('managementBtn')?.addEventListener('click', showManagerModal);
 document.getElementById('backToClockBtn')?.addEventListener('click', backToClock);
@@ -1480,8 +1470,9 @@ setInterval(async () => {
             }
         }
     }
-}, 60000);
+}, 60000); // Atualizar a cada minuto
 
+criarTabelaLogs();
 renderEmployeeGrid();
 </script>
 </body>
