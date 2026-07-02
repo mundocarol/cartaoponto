@@ -506,12 +506,24 @@ function isDayCompleteForPrint(rec, dow, isHoliday) {
     const isSunday = dow === 0;
     const isSpecialDay = isSunday || isSaturday || isHoliday;
     
+    // AJUSTE: Domingo é liberado automaticamente
+    if (isSunday) {
+        return true;
+    }
+    
+    // AJUSTE: Feriado Desc é liberado automaticamente
+    if (rec.observacao === 'feriado-descanso') {
+        return true;
+    }
+    
+    // Se tem observação que já libera
+    const hasObservacao = rec.observacao && ['folga','falta','atestado','ferias','feriado-trabalhado','feriado-descanso'].includes(rec.observacao);
+    if (hasObservacao) return true;
+    
+    // Verifica se tem todos os horários preenchidos
     if (isSpecialDay) {
         return rec.entrada && rec.saida;
     }
-    
-    const hasObservacao = rec.observacao && ['folga','falta','atestado','ferias','feriado-trabalhado','feriado-descanso'].includes(rec.observacao);
-    if (hasObservacao) return true;
     
     return rec.entrada && rec.saida_almoco && rec.volta_almoco && rec.saida;
 }
@@ -544,15 +556,14 @@ function calculateDayBalance(worked, dow, isHoliday, obs) {
         return { balance: 0, bank: 0, extra: 0 };
     }
     
-    if (obs === 'falta') {
-        if (dow === 0 || isHoliday) return { balance: 0, bank: 0, extra: 0 };
-        if (dow === 6) return { balance: -240, bank: 0, extra: 0 };
-        return { balance: -480, bank: 0, extra: 0 };
-    }
-    
-    // Domingo ou Feriado: não gera saldo (considerado dia de descanso)
+    // Domingos e feriados não geram saldo
     if (dow === 0 || isHoliday) {
         return { balance: 0, bank: 0, extra: 0 };
+    }
+    
+    if (obs === 'falta') {
+        if (dow === 6) return { balance: -240, bank: 0, extra: 0 };
+        return { balance: -480, bank: 0, extra: 0 };
     }
     
     let baseHour = (dow === 6) ? 240 : 480;
@@ -591,7 +602,7 @@ function getObservationText(rec, dow, isHoliday, temHorario) {
     if (isHoliday && !temHorario) return 'Feriado Desc';
     
     if (isSunday && temHorario) return 'Domingo Trab';
-    if (isSunday && !temHorario && !obs) return 'Domingo';
+    if (isSunday && !temHorario && !obs) return 'Normal (Domingo)';
     
     return 'Normal';
 }
@@ -629,22 +640,33 @@ async function renderEmployeeGrid() {
         
         let status = '', sClass = '';
         const isReduced = await isReducedDay(t);
+        const dow = t.getDay();
         
-        if (isReduced) {
+        // AJUSTE: Domingo é considerado completo automaticamente
+        if (dow === 0) {
+            status = '✅ Domingo (Liberado)';
+            sClass = 'status-complete';
+        } else if (isReduced) {
             if (today.entrada && today.saida) {
-                status = '✅ Completo'; sClass = 'status-complete';
+                status = '✅ Completo';
+                sClass = 'status-complete';
             } else if (today.entrada) {
-                status = '🟡 Aguardando Saída'; sClass = 'status-incomplete';
+                status = '🟡 Aguardando Saída';
+                sClass = 'status-incomplete';
             } else {
-                status = '⚪ Pendente'; sClass = 'status-none';
+                status = '⚪ Pendente';
+                sClass = 'status-none';
             }
         } else {
             if (today.entrada && today.saida_almoco && today.volta_almoco && today.saida) {
-                status = '✅ Completo'; sClass = 'status-complete';
+                status = '✅ Completo';
+                sClass = 'status-complete';
             } else if (today.entrada) {
-                status = '🟡 Andamento'; sClass = 'status-incomplete';
+                status = '🟡 Andamento';
+                sClass = 'status-incomplete';
             } else {
-                status = '⚪ Pendente'; sClass = 'status-none';
+                status = '⚪ Pendente';
+                sClass = 'status-none';
             }
         }
         
@@ -669,7 +691,16 @@ async function renderEmployeeGrid() {
             </div>
             <div class="status-badge ${sClass}">${status}</div>
         `;
-        card.onclick = () => { selectedEmployee = emp; document.getElementById('modalEmployeeName').innerHTML = `👤 ${nome}`; document.getElementById('employeePasswordModal').style.display = 'flex'; };
+        card.onclick = () => {
+            // Se for domingo, não permite bater ponto
+            if (dow === 0) {
+                showMessage('📅 Domingo - dia de descanso, não é necessário bater ponto.', 'warning');
+                return;
+            }
+            selectedEmployee = emp;
+            document.getElementById('modalEmployeeName').innerHTML = `👤 ${nome}`;
+            document.getElementById('employeePasswordModal').style.display = 'flex';
+        };
         grid.appendChild(card);
     }
     
@@ -1149,6 +1180,16 @@ async function validateAndPrint(empId, year, month, isTest) {
             const key = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
             const rec = records[key] || {};
             
+            // AJUSTE: Não considera domingo como pendente
+            if (dow === 0) {
+                continue;
+            }
+            
+            // AJUSTE: Não considera Feriado Desc como pendente
+            if (rec.observacao === 'feriado-descanso') {
+                continue;
+            }
+            
             if (!isDayCompleteForPrint(rec, dow, isHoliday)) {
                 missing.push(`${d}/${month} - ${['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][dow]}`);
             }
@@ -1233,7 +1274,7 @@ async function generatePrint(empId, year, month, isTest) {
         table{width:100%;border-collapse:collapse;font-size:8pt}
         th,td{border:1px solid #000;padding:4px;text-align:center}
         th{background:#f2f2f2}
-        .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:15px 0}
+        .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}
         .summary-box{border:1px solid #000;padding:6px;text-align:center}
         .summary-box-small{font-size:8pt;color:#555;margin-top:2px}
         .signature{display:flex;justify-content:space-between;margin-top:25px}
@@ -1265,8 +1306,6 @@ async function generatePrint(empId, year, month, isTest) {
     </div>
     <div class="summary">
         <div class="summary-box"><strong>Total Horas</strong><br>${minutesToTime(totalHoras)}<div class="summary-box-small">${minutesToDecimal(totalHoras)}h</div></div>
-        <div class="summary-box"><strong>Banco Positivo</strong><br><span class="positive">${minutesToTime(totalBancoPositivo)}</span><div class="summary-box-small">${minutesToDecimal(totalBancoPositivo)}h</div></div>
-        <div class="summary-box"><strong>Banco Negativo</strong><br><span class="negative">${minutesToTime(-totalBancoNegativo)}</span><div class="summary-box-small">${minutesToDecimal(-totalBancoNegativo)}h</div></div>
         <div class="summary-box"><strong>Horas Extras</strong><br><span class="positive">${minutesToTime(totalHorasExtras)}</span><div class="summary-box-small">${minutesToDecimal(totalHorasExtras)}h</div></div>
         <div class="summary-box"><strong>Saldo Final</strong><br><span class="${saldoFinal>=0?'positive':'negative'}">${minutesToTime(saldoFinal)}</span><div class="summary-box-small">${minutesToDecimal(saldoFinal)}h</div></div>
     </div>
@@ -1282,7 +1321,7 @@ async function generatePrint(empId, year, month, isTest) {
     </div>
     <div class="footer">
         Sábados e feriados: jornada reduzida (sem intervalo de almoço)<br>
-        Dias úteis: 8h com 1h de almoço | Banco de horas: até 2h/dia<br>
+        Dias úteis: 8h com 2h de almoço | Banco de horas: até 2h/dia<br>
         Documento eletrônico. * = Alterado pelo Gestor.<br>
         Emitido: ${new Date().toLocaleDateString('pt-BR')}
         ${isTest ? '<br><strong style="color:#f39c12;">IMPRESSÃO TESTE - NÃO VÁLIDA COMO REGISTRO OFICIAL</strong>' : ''}
