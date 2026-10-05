@@ -52,7 +52,6 @@
         .table-wrapper { overflow-x: auto; margin: 12px 0; }
         .timesheet-table { width: 100%; border-collapse: collapse; font-size: 10px; min-width: 750px; }
         .timesheet-table th, .timesheet-table td { border: 1px solid #ddd; padding: 6px 3px; text-align: center; }
-        /* AJUSTE: Aumentei a largura dos campos de hora para visualizar completamente */
         .time-input { width: 80px; text-align: center; font-family: monospace; padding: 4px 6px; border: 1px solid #ddd; border-radius: 6px; font-size: 11px; }
         .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 12px; margin-bottom: 12px; }
         .summary-item { background: white; padding: 8px; border-radius: 12px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 11px; cursor: pointer; transition: transform 0.2s; }
@@ -97,7 +96,6 @@
             .employee-info h3 { font-size: 13px; }
             .status-badge { font-size: 9px; padding: 3px 6px; }
             .summary-grid { grid-template-columns: repeat(2, 1fr); }
-            /* AJUSTE: Em telas pequenas, reduzir a largura dos campos */
             .time-input { width: 65px; font-size: 10px; padding: 3px 4px; }
         }
         
@@ -160,6 +158,18 @@
         <div id="missingDaysList" class="missing-days-list"></div>
         <p style="font-size:11px;">Classifique como Folga, Falta, Atestado ou Férias</p>
         <button onclick="closeValidationModal()" class="warning">OK</button>
+    </div>
+</div>
+
+<!-- Modal para senha de impressão atual -->
+<div id="printPasswordModal" class="modal">
+    <div class="modal-content">
+        <h2>🖨️ Imprimir Atual</h2>
+        <p>Digite a senha para imprimir:</p>
+        <input type="password" id="printPassword" maxlength="4" inputmode="numeric" placeholder="****">
+        <div id="printPasswordError" style="color:#e74c3c; font-size:12px;"></div>
+        <button onclick="verifyPrintPassword()">Confirmar</button>
+        <button onclick="closePrintPasswordModal()" class="danger">Cancelar</button>
     </div>
 </div>
 
@@ -234,6 +244,8 @@
 </div>
 
 <script>
+
+    
 // ==================== SUPABASE ====================
 const SB_URL = 'https://cwtinzjbjffilxuglufw.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3dGluempiamZmaWx4dWdsdWZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MDY1OTgsImV4cCI6MjA5NTk4MjU5OH0.zlPbCUYrEZm3vxxZEosDu5Ym-ljJIWHQjLroi44ZAkU';
@@ -245,6 +257,7 @@ let holidays = [];
 let currentEmployeeIndex = 0;
 let currentMonthYear = '';
 let selectedEmployee = null;
+let pendingPrintData = null; // Armazena dados para impressão atual
 
 function timeToMinutes(t) { if (!t) return 0; const [h,m] = t.split(':').map(Number); return (h * 60) + m; }
 function minutesToTime(min) { 
@@ -269,6 +282,30 @@ function closeValidationModal() { document.getElementById('validationModal').sty
 function closeSqlTestModal() { document.getElementById('sqlTestModal').style.display = 'none'; }
 function closeEmployeeModalGestor() { document.getElementById('employeeModal').style.display = 'none'; }
 function closeLogsModal() { document.getElementById('logsModal').style.display = 'none'; }
+
+// Funções para modal de impressão atual
+function closePrintPasswordModal() {
+    document.getElementById('printPasswordModal').style.display = 'none';
+    document.getElementById('printPassword').value = '';
+    document.getElementById('printPasswordError').textContent = '';
+    pendingPrintData = null;
+}
+
+function verifyPrintPassword() {
+    const pwd = document.getElementById('printPassword').value;
+    if (pwd === '1322') {
+        document.getElementById('printPasswordModal').style.display = 'none';
+        document.getElementById('printPassword').value = '';
+        document.getElementById('printPasswordError').textContent = '';
+        // Executa a impressão atual
+        if (pendingPrintData) {
+            generatePrint(pendingPrintData.empId, pendingPrintData.year, pendingPrintData.month, false);
+            pendingPrintData = null;
+        }
+    } else {
+        document.getElementById('printPasswordError').textContent = 'Senha incorreta!';
+    }
+}
 
 async function getServerTime() {
     try {
@@ -318,7 +355,6 @@ async function loadRecords(empId, month, year) {
     return records;
 }
 
-// Verificar se é dia de jornada reduzida (sábado ou feriado)
 async function isReducedDay(date) {
     const dow = date.getDay();
     const isSaturday = dow === 6;
@@ -327,7 +363,6 @@ async function isReducedDay(date) {
     return isSaturday || isHoliday;
 }
 
-// FUNÇÃO PARA REGISTRAR LOG DO GESTOR
 async function registrarLogGestor(funcionarioId, funcionarioNome, dataAlteracao, campo, valorAntigo, valorNovo) {
     try {
         const logData = {
@@ -357,10 +392,8 @@ async function registrarLogGestor(funcionarioId, funcionarioNome, dataAlteracao,
     }
 }
 
-// FUNÇÃO CORRIGIDA PARA SALVAR REGISTRO (sem erro de duplicate key)
 async function saveRecord(empId, date, field, val, isManager) {
     try {
-        // Primeiro, tentar buscar o registro existente
         let { data: existing, error: selectError } = await sbClient
             .from('registros_ponto')
             .select('*')
@@ -372,7 +405,6 @@ async function saveRecord(empId, date, field, val, isManager) {
         
         const valorAntigo = existing ? existing[field] : null;
         
-        // Se o valor não mudou, não faz nada
         if (valorAntigo === val && existing) {
             return true;
         }
@@ -380,14 +412,12 @@ async function saveRecord(empId, date, field, val, isManager) {
         let saveSuccess = false;
         
         if (existing) {
-            // ATUALIZAR registro existente
             const updateData = {
                 [field]: val || null,
                 marcado_por: isManager ? 'gestor' : 'funcionario',
                 manager_intervention: isManager || existing.manager_intervention
             };
             
-            // Manter os outros campos
             if (field !== 'entrada') updateData.entrada = existing.entrada || null;
             if (field !== 'saida_almoco') updateData.saida_almoco = existing.saida_almoco || null;
             if (field !== 'volta_almoco') updateData.volta_almoco = existing.volta_almoco || null;
@@ -402,7 +432,6 @@ async function saveRecord(empId, date, field, val, isManager) {
             if (updateError) throw updateError;
             saveSuccess = true;
         } else {
-            // INSERIR novo registro
             const insertData = {
                 funcionario_id: empId,
                 data: date,
@@ -425,7 +454,6 @@ async function saveRecord(empId, date, field, val, isManager) {
             saveSuccess = true;
         }
         
-        // Registrar log se foi ação do gestor e houve mudança
         if (saveSuccess && isManager && valorAntigo !== val) {
             const funcionario = employees.find(e => e.id === empId);
             const nomeCampo = {
@@ -459,13 +487,11 @@ async function markClock(employee) {
     const records = await loadRecords(employee.id, t.getMonth()+1, t.getFullYear());
     const today = records[date] || {};
     
-    // Verificar se é dia de jornada reduzida (sábado ou feriado)
     const isReduced = await isReducedDay(t);
     
     let field = '', name = '';
     
     if (isReduced) {
-        // Dias reduzidos: apenas Entrada e Saída
         if (!today.entrada) {
             field = 'entrada';
             name = 'Entrada';
@@ -477,7 +503,6 @@ async function markClock(employee) {
             return;
         }
     } else {
-        // Dias normais: Entrada → Saída Almoço → Volta Almoço → Saída
         if (!today.entrada) {
             field = 'entrada';
             name = 'Entrada';
@@ -509,21 +534,17 @@ function isDayCompleteForPrint(rec, dow, isHoliday) {
     const isSunday = dow === 0;
     const isSpecialDay = isSunday || isSaturday || isHoliday;
     
-    // AJUSTE: Domingo é liberado automaticamente
     if (isSunday) {
         return true;
     }
     
-    // AJUSTE: Feriado Desc é liberado automaticamente
     if (rec.observacao === 'feriado-descanso') {
         return true;
     }
     
-    // Se tem observação que já libera
     const hasObservacao = rec.observacao && ['folga','falta','atestado','ferias','feriado-trabalhado','feriado-descanso'].includes(rec.observacao);
     if (hasObservacao) return true;
     
-    // Verifica se tem todos os horários preenchidos
     if (isSpecialDay) {
         return rec.entrada && rec.saida;
     }
@@ -540,7 +561,6 @@ function calculateWorked(ent, sAlm, vAlm, sai, isReducedDay) {
         if (sMin < eMin) sMin += 1440;
         worked = sMin - eMin;
         
-        // Só subtrai almoço se NÃO for dia reduzido
         if (!isReducedDay && sAlm && vAlm) {
             let outMin = timeToMinutes(sAlm);
             let inMin = timeToMinutes(vAlm);
@@ -555,7 +575,6 @@ function calculateWorked(ent, sAlm, vAlm, sai, isReducedDay) {
 }
 
 function calculateDayBalance(worked, dow, isHoliday, obs) {
-    // AJUSTE: Falta tem saldo zero
     if (obs === 'falta') {
         return { balance: 0, bank: 0, extra: 0 };
     }
@@ -564,7 +583,6 @@ function calculateDayBalance(worked, dow, isHoliday, obs) {
         return { balance: 0, bank: 0, extra: 0 };
     }
     
-    // Domingos e feriados não geram saldo
     if (dow === 0 || isHoliday) {
         return { balance: 0, bank: 0, extra: 0 };
     }
@@ -620,7 +638,6 @@ async function renderEmployeeGrid() {
     const t = await getServerTime();
     const todayKey = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
     
-    // Mostrar informação sobre o tipo de dia atual
     const isTodayReduced = await isReducedDay(t);
     const dayTypeInfo = document.getElementById('dayTypeInfo');
     if (isTodayReduced) {
@@ -645,7 +662,6 @@ async function renderEmployeeGrid() {
         const isReduced = await isReducedDay(t);
         const dow = t.getDay();
         
-        // AJUSTE: Domingo é considerado completo automaticamente
         if (dow === 0) {
             status = '✅ Domingo (Liberado)';
             sClass = 'status-complete';
@@ -695,7 +711,6 @@ async function renderEmployeeGrid() {
             <div class="status-badge ${sClass}">${status}</div>
         `;
         card.onclick = () => {
-            // Se for domingo, não permite bater ponto
             if (dow === 0) {
                 showMessage('📅 Domingo - dia de descanso, não é necessário bater ponto.', 'warning');
                 return;
@@ -730,7 +745,6 @@ function closeEmployeeModal() {
     document.getElementById('employeePasswordError').textContent = '';
 }
 
-// FUNÇÃO PARA BUSCAR LOGS DO GESTOR
 async function loadGestorLogs(empId, year, month) {
     const startDate = `${year}-${String(month).padStart(2,'0')}-01`;
     const endDate = `${year}-${String(month).padStart(2,'0')}-${new Date(year, month, 0).getDate()}`;
@@ -774,7 +788,6 @@ async function showLogsModal(empId, year, month) {
     document.getElementById('logsModal').style.display = 'flex';
 }
 
-// ==================== GESTOR ====================
 function showManagerModal() {
     document.getElementById('fakeManagerModal').style.display = 'flex';
     document.getElementById('managerPassword').value = '';
@@ -1050,7 +1063,6 @@ async function renderTabContent(idx) {
         else if (dow === 6) rowClass = 'saturday-row';
         if (isHoliday) rowClass = 'holiday-row';
         
-        // Para dias reduzidos, desabilitar campos de almoço
         const almocoDisabled = isReduced ? 'disabled' : '';
         const almocoStyle = isReduced ? 'background:#f5f5f5;' : '';
         
@@ -1135,9 +1147,19 @@ async function renderTabContent(idx) {
     </div>
     <div class="print-btn-container">
         <button onclick="validateAndPrint('${emp.id}',${year},${month}, false)" class="success" style="width:auto; padding:8px 20px;">🖨️ Imprimir</button>
+        <button onclick="requestPrintAtual('${emp.id}',${year},${month})" class="warning" style="width:auto; padding:8px 20px;">🖨️ Imprimir Atual</button>
     </div>`;
     
     document.getElementById('tabContent').innerHTML = html;
+}
+
+// Função para solicitar impressão atual (pede senha)
+function requestPrintAtual(empId, year, month) {
+    pendingPrintData = { empId, year, month };
+    document.getElementById('printPasswordModal').style.display = 'flex';
+    document.getElementById('printPassword').value = '';
+    document.getElementById('printPasswordError').textContent = '';
+    document.getElementById('printPassword').focus();
 }
 
 window.saveField = async function(idx, day, field) {
@@ -1183,12 +1205,10 @@ async function validateAndPrint(empId, year, month, isTest) {
             const key = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
             const rec = records[key] || {};
             
-            // AJUSTE: Não considera domingo como pendente
             if (dow === 0) {
                 continue;
             }
             
-            // AJUSTE: Não considera Feriado Desc como pendente
             if (rec.observacao === 'feriado-descanso') {
                 continue;
             }
@@ -1445,7 +1465,6 @@ async function testDatabaseConnection() {
     }
 }
 
-// SQL para criar a tabela de logs
 async function criarTabelaLogs() {
     const sql = `
     CREATE TABLE IF NOT EXISTS logs_gestor (
@@ -1496,7 +1515,6 @@ setInterval(async () => {
         const elem = document.getElementById('currentDateTime');
         if (elem) elem.innerHTML = now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
         
-        // Atualizar info do dia a cada minuto
         if (document.getElementById('dayTypeInfo')) {
             const t = new Date();
             const isTodayReduced = await isReducedDay(t);
@@ -1512,7 +1530,7 @@ setInterval(async () => {
             }
         }
     }
-}, 60000); // Atualizar a cada minuto
+}, 60000);
 
 criarTabelaLogs();
 renderEmployeeGrid();
