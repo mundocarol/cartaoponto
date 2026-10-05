@@ -68,6 +68,7 @@
         .sunday-row { background-color: #ffebee; }
         .saturday-row { background-color: #e3f2fd; }
         .holiday-row { background-color: #fff8e1; }
+        .nao-trabalhava-row { background-color: #f0f0f0; opacity: 0.7; }
         .jornada-edit { background: #e8f4fd; padding: 10px; border-radius: 14px; margin-bottom: 12px; }
         .jornada-edit h4 { font-size: 12px; margin-bottom: 6px; }
         .print-btn-container { text-align: center; margin: 12px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
@@ -89,6 +90,159 @@
         .log-new { color: #27ae60; font-weight: bold; }
         
         .info-message { background: #e8f4fd; padding: 10px; border-radius: 12px; margin-bottom: 12px; font-size: 11px; color: #2c3e50; text-align: center; }
+        
+        /* ============================================
+           TELA DE BLOQUEIO MOBILE
+           ============================================ */
+        .mobile-block {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%);
+            color: white;
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 24px;
+            text-align: center;
+        }
+        .mobile-block.show { display: flex; }
+        .mobile-block-content { max-width: 420px; }
+        .mobile-block .icon {
+            font-size: 72px;
+            margin-bottom: 24px;
+            display: block;
+        }
+        .mobile-block h1 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+        .mobile-block p {
+            font-size: 15px;
+            line-height: 1.7;
+            opacity: 0.95;
+            margin-bottom: 14px;
+        }
+        .mobile-block .alert-box {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            padding: 18px;
+            border-radius: 14px;
+            margin: 24px 0;
+            font-size: 13px;
+            line-height: 1.6;
+            text-align: left;
+        }
+        .mobile-block .alert-box strong {
+            color: #fca5a5;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .mobile-block .divider {
+            width: 60px;
+            height: 3px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            margin: 24px auto;
+        }
+
+        /* ============================================
+           TELA DE SENHA DO DISPOSITIVO
+           ============================================ */
+        .device-lock {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            z-index: 99998;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .device-lock.show { display: flex; }
+        .device-lock-box {
+            background: white;
+            color: #1e293b;
+            padding: 40px 32px;
+            border-radius: 20px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+        }
+        .device-lock-box .icon {
+            width: 72px; height: 72px;
+            border-radius: 20px;
+            background: #eff6ff; color: #1d4ed8;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .device-lock-box h2 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #0f172a;
+            letter-spacing: -0.3px;
+        }
+        .device-lock-box p {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        .device-lock-box input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #d1d9e3;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            background: white;
+            color: #0f172a;
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+        .device-lock-box input:focus {
+            outline: none;
+            border-color: #1d4ed8;
+            box-shadow: 0 0 0 3px rgba(29,78,216,0.1);
+        }
+        .device-lock-box button {
+            width: 100%;
+            padding: 14px;
+            background: #1d4ed8;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.18s;
+        }
+        .device-lock-box button:hover {
+            background: #1e40af;
+        }
+        .device-lock-error {
+            color: #b91c1c;
+            font-size: 13px;
+            margin-top: 14px;
+            display: none;
+        }
+        .device-lock-error.show { display: block; }
+        .device-lock-footer {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+            line-height: 1.6;
+        }
         
         @media (max-width: 480px) {
             body { padding: 8px; }
@@ -117,9 +271,84 @@
             border-color: #e74c3c !important;
             background-color: #ffe6e6 !important;
         }
+
+        /* Estilo do botão X para "Não Trabalhava" */
+        .btn-nao-trabalhava {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            border: 1px solid #bdc3c7;
+            background: #ecf0f1;
+            color: #7f8c8d;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+        .btn-nao-trabalhava:hover {
+            background: #dfe6e9;
+        }
+        .btn-nao-trabalhava.active {
+            background: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+        }
+        .btn-nao-trabalhava.active:hover {
+            background: #c0392b;
+        }
     </style>
 </head>
 <body>
+
+<!-- ============================================
+     BLOQUEIO DE CELULAR
+     ============================================ -->
+<div id="mobileBlock" class="mobile-block">
+    <div class="mobile-block-content">
+        <span class="icon">🚫</span>
+        <h1>Acesso não permitido</h1>
+        <p>Este sistema foi projetado para uso <strong>exclusivo em computadores</strong> dentro das dependências da empresa.</p>
+
+        <div class="alert-box">
+            <strong>⚠️ AVISO IMPORTANTE</strong>
+            Marcar ponto ou realizar qualquer ajuste <strong>fora do local de trabalho</strong> será considerado <strong>FRAUDE</strong>, sujeito às penalidades previstas em lei e no regulamento interno da empresa.
+        </div>
+
+        <p>Utilize um computador autorizado dentro da empresa para acessar o sistema.</p>
+
+        <div class="divider"></div>
+        <p style="font-size: 12px; opacity: 0.7;">🔒 Mundo Carol · Ponto Eletrônico</p>
+    </div>
+</div>
+
+<!-- ============================================
+     TRAVA DO DISPOSITIVO (SENHA ÚNICA POR PC)
+     ============================================ -->
+<div id="deviceLock" class="device-lock">
+    <div class="device-lock-box">
+        <div class="icon">🔒</div>
+        <h2>Acesso Restrito</h2>
+        <p>Este computador ainda não foi autorizado. Digite a senha de liberação.</p>
+        <input type="password" id="devicePassword" placeholder="••••••••" autocomplete="off" autofocus>
+        <button onclick="verifyDevicePassword()">Desbloquear</button>
+        <div class="device-lock-error" id="deviceError">Senha incorreta. Tente novamente.</div>
+        <div class="device-lock-footer">
+            🔐 Após a primeira liberação, este computador não pedirá senha novamente.<br>
+            Uso restrito ao ambiente da empresa.
+        </div>
+    </div>
+</div>
+
+<!-- ============================================
+     APP PRINCIPAL (só aparece depois de validar)
+     ============================================ -->
+<div id="appRoot" style="display:none">
 
 <div id="clockScreen" class="clock-screen">
     <div class="clock-header">
@@ -161,7 +390,6 @@
     </div>
 </div>
 
-<!-- Modal para senha de impressão atual -->
 <div id="printPasswordModal" class="modal">
     <div class="modal-content">
         <h2>🖨️ Imprimir Atual</h2>
@@ -226,7 +454,6 @@
     </div>
 </div>
 
-<!-- Modal de Funcionário -->
 <div id="employeeModal" class="modal">
     <div class="modal-content" style="max-width: 450px;">
         <h2 id="employeeModalTitle">Novo Funcionário</h2>
@@ -234,7 +461,6 @@
     </div>
 </div>
 
-<!-- Modal de Teste SQL -->
 <div id="sqlTestModal" class="modal">
     <div class="modal-content sql-modal-content">
         <h2>🔧 Teste de Banco de Dados</h2>
@@ -243,9 +469,123 @@
     </div>
 </div>
 
+</div><!-- /appRoot -->
+
 <script>
 
-    
+/* ============================================================
+   BLOQUEIO MOBILE + TRAVA DE DISPOSITIVO
+   ============================================================ */
+
+/* Senha única do dispositivo */
+const DEVICE_PASSWORD = 'dan8301';
+const DEVICE_STORAGE_KEY = 'mundoCarol_device_unlocked';
+
+/* Detecta se é mobile */
+function isMobileDevice() {
+    // userAgent
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const uaMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+
+    // Tamanho da tela
+    const smallScreen = window.innerWidth < 900;
+
+    // Touch
+    const isTouch = ('ontouchstart' in window) && (navigator.maxTouchPoints > 0);
+
+    // Considera mobile se UA indicar mobile OU se a tela for pequena e tiver touch
+    return uaMobile || (smallScreen && isTouch);
+}
+
+/* Verifica se este dispositivo já foi liberado */
+function isDeviceUnlocked() {
+    try {
+        return localStorage.getItem(DEVICE_STORAGE_KEY) === 'yes';
+    } catch (e) {
+        return false;
+    }
+}
+
+/* Marca dispositivo como liberado */
+function unlockDevice() {
+    try {
+        localStorage.setItem(DEVICE_STORAGE_KEY, 'yes');
+    } catch (e) {
+        console.warn('Não foi possível salvar no localStorage', e);
+    }
+}
+
+/* Verifica a senha digitada */
+function verifyDevicePassword() {
+    const input = document.getElementById('devicePassword');
+    const err = document.getElementById('deviceError');
+    if (!input) return;
+
+    if (input.value === DEVICE_PASSWORD) {
+        unlockDevice();
+        document.getElementById('deviceLock').classList.remove('show');
+        iniciarApp();
+    } else {
+        err.classList.add('show');
+        input.value = '';
+        input.focus();
+        setTimeout(() => err.classList.remove('show'), 3000);
+    }
+}
+
+/* Enter no campo de senha */
+document.addEventListener('DOMContentLoaded', () => {
+    const inp = document.getElementById('devicePassword');
+    if (inp) {
+        inp.addEventListener('keypress', e => {
+            if (e.key === 'Enter') verifyDevicePassword();
+        });
+    }
+});
+
+/* Inicializa o app depois das validações */
+function iniciarApp() {
+    const appRoot = document.getElementById('appRoot');
+    if (appRoot) appRoot.style.display = 'block';
+
+    // Chama o bootstrap original
+    if (typeof bootstrapApp === 'function') {
+        bootstrapApp();
+    }
+}
+
+/* Validação principal ao carregar */
+(function validarAcesso() {
+    const mobileBlock = document.getElementById('mobileBlock');
+    const deviceLock = document.getElementById('deviceLock');
+
+    // 1) Se for mobile → bloqueia
+    if (isMobileDevice()) {
+        mobileBlock.classList.add('show');
+        return;
+    }
+
+    // 2) Se não for mobile mas dispositivo não liberado → pede senha
+    if (!isDeviceUnlocked()) {
+        deviceLock.classList.add('show');
+        // Foca no input depois de um tempo
+        setTimeout(() => {
+            const inp = document.getElementById('devicePassword');
+            if (inp) inp.focus();
+        }, 200);
+        return;
+    }
+
+    // 3) Dispositivo OK → inicia o app
+    iniciarApp();
+})();
+
+/* ============================================================
+   FIM DO BLOQUEIO
+   ============================================================ */
+
+
+
 // ==================== SUPABASE ====================
 const SB_URL = 'https://cwtinzjbjffilxuglufw.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3dGluempiamZmaWx4dWdsdWZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MDY1OTgsImV4cCI6MjA5NTk4MjU5OH0.zlPbCUYrEZm3vxxZEosDu5Ym-ljJIWHQjLroi44ZAkU';
@@ -257,7 +597,7 @@ let holidays = [];
 let currentEmployeeIndex = 0;
 let currentMonthYear = '';
 let selectedEmployee = null;
-let pendingPrintData = null; // Armazena dados para impressão atual
+let pendingPrintData = null;
 
 function timeToMinutes(t) { if (!t) return 0; const [h,m] = t.split(':').map(Number); return (h * 60) + m; }
 function minutesToTime(min) { 
@@ -283,7 +623,6 @@ function closeSqlTestModal() { document.getElementById('sqlTestModal').style.dis
 function closeEmployeeModalGestor() { document.getElementById('employeeModal').style.display = 'none'; }
 function closeLogsModal() { document.getElementById('logsModal').style.display = 'none'; }
 
-// Funções para modal de impressão atual
 function closePrintPasswordModal() {
     document.getElementById('printPasswordModal').style.display = 'none';
     document.getElementById('printPassword').value = '';
@@ -297,7 +636,6 @@ function verifyPrintPassword() {
         document.getElementById('printPasswordModal').style.display = 'none';
         document.getElementById('printPassword').value = '';
         document.getElementById('printPasswordError').textContent = '';
-        // Executa a impressão atual
         if (pendingPrintData) {
             generatePrint(pendingPrintData.empId, pendingPrintData.year, pendingPrintData.month, false);
             pendingPrintData = null;
@@ -534,6 +872,11 @@ function isDayCompleteForPrint(rec, dow, isHoliday) {
     const isSunday = dow === 0;
     const isSpecialDay = isSunday || isSaturday || isHoliday;
     
+    // ✨ Se marcado como "Não Trabalhava", ignora validação
+    if (rec.observacao === 'nao-trabalhava') {
+        return true;
+    }
+    
     if (isSunday) {
         return true;
     }
@@ -575,6 +918,11 @@ function calculateWorked(ent, sAlm, vAlm, sai, isReducedDay) {
 }
 
 function calculateDayBalance(worked, dow, isHoliday, obs) {
+    // ✨ Não trabalava na empresa → zera tudo
+    if (obs === 'nao-trabalhava') {
+        return { balance: 0, bank: 0, extra: 0 };
+    }
+    
     if (obs === 'falta') {
         return { balance: 0, bank: 0, extra: 0 };
     }
@@ -613,6 +961,9 @@ function calculateDayBalance(worked, dow, isHoliday, obs) {
 function getObservationText(rec, dow, isHoliday, temHorario) {
     const obs = rec.observacao;
     const isSunday = dow === 0;
+    
+    // ✨ Não trabalhava → aparece como "—"
+    if (obs === 'nao-trabalhava') return '—';
     
     if (obs === 'folga') return 'Folga';
     if (obs === 'falta') return 'Falta';
@@ -1031,7 +1382,7 @@ async function renderTabContent(idx) {
             <div><strong>Seg-Sex:</strong> ${emp.jornada_seg_sex_entrada || '--:--'} às ${emp.jornada_seg_sex_saida || '--:--'} (8h/dia)</div>
             <div><strong>Sábado:</strong> ${emp.jornada_sabado_entrada || '--:--'} às ${emp.jornada_sabado_saida || '--:--'} (4h/dia - sem almoço)</div>
         </div>
-        <small style="color:#666;">* Sábado: base 4h sem intervalo | Segunda a Sexta: base 8h com 2h almoço | Banco de horas: até 2h/dia</small>
+        <small style="color:#666;">* Sábado: base 4h sem intervalo | Segunda a Sexta: base 8h com 2h almoço | Banco de horas: até 2h/dia | Marque com ✕ os dias que o funcionário não trabalhava (antes da admissão, etc)</small>
     </div><div class="table-wrapper"><table class="timesheet-table"><thead><tr><th>Data</th><th>Dia</th><th>Ent</th><th>Sai Alm</th><th>Vol Alm</th><th>Sai</th><th>H.T.</th><th>Saldo</th><th>Obs</th></tr></thead><tbody>`;
     
     for (let d = 1; d <= days; d++) {
@@ -1059,12 +1410,15 @@ async function renderTabContent(idx) {
         const obsText = getObservationText({...rec, observacao: obsVal}, dow, isHoliday, temHorario);
         
         let rowClass = '';
-        if (dow === 0) rowClass = 'sunday-row';
+        if (obsVal === 'nao-trabalhava') rowClass = 'nao-trabalhava-row';
+        else if (dow === 0) rowClass = 'sunday-row';
         else if (dow === 6) rowClass = 'saturday-row';
         if (isHoliday) rowClass = 'holiday-row';
         
         const almocoDisabled = isReduced ? 'disabled' : '';
         const almocoStyle = isReduced ? 'background:#f5f5f5;' : '';
+        
+        const isNaoTrabalhava = obsVal === 'nao-trabalhava';
         
         html += `<tr class="${rowClass}">
             <td>${String(d).padStart(2,'0')}/${String(month).padStart(2,'0')}</td>
@@ -1075,16 +1429,26 @@ async function renderTabContent(idx) {
             <td><input type="time" class="time-input" id="saida-${idx}-${d}" value="${rec.saida || ''}" onchange="saveField(${idx},${d},'saida')"></td>
             <td>${minutesToTime(worked)}</td>
             <td class="${balance >= 0 ? 'positive' : 'negative'}">${minutesToTime(balance)}</td>
-            <td><select id="obs-${idx}-${d}" onchange="saveObs(${idx},${d})" style="font-size:9px; padding:3px;">
-                <option value="" ${!obsVal ? 'selected' : ''}>Normal</option>
-                <option value="folga" ${obsVal === 'folga' ? 'selected' : ''}>Folga</option>
-                <option value="falta" ${obsVal === 'falta' ? 'selected' : ''}>Falta</option>
-                <option value="atestado" ${obsVal === 'atestado' ? 'selected' : ''}>Atestado</option>
-                <option value="ferias" ${obsVal === 'ferias' ? 'selected' : ''}>Férias</option>
-                <option value="feriado-trabalhado" ${obsVal === 'feriado-trabalhado' ? 'selected' : ''}>Feriado Trab</option>
-                <option value="feriado-descanso" ${obsVal === 'feriado-descanso' ? 'selected' : ''}>Feriado Desc</option>
-                <option value="domingo-trabalhado" ${obsVal === 'domingo-trabalhado' ? 'selected' : ''}>Domingo Trab</option>
-            </select></td>
+            <td>
+                <div style="display:flex; gap:4px; align-items:center; justify-content:center;">
+                    <select id="obs-${idx}-${d}" onchange="saveObs(${idx},${d})" style="font-size:9px; padding:3px; flex:1; min-width:70px;">
+                        <option value="" ${!obsVal ? 'selected' : ''}>Normal</option>
+                        <option value="folga" ${obsVal === 'folga' ? 'selected' : ''}>Folga</option>
+                        <option value="falta" ${obsVal === 'falta' ? 'selected' : ''}>Falta</option>
+                        <option value="atestado" ${obsVal === 'atestado' ? 'selected' : ''}>Atestado</option>
+                        <option value="ferias" ${obsVal === 'ferias' ? 'selected' : ''}>Férias</option>
+                        <option value="feriado-trabalhado" ${obsVal === 'feriado-trabalhado' ? 'selected' : ''}>Feriado Trab</option>
+                        <option value="feriado-descanso" ${obsVal === 'feriado-descanso' ? 'selected' : ''}>Feriado Desc</option>
+                        <option value="domingo-trabalhado" ${obsVal === 'domingo-trabalhado' ? 'selected' : ''}>Domingo Trab</option>
+                        <option value="nao-trabalhava" ${obsVal === 'nao-trabalhava' ? 'selected' : ''}>Não Trabalhava</option>
+                    </select>
+                    <button 
+                        onclick="toggleNaoTrabalhava(${idx},${d})" 
+                        class="btn-nao-trabalhava ${isNaoTrabalhava ? 'active' : ''}"
+                        title="${isNaoTrabalhava ? 'Remover marcação (funcionário trabalhava neste dia)' : 'Marcar como dia sem trabalho (antes da admissão, etc)'}"
+                    >✕</button>
+                </div>
+            </td>
         </tr>`;
     }
     
@@ -1153,7 +1517,26 @@ async function renderTabContent(idx) {
     document.getElementById('tabContent').innerHTML = html;
 }
 
-// Função para solicitar impressão atual (pede senha)
+window.toggleNaoTrabalhava = async function(idx, day) {
+    const emp = employees[idx];
+    const [year, month] = currentMonthYear.split('-').map(Number);
+    const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const selectEl = document.getElementById(`obs-${idx}-${day}`);
+    const valorAtual = selectEl ? selectEl.value : '';
+    
+    const novoValor = (valorAtual === 'nao-trabalhava') ? '' : 'nao-trabalhava';
+    
+    const success = await saveRecord(emp.id, dateKey, 'observacao', novoValor, true);
+    if (success) {
+        await renderTabContent(idx);
+        if (novoValor === 'nao-trabalhava') {
+            showMessage(`✅ Dia ${day} marcado como "Não Trabalhava"`, 'success');
+        } else {
+            showMessage(`✅ Marcação removida do dia ${day}`, 'success');
+        }
+    }
+};
+
 function requestPrintAtual(empId, year, month) {
     pendingPrintData = { empId, year, month };
     document.getElementById('printPasswordModal').style.display = 'flex';
@@ -1210,6 +1593,10 @@ async function validateAndPrint(empId, year, month, isTest) {
             }
             
             if (rec.observacao === 'feriado-descanso') {
+                continue;
+            }
+            
+            if (rec.observacao === 'nao-trabalhava') {
                 continue;
             }
             
@@ -1482,58 +1869,63 @@ async function criarTabelaLogs() {
     console.log('Para criar a tabela de logs, execute o SQL acima no Supabase SQL Editor');
 }
 
-// Event Listeners
-document.getElementById('managementBtn')?.addEventListener('click', showManagerModal);
-document.getElementById('backToClockBtn')?.addEventListener('click', backToClock);
-document.getElementById('updateMonthBtn')?.addEventListener('click', async () => { 
-    currentMonthYear = document.getElementById('monthYear').value; 
-    await renderTabContent(currentEmployeeIndex); 
-});
-document.getElementById('addHolidayBtn')?.addEventListener('click', addHoliday);
-document.getElementById('testPrintBtn')?.addEventListener('click', async () => {
-    if (employees.length > 0 && currentMonthYear) {
-        const [year, month] = currentMonthYear.split('-').map(Number);
-        await validateAndPrint(employees[currentEmployeeIndex]?.id, year, month, true);
-    } else {
-        showMessage('❌ Selecione um funcionário e mês primeiro', 'error');
-    }
-});
-document.getElementById('testConnectionBtn')?.addEventListener('click', testDatabaseConnection);
-document.getElementById('addEmployeeBtn')?.addEventListener('click', showEmployeeManager);
+/* ============================================================
+   BOOTSTRAP DO APP (chamado depois das validações)
+   ============================================================ */
+function bootstrapApp() {
+    // Event Listeners
+    document.getElementById('managementBtn')?.addEventListener('click', showManagerModal);
+    document.getElementById('backToClockBtn')?.addEventListener('click', backToClock);
+    document.getElementById('updateMonthBtn')?.addEventListener('click', async () => { 
+        currentMonthYear = document.getElementById('monthYear').value; 
+        await renderTabContent(currentEmployeeIndex); 
+    });
+    document.getElementById('addHolidayBtn')?.addEventListener('click', addHoliday);
+    document.getElementById('testPrintBtn')?.addEventListener('click', async () => {
+        if (employees.length > 0 && currentMonthYear) {
+            const [year, month] = currentMonthYear.split('-').map(Number);
+            await validateAndPrint(employees[currentEmployeeIndex]?.id, year, month, true);
+        } else {
+            showMessage('❌ Selecione um funcionário e mês primeiro', 'error');
+        }
+    });
+    document.getElementById('testConnectionBtn')?.addEventListener('click', testDatabaseConnection);
+    document.getElementById('addEmployeeBtn')?.addEventListener('click', showEmployeeManager);
 
-let holidayVisible = false;
-document.getElementById('toggleHolidayBtn')?.addEventListener('click', () => {
-    const section = document.getElementById('holidaySection');
-    holidayVisible = !holidayVisible;
-    section.style.display = holidayVisible ? 'block' : 'none';
-});
+    let holidayVisible = false;
+    document.getElementById('toggleHolidayBtn')?.addEventListener('click', () => {
+        const section = document.getElementById('holidaySection');
+        holidayVisible = !holidayVisible;
+        section.style.display = holidayVisible ? 'block' : 'none';
+    });
 
-setInterval(async () => {
-    const cs = document.getElementById('clockScreen');
-    if (cs && cs.style.display !== 'none') {
-        const now = await getServerTime();
-        const elem = document.getElementById('currentDateTime');
-        if (elem) elem.innerHTML = now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-        
-        if (document.getElementById('dayTypeInfo')) {
-            const t = new Date();
-            const isTodayReduced = await isReducedDay(t);
-            const dayTypeInfo = document.getElementById('dayTypeInfo');
-            if (isTodayReduced) {
-                dayTypeInfo.innerHTML = '📌 <strong>Hoje é dia de jornada reduzida!</strong> (Sábado ou Feriado) - Apenas <strong>Entrada</strong> e <strong>Saída</strong> serão registrados.';
-                dayTypeInfo.style.background = '#fff3e0';
-                dayTypeInfo.style.color = '#e67e22';
-            } else {
-                dayTypeInfo.innerHTML = '📌 <strong>Dia útil normal</strong> - Registre: Entrada → Saída Almoço → Volta Almoço → Saída';
-                dayTypeInfo.style.background = '#e8f4fd';
-                dayTypeInfo.style.color = '#2980b9';
+    setInterval(async () => {
+        const cs = document.getElementById('clockScreen');
+        if (cs && cs.style.display !== 'none') {
+            const now = await getServerTime();
+            const elem = document.getElementById('currentDateTime');
+            if (elem) elem.innerHTML = now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+            
+            if (document.getElementById('dayTypeInfo')) {
+                const t = new Date();
+                const isTodayReduced = await isReducedDay(t);
+                const dayTypeInfo = document.getElementById('dayTypeInfo');
+                if (isTodayReduced) {
+                    dayTypeInfo.innerHTML = '📌 <strong>Hoje é dia de jornada reduzida!</strong> (Sábado ou Feriado) - Apenas <strong>Entrada</strong> e <strong>Saída</strong> serão registrados.';
+                    dayTypeInfo.style.background = '#fff3e0';
+                    dayTypeInfo.style.color = '#e67e22';
+                } else {
+                    dayTypeInfo.innerHTML = '📌 <strong>Dia útil normal</strong> - Registre: Entrada → Saída Almoço → Volta Almoço → Saída';
+                    dayTypeInfo.style.background = '#e8f4fd';
+                    dayTypeInfo.style.color = '#2980b9';
+                }
             }
         }
-    }
-}, 60000);
+    }, 60000);
 
-criarTabelaLogs();
-renderEmployeeGrid();
+    criarTabelaLogs();
+    renderEmployeeGrid();
+}
 </script>
 </body>
 </html>
