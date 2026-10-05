@@ -389,12 +389,8 @@
 
 /* ============================================================
    SISTEMA DE VERSÃO — LIMPA CACHE AUTOMATICAMENTE
-   ============================================================
-   Altere APP_VERSION a cada modificação do código.
-   Isso força o navegador a limpar tudo (exceto a senha do
-   dispositivo que fica salva no localStorage).
    ============================================================ */
-const APP_VERSION = 'v2.0';
+const APP_VERSION = 'v2.1';
 const VERSION_KEY = 'mundoCarol_app_version';
 
 function verificarVersao() {
@@ -403,19 +399,15 @@ function verificarVersao() {
         if (versaoSalva !== APP_VERSION) {
             console.log(`🔄 Atualizando de "${versaoSalva || 'nenhuma'}" para "${APP_VERSION}"`);
 
-            // Preserva a senha do dispositivo
             const senhaDispositivo = localStorage.getItem('mundoCarol_device_unlocked');
 
-            // Limpa tudo
             sessionStorage.clear();
             localStorage.clear();
 
-            // Restaura a senha
             if (senhaDispositivo) {
                 localStorage.setItem('mundoCarol_device_unlocked', senhaDispositivo);
             }
 
-            // Marca nova versão
             localStorage.setItem(VERSION_KEY, APP_VERSION);
 
             console.log('✅ Cache limpo. Recarregando...');
@@ -468,7 +460,6 @@ function verifyDevicePassword() {
     if (input.value === DEVICE_PASSWORD) {
         unlockDevice();
         document.getElementById('deviceLock').classList.remove('show');
-        // Aguarda o resto do script carregar antes de iniciar
         setTimeout(() => iniciarApp(), 100);
     } else {
         err.classList.add('show');
@@ -485,24 +476,21 @@ document.addEventListener('keypress', (e) => {
 });
 
 /* ============================================================
-   INICIALIZAÇÃO BLINDADA DO APP
+   INICIALIZAÇÃO BLINDADA
    ============================================================ */
 function iniciarApp() {
-    // Proteção 1: Supabase carregado?
     if (typeof sbClient === 'undefined' || sbClient === null) {
         console.log('⏳ Aguardando Supabase...');
         setTimeout(iniciarApp, 100);
         return;
     }
 
-    // Proteção 2: bootstrapApp definida?
     if (typeof bootstrapApp !== 'function') {
         console.log('⏳ Aguardando bootstrapApp...');
         setTimeout(iniciarApp, 100);
         return;
     }
 
-    // Tudo pronto → inicia
     const appRoot = document.getElementById('appRoot');
     if (appRoot) appRoot.style.display = 'block';
 
@@ -513,19 +501,16 @@ function iniciarApp() {
    VALIDAÇÃO DE ACESSO
    ============================================================ */
 window.addEventListener('DOMContentLoaded', () => {
-    // 1) Verifica versão — se mudou, limpa e recarrega
     if (verificarVersao()) return;
 
     const mobileBlock = document.getElementById('mobileBlock');
     const deviceLock = document.getElementById('deviceLock');
 
-    // 2) É mobile? → bloqueia
     if (isMobileDevice()) {
         mobileBlock.classList.add('show');
         return;
     }
 
-    // 3) Dispositivo não autorizado? → pede senha
     if (!isDeviceUnlocked()) {
         deviceLock.classList.add('show');
         setTimeout(() => {
@@ -535,7 +520,6 @@ window.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // 4) Tudo OK → inicia
     setTimeout(() => iniciarApp(), 50);
 });
 
@@ -807,13 +791,7 @@ async function markClock(employee) {
 }
 
 /* ============================================================
-   VALIDAÇÃO INTELIGENTE DE IMPRESSÃO
-   ============================================================
-   ✅ Aceita: entrada + saida (sem almoço)
-   ✅ Aceita: entrada + saida_almoco + volta_almoco + saida
-   ✅ Aceita: observação especial (folga, falta, etc)
-   ✅ Aceita: domingo, feriado descanso
-   ❌ Rejeita: entrada + saida_almoco SEM volta_almoco E sem saida
+   VALIDAÇÃO DE IMPRESSÃO
    ============================================================ */
 function validarDiaParaImpressao(rec, dow, isHoliday) {
     if (!rec || Object.keys(rec).length === 0) {
@@ -874,7 +852,16 @@ function calculateWorked(ent, sAlm, vAlm, sai) {
     return Math.max(0, worked);
 }
 
+/* ============================================================
+   CÁLCULO DO SALDO DIÁRIO
+   ============================================================
+   Regras:
+   - Sábado: base 4h (positivo/negativo normal)
+   - Feriado trabalhado: base 8h, NUNCA negativo (só conta excedente)
+   - Seg-Sex: base 8h (positivo/negativo normal)
+   ============================================================ */
 function calculateDayBalance(worked, dow, isHoliday, obs) {
+    // Não trabalava na empresa → zera tudo
     if (obs === 'nao-trabalhava') {
         return { balance: 0, bank: 0, extra: 0 };
     }
@@ -887,15 +874,49 @@ function calculateDayBalance(worked, dow, isHoliday, obs) {
         return { balance: 0, bank: 0, extra: 0 };
     }
     
+    // Domingo → zera
     if (dow === 0) {
         return { balance: 0, bank: 0, extra: 0 };
     }
     
+    // Feriado sem horário (descanso) → zera
     if (isHoliday && obs === 'feriado-descanso') {
         return { balance: 0, bank: 0, extra: 0 };
     }
     
-    let baseHour = (dow === 6 || isHoliday) ? 360 : 480;
+    // ============================================================
+    // FERIADO TRABALHADO → base 8h (480min), NUNCA negativo
+    // Só conta o que passar de 8h
+    // ============================================================
+    if (isHoliday) {
+        const baseFeriado = 480; // 8h
+        let diff = worked - baseFeriado;
+        
+        // Se trabalhou menos que 8h → saldo ZERO (não fica negativo)
+        if (diff <= 0) {
+            return { balance: 0, bank: 0, extra: 0 };
+        }
+        
+        // Passou de 8h → conta o excedente
+        let bank = 0;
+        let extra = 0;
+        
+        if (diff <= 120) {
+            bank = diff;
+            extra = 0;
+        } else {
+            bank = 120;
+            extra = diff - 120;
+        }
+        
+        return { balance: diff, bank: bank, extra: extra };
+    }
+    
+    // ============================================================
+    // SÁBADO → base 4h (240min), cálculo normal
+    // Seg-Sex → base 8h (480min), cálculo normal
+    // ============================================================
+    let baseHour = (dow === 6) ? 240 : 480;
     let diff = worked - baseHour;
     
     let bank = 0;
@@ -952,7 +973,7 @@ async function renderEmployeeGrid() {
     const dayTypeInfo = document.getElementById('dayTypeInfo');
     if (isTodayReduced) {
         dayTypeInfo.style.display = 'block';
-        dayTypeInfo.innerHTML = '📌 <strong>Hoje é dia de jornada reduzida!</strong> (Sábado ou Feriado) - Referência: <strong>6 horas</strong>';
+        dayTypeInfo.innerHTML = '📌 <strong>Hoje é dia especial!</strong> (Sábado: base 4h · Feriado: base 8h, só conta excedente)';
         dayTypeInfo.style.background = '#fff3e0';
         dayTypeInfo.style.color = '#e67e22';
     } else {
@@ -1324,9 +1345,10 @@ async function renderTabContent(idx) {
     let html = `<div class="jornada-edit"><h4>📋 Horários de Referência</h4>
         <div style="display:flex; gap:8px; flex-wrap:wrap; font-size:11px;">
             <div><strong>Seg-Sex:</strong> ${emp.jornada_seg_sex_entrada || '--:--'} às ${emp.jornada_seg_sex_saida || '--:--'} (base 8h)</div>
-            <div><strong>Sábado/Feriado:</strong> ${emp.jornada_sabado_entrada || '--:--'} às ${emp.jornada_sabado_saida || '--:--'} (base 6h)</div>
+            <div><strong>Sábado:</strong> ${emp.jornada_sabado_entrada || '--:--'} às ${emp.jornada_sabado_saida || '--:--'} (base 4h)</div>
+            <div><strong>Feriado:</strong> Base 8h · Só conta excedente</div>
         </div>
-        <small style="color:#666;">* Sábado e Feriado: base 6h | Segunda a Sexta: base 8h | Banco: até 2h/dia | Use ✕ para marcar dias sem trabalho</small>
+        <small style="color:#666;">* Sábado: base 4h (positivo/negativo) | Feriado: base 8h (nunca negativo) | Segunda a Sexta: base 8h | Banco: até 2h/dia | Use ✕ para marcar dias sem trabalho</small>
     </div><div class="table-wrapper"><table class="timesheet-table"><thead><tr><th>Data</th><th>Dia</th><th>Ent</th><th>Sai Alm</th><th>Vol Alm</th><th>Sai</th><th>H.T.</th><th>Saldo</th><th>Obs</th></tr></thead><tbody>`;
     
     for (let d = 1; d <= days; d++) {
@@ -1688,7 +1710,7 @@ async function generatePrint(empId, year, month, isTest) {
         <div style="text-align:center;"><div class="signature-line"></div>Assinatura do Responsável</div>
     </div>
     <div class="footer">
-        Sábados e feriados: referência 6h | Dias úteis: 8h com 1h de almoço | Banco de horas: até 2h/dia<br>
+        Sábados: base 4h | Feriados: base 8h (nunca negativo) | Dias úteis: 8h com 1h de almoço | Banco: até 2h/dia<br>
         Documento eletrônico. * = Alterado pelo Gestor.<br>
         Emitido: ${new Date().toLocaleDateString('pt-BR')}
         ${isTest ? '<br><strong style="color:#f39c12;">IMPRESSÃO TESTE - NÃO VÁLIDA COMO REGISTRO OFICIAL</strong>' : ''}
@@ -1867,7 +1889,7 @@ function bootstrapApp() {
                 const isTodayReduced = await isReducedDay(t);
                 const dayTypeInfo = document.getElementById('dayTypeInfo');
                 if (isTodayReduced) {
-                    dayTypeInfo.innerHTML = '📌 <strong>Hoje é dia de jornada reduzida!</strong> (Sábado ou Feriado) - Referência: <strong>6 horas</strong>';
+                    dayTypeInfo.innerHTML = '📌 <strong>Hoje é dia especial!</strong> (Sábado: base 4h · Feriado: base 8h, só conta excedente)';
                     dayTypeInfo.style.background = '#fff3e0';
                     dayTypeInfo.style.color = '#e67e22';
                 } else {
