@@ -388,9 +388,51 @@
 <script>
 
 /* ============================================================
+   SISTEMA DE VERSÃO — LIMPA CACHE AUTOMATICAMENTE
+   ============================================================
+   Altere APP_VERSION a cada modificação do código.
+   Isso força o navegador a limpar tudo (exceto a senha do
+   dispositivo que fica salva no localStorage).
+   ============================================================ */
+const APP_VERSION = 'v2.0';
+const VERSION_KEY = 'mundoCarol_app_version';
+
+function verificarVersao() {
+    try {
+        const versaoSalva = localStorage.getItem(VERSION_KEY);
+        if (versaoSalva !== APP_VERSION) {
+            console.log(`🔄 Atualizando de "${versaoSalva || 'nenhuma'}" para "${APP_VERSION}"`);
+
+            // Preserva a senha do dispositivo
+            const senhaDispositivo = localStorage.getItem('mundoCarol_device_unlocked');
+
+            // Limpa tudo
+            sessionStorage.clear();
+            localStorage.clear();
+
+            // Restaura a senha
+            if (senhaDispositivo) {
+                localStorage.setItem('mundoCarol_device_unlocked', senhaDispositivo);
+            }
+
+            // Marca nova versão
+            localStorage.setItem(VERSION_KEY, APP_VERSION);
+
+            console.log('✅ Cache limpo. Recarregando...');
+            setTimeout(() => {
+                location.reload();
+            }, 150);
+            return true;
+        }
+    } catch (e) {
+        console.warn('Erro ao verificar versão:', e);
+    }
+    return false;
+}
+
+/* ============================================================
    BLOQUEIO MOBILE + TRAVA DE DISPOSITIVO
    ============================================================ */
-
 const DEVICE_PASSWORD = 'dan8301';
 const DEVICE_STORAGE_KEY = 'mundoCarol_device_unlocked';
 
@@ -426,7 +468,8 @@ function verifyDevicePassword() {
     if (input.value === DEVICE_PASSWORD) {
         unlockDevice();
         document.getElementById('deviceLock').classList.remove('show');
-        iniciarApp();
+        // Aguarda o resto do script carregar antes de iniciar
+        setTimeout(() => iniciarApp(), 100);
     } else {
         err.classList.add('show');
         input.value = '';
@@ -435,33 +478,54 @@ function verifyDevicePassword() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const inp = document.getElementById('devicePassword');
-    if (inp) {
-        inp.addEventListener('keypress', e => {
-            if (e.key === 'Enter') verifyDevicePassword();
-        });
+document.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && document.getElementById('deviceLock')?.classList.contains('show')) {
+        verifyDevicePassword();
     }
 });
 
+/* ============================================================
+   INICIALIZAÇÃO BLINDADA DO APP
+   ============================================================ */
 function iniciarApp() {
+    // Proteção 1: Supabase carregado?
+    if (typeof sbClient === 'undefined' || sbClient === null) {
+        console.log('⏳ Aguardando Supabase...');
+        setTimeout(iniciarApp, 100);
+        return;
+    }
+
+    // Proteção 2: bootstrapApp definida?
+    if (typeof bootstrapApp !== 'function') {
+        console.log('⏳ Aguardando bootstrapApp...');
+        setTimeout(iniciarApp, 100);
+        return;
+    }
+
+    // Tudo pronto → inicia
     const appRoot = document.getElementById('appRoot');
     if (appRoot) appRoot.style.display = 'block';
 
-    if (typeof bootstrapApp === 'function') {
-        bootstrapApp();
-    }
+    bootstrapApp();
 }
 
-(function validarAcesso() {
+/* ============================================================
+   VALIDAÇÃO DE ACESSO
+   ============================================================ */
+window.addEventListener('DOMContentLoaded', () => {
+    // 1) Verifica versão — se mudou, limpa e recarrega
+    if (verificarVersao()) return;
+
     const mobileBlock = document.getElementById('mobileBlock');
     const deviceLock = document.getElementById('deviceLock');
 
+    // 2) É mobile? → bloqueia
     if (isMobileDevice()) {
         mobileBlock.classList.add('show');
         return;
     }
 
+    // 3) Dispositivo não autorizado? → pede senha
     if (!isDeviceUnlocked()) {
         deviceLock.classList.add('show');
         setTimeout(() => {
@@ -471,8 +535,9 @@ function iniciarApp() {
         return;
     }
 
-    iniciarApp();
-})();
+    // 4) Tudo OK → inicia
+    setTimeout(() => iniciarApp(), 50);
+});
 
 
 
@@ -584,7 +649,6 @@ async function loadRecords(empId, month, year) {
 }
 
 async function isReducedDay(date) {
-    // Sábado OU feriado = jornada reduzida (base 6h, almoço liberado)
     const dow = date.getDay();
     const isSaturday = dow === 6;
     const dateKey = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
@@ -745,32 +809,23 @@ async function markClock(employee) {
 /* ============================================================
    VALIDAÇÃO INTELIGENTE DE IMPRESSÃO
    ============================================================
-   Regras:
-   ✅ Aceita: entrada + saida (sem almoço) → trabalho direto
-   ✅ Aceita: entrada + saida_almoco + volta_almoco + saida → dia completo
-   ✅ Aceita: observação especial (folga, falta, atestado, férias,
-              feriado-descanso, nao-trabalhava)
+   ✅ Aceita: entrada + saida (sem almoço)
+   ✅ Aceita: entrada + saida_almoco + volta_almoco + saida
+   ✅ Aceita: observação especial (folga, falta, etc)
    ✅ Aceita: domingo, feriado descanso
-   ✅ Aceita: feriado trabalhado com entrada + saida (sem almoço)
-   ❌ Rejeita: entrada + saida_almoco SEM volta_almoco OU sem saida
-              → inconsistente, gestor precisa corrigir
+   ❌ Rejeita: entrada + saida_almoco SEM volta_almoco E sem saida
    ============================================================ */
 function validarDiaParaImpressao(rec, dow, isHoliday) {
-    // Sem registro → precisa verificar se é dia que deveria ter registro
     if (!rec || Object.keys(rec).length === 0) {
-        // Domingo sem registro → OK
         if (dow === 0) return { valido: true, motivo: null };
-        // Outros dias sem registro → precisa validação
         return { valido: false, motivo: 'sem-registro' };
     }
 
-    // Observação especial → sempre aceita
     const obsEspeciais = ['folga','falta','atestado','ferias','feriado-descanso','nao-trabalhava'];
     if (rec.observacao && obsEspeciais.includes(rec.observacao)) {
         return { valido: true, motivo: null };
     }
 
-    // Domingo → sempre aceita
     if (dow === 0) return { valido: true, motivo: null };
 
     const temEntrada = !!rec.entrada;
@@ -778,23 +833,18 @@ function validarDiaParaImpressao(rec, dow, isHoliday) {
     const temVoltaAlmoco = !!rec.volta_almoco;
     const temSaida = !!rec.saida;
 
-    // ❌ Caso crítico: entrada + saída almoço SEM volta almoço E sem saída
-    // Isso indica que o funcionário foi embora no meio e não registrou corretamente
     if (temEntrada && temSaidaAlmoco && !temVoltaAlmoco && !temSaida) {
         return { valido: false, motivo: 'saida-almoco-sem-retorno' };
     }
 
-    // ✅ Caso 1: entrada + saída (direto, sem almoço) — funcionário veio e foi embora
     if (temEntrada && temSaida && !temSaidaAlmoco && !temVoltaAlmoco) {
         return { valido: true, motivo: null };
     }
 
-    // ✅ Caso 2: entrada + saída almoço + volta almoço + saída (dia completo)
     if (temEntrada && temSaidaAlmoco && temVoltaAlmoco && temSaida) {
         return { valido: true, motivo: null };
     }
 
-    // ❌ Qualquer outra combinação → inválido
     return { valido: false, motivo: 'incompleto' };
 }
 
@@ -811,15 +861,12 @@ function calculateWorked(ent, sAlm, vAlm, sai) {
         if (sMin < eMin) sMin += 1440;
         worked = sMin - eMin;
         
-        // ✨ Desconta almoço sempre que os horários estiverem preenchidos
-        // (vale para qualquer dia, inclusive sábado e feriado)
         if (sAlm && vAlm) {
             let outMin = timeToMinutes(sAlm);
             let inMin = timeToMinutes(vAlm);
             if (inMin < outMin) inMin += 1440;
             worked -= (inMin - outMin);
         } else if (worked > 360) {
-            // Se não marcou almoço mas trabalhou mais de 6h, desconta 1h automático
             worked -= 60;
         }
     }
@@ -828,7 +875,6 @@ function calculateWorked(ent, sAlm, vAlm, sai) {
 }
 
 function calculateDayBalance(worked, dow, isHoliday, obs) {
-    // Não trabalava na empresa → zera tudo
     if (obs === 'nao-trabalhava') {
         return { balance: 0, bank: 0, extra: 0 };
     }
@@ -841,18 +887,14 @@ function calculateDayBalance(worked, dow, isHoliday, obs) {
         return { balance: 0, bank: 0, extra: 0 };
     }
     
-    // Domingo → zera
     if (dow === 0) {
         return { balance: 0, bank: 0, extra: 0 };
     }
     
-    // Feriado sem horário (descanso) → zera
     if (isHoliday && obs === 'feriado-descanso') {
         return { balance: 0, bank: 0, extra: 0 };
     }
     
-    // ✨ Sábado E feriado → base 6h (360 min)
-    // ✨ Segunda a sexta → base 8h (480 min)
     let baseHour = (dow === 6 || isHoliday) ? 360 : 480;
     let diff = worked - baseHour;
     
@@ -1309,7 +1351,6 @@ async function renderTabContent(idx) {
         const worked = calculateWorked(rec.entrada, rec.saida_almoco, rec.volta_almoco, rec.saida);
         const { balance } = calculateDayBalance(worked, dow, isHoliday, obsVal);
         
-        // Validação visual: destaca dias inconsistentes
         const validacao = validarDiaParaImpressao({...rec, observacao: obsVal}, dow, isHoliday);
         const temInconsistencia = !validacao.valido && validacao.motivo === 'saida-almoco-sem-retorno';
         
