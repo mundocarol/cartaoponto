@@ -91,9 +91,7 @@
         
         .info-message { background: #e8f4fd; padding: 10px; border-radius: 12px; margin-bottom: 12px; font-size: 11px; color: #2c3e50; text-align: center; }
         
-        /* ============================================
-           TELA DE BLOQUEIO MOBILE
-           ============================================ */
+        /* MOBILE BLOCK */
         .mobile-block {
             display: none;
             position: fixed;
@@ -108,23 +106,9 @@
         }
         .mobile-block.show { display: flex; }
         .mobile-block-content { max-width: 420px; }
-        .mobile-block .icon {
-            font-size: 72px;
-            margin-bottom: 24px;
-            display: block;
-        }
-        .mobile-block h1 {
-            font-size: 22px;
-            font-weight: 800;
-            margin-bottom: 16px;
-            letter-spacing: -0.5px;
-        }
-        .mobile-block p {
-            font-size: 15px;
-            line-height: 1.7;
-            opacity: 0.95;
-            margin-bottom: 14px;
-        }
+        .mobile-block .icon { font-size: 72px; margin-bottom: 24px; display: block; }
+        .mobile-block h1 { font-size: 22px; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.5px; }
+        .mobile-block p { font-size: 15px; line-height: 1.7; opacity: 0.95; margin-bottom: 14px; }
         .mobile-block .alert-box {
             background: rgba(239, 68, 68, 0.15);
             border: 1px solid rgba(239, 68, 68, 0.4);
@@ -135,23 +119,10 @@
             line-height: 1.6;
             text-align: left;
         }
-        .mobile-block .alert-box strong {
-            color: #fca5a5;
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        .mobile-block .divider {
-            width: 60px;
-            height: 3px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 2px;
-            margin: 24px auto;
-        }
+        .mobile-block .alert-box strong { color: #fca5a5; display: block; margin-bottom: 8px; font-size: 14px; }
+        .mobile-block .divider { width: 60px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px; margin: 24px auto; }
 
-        /* ============================================
-           TELA DE SENHA DO DISPOSITIVO
-           ============================================ */
+        /* DEVICE LOCK */
         .device-lock {
             display: none;
             position: fixed;
@@ -179,70 +150,31 @@
             border-radius: 20px;
             background: #eff6ff; color: #1d4ed8;
             display: inline-flex; align-items: center; justify-content: center;
-            font-size: 36px;
-            margin-bottom: 20px;
+            font-size: 36px; margin-bottom: 20px;
         }
-        .device-lock-box h2 {
-            font-size: 22px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            color: #0f172a;
-            letter-spacing: -0.3px;
-        }
-        .device-lock-box p {
-            color: #64748b;
-            font-size: 14px;
-            margin-bottom: 24px;
-        }
+        .device-lock-box h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; color: #0f172a; letter-spacing: -0.3px; }
+        .device-lock-box p { color: #64748b; font-size: 14px; margin-bottom: 24px; }
         .device-lock-box input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid #d1d9e3;
-            border-radius: 10px;
-            font-size: 16px;
-            font-family: inherit;
-            background: white;
-            color: #0f172a;
-            text-align: center;
-            letter-spacing: 2px;
+            width: 100%; padding: 14px 16px;
+            border: 1px solid #d1d9e3; border-radius: 10px;
+            font-size: 16px; font-family: inherit;
+            background: white; color: #0f172a;
+            text-align: center; letter-spacing: 2px;
             margin-bottom: 16px;
         }
-        .device-lock-box input:focus {
-            outline: none;
-            border-color: #1d4ed8;
-            box-shadow: 0 0 0 3px rgba(29,78,216,0.1);
-        }
+        .device-lock-box input:focus { outline: none; border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1); }
         .device-lock-box button {
-            width: 100%;
-            padding: 14px;
-            background: #1d4ed8;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
+            width: 100%; padding: 14px;
+            background: #1d4ed8; color: white;
+            border: none; border-radius: 10px;
+            font-size: 15px; font-weight: 600;
+            font-family: inherit; cursor: pointer;
             transition: all 0.18s;
         }
-        .device-lock-box button:hover {
-            background: #1e40af;
-        }
-        .device-lock-error {
-            color: #b91c1c;
-            font-size: 13px;
-            margin-top: 14px;
-            display: none;
-        }
+        .device-lock-box button:hover { background: #1e40af; }
+        .device-lock-error { color: #b91c1c; font-size: 13px; margin-top: 14px; display: none; }
         .device-lock-error.show { display: block; }
-        .device-lock-footer {
-            font-size: 11px;
-            color: #94a3b8;
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid #f1f5f9;
-            line-height: 1.6;
-        }
+        .device-lock-footer { font-size: 11px; color: #94a3b8; margin-top: 24px; padding-top: 20px; border-top: 1px solid #f1f5f9; line-height: 1.6; }
         
         @media (max-width: 480px) {
             body { padding: 8px; }
@@ -267,12 +199,8 @@
         
         .clickable { cursor: pointer; }
         
-        .time-input-error {
-            border-color: #e74c3c !important;
-            background-color: #ffe6e6 !important;
-        }
+        .time-input-error { border-color: #e74c3c !important; background-color: #ffe6e6 !important; }
 
-        /* Estilo do botão X para "Não Trabalhava" */
         .btn-nao-trabalhava {
             width: 24px;
             height: 24px;
@@ -291,24 +219,14 @@
             transition: all 0.15s;
             flex-shrink: 0;
         }
-        .btn-nao-trabalhava:hover {
-            background: #dfe6e9;
-        }
-        .btn-nao-trabalhava.active {
-            background: #e74c3c;
-            color: white;
-            border-color: #c0392b;
-        }
-        .btn-nao-trabalhava.active:hover {
-            background: #c0392b;
-        }
+        .btn-nao-trabalhava:hover { background: #dfe6e9; }
+        .btn-nao-trabalhava.active { background: #e74c3c; color: white; border-color: #c0392b; }
+        .btn-nao-trabalhava.active:hover { background: #c0392b; }
     </style>
 </head>
 <body>
 
-<!-- ============================================
-     BLOQUEIO DE CELULAR
-     ============================================ -->
+<!-- MOBILE BLOCK -->
 <div id="mobileBlock" class="mobile-block">
     <div class="mobile-block-content">
         <span class="icon">🚫</span>
@@ -327,9 +245,7 @@
     </div>
 </div>
 
-<!-- ============================================
-     TRAVA DO DISPOSITIVO (SENHA ÚNICA POR PC)
-     ============================================ -->
+<!-- DEVICE LOCK -->
 <div id="deviceLock" class="device-lock">
     <div class="device-lock-box">
         <div class="icon">🔒</div>
@@ -345,9 +261,7 @@
     </div>
 </div>
 
-<!-- ============================================
-     APP PRINCIPAL (só aparece depois de validar)
-     ============================================ -->
+<!-- APP PRINCIPAL -->
 <div id="appRoot" style="display:none">
 
 <div id="clockScreen" class="clock-screen">
@@ -383,9 +297,9 @@
 <div id="validationModal" class="modal">
     <div class="modal-content">
         <h2>⚠️ Pendências</h2>
-        <p>Dias sem classificação:</p>
+        <p id="validationSubtitle">Dias sem classificação:</p>
         <div id="missingDaysList" class="missing-days-list"></div>
-        <p style="font-size:11px;">Classifique como Folga, Falta, Atestado ou Férias</p>
+        <p style="font-size:11px;">Corrija os horários ou classifique o dia antes de imprimir</p>
         <button onclick="closeValidationModal()" class="warning">OK</button>
     </div>
 </div>
@@ -477,27 +391,17 @@
    BLOQUEIO MOBILE + TRAVA DE DISPOSITIVO
    ============================================================ */
 
-/* Senha única do dispositivo */
 const DEVICE_PASSWORD = 'dan8301';
 const DEVICE_STORAGE_KEY = 'mundoCarol_device_unlocked';
 
-/* Detecta se é mobile */
 function isMobileDevice() {
-    // userAgent
     const ua = navigator.userAgent || navigator.vendor || window.opera;
     const uaMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-
-    // Tamanho da tela
     const smallScreen = window.innerWidth < 900;
-
-    // Touch
     const isTouch = ('ontouchstart' in window) && (navigator.maxTouchPoints > 0);
-
-    // Considera mobile se UA indicar mobile OU se a tela for pequena e tiver touch
     return uaMobile || (smallScreen && isTouch);
 }
 
-/* Verifica se este dispositivo já foi liberado */
 function isDeviceUnlocked() {
     try {
         return localStorage.getItem(DEVICE_STORAGE_KEY) === 'yes';
@@ -506,7 +410,6 @@ function isDeviceUnlocked() {
     }
 }
 
-/* Marca dispositivo como liberado */
 function unlockDevice() {
     try {
         localStorage.setItem(DEVICE_STORAGE_KEY, 'yes');
@@ -515,7 +418,6 @@ function unlockDevice() {
     }
 }
 
-/* Verifica a senha digitada */
 function verifyDevicePassword() {
     const input = document.getElementById('devicePassword');
     const err = document.getElementById('deviceError');
@@ -533,7 +435,6 @@ function verifyDevicePassword() {
     }
 }
 
-/* Enter no campo de senha */
 document.addEventListener('DOMContentLoaded', () => {
     const inp = document.getElementById('devicePassword');
     if (inp) {
@@ -543,32 +444,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-/* Inicializa o app depois das validações */
 function iniciarApp() {
     const appRoot = document.getElementById('appRoot');
     if (appRoot) appRoot.style.display = 'block';
 
-    // Chama o bootstrap original
     if (typeof bootstrapApp === 'function') {
         bootstrapApp();
     }
 }
 
-/* Validação principal ao carregar */
 (function validarAcesso() {
     const mobileBlock = document.getElementById('mobileBlock');
     const deviceLock = document.getElementById('deviceLock');
 
-    // 1) Se for mobile → bloqueia
     if (isMobileDevice()) {
         mobileBlock.classList.add('show');
         return;
     }
 
-    // 2) Se não for mobile mas dispositivo não liberado → pede senha
     if (!isDeviceUnlocked()) {
         deviceLock.classList.add('show');
-        // Foca no input depois de um tempo
         setTimeout(() => {
             const inp = document.getElementById('devicePassword');
             if (inp) inp.focus();
@@ -576,13 +471,8 @@ function iniciarApp() {
         return;
     }
 
-    // 3) Dispositivo OK → inicia o app
     iniciarApp();
 })();
-
-/* ============================================================
-   FIM DO BLOQUEIO
-   ============================================================ */
 
 
 
@@ -694,6 +584,7 @@ async function loadRecords(empId, month, year) {
 }
 
 async function isReducedDay(date) {
+    // Sábado OU feriado = jornada reduzida (base 6h, almoço liberado)
     const dow = date.getDay();
     const isSaturday = dow === 6;
     const dateKey = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
@@ -825,77 +716,93 @@ async function markClock(employee) {
     const records = await loadRecords(employee.id, t.getMonth()+1, t.getFullYear());
     const today = records[date] || {};
     
-    const isReduced = await isReducedDay(t);
-    
     let field = '', name = '';
     
-    if (isReduced) {
-        if (!today.entrada) {
-            field = 'entrada';
-            name = 'Entrada';
-        } else if (!today.saida) {
-            field = 'saida';
-            name = 'Saída';
-        } else {
-            showMessage('⚠️ Dia completo! (Jornada reduzida - sem almoço)', 'warning');
-            return;
-        }
+    if (!today.entrada) {
+        field = 'entrada';
+        name = 'Entrada';
+    } else if (!today.saida_almoco) {
+        field = 'saida_almoco';
+        name = 'Saída para Almoço';
+    } else if (!today.volta_almoco) {
+        field = 'volta_almoco';
+        name = 'Volta do Almoço';
+    } else if (!today.saida) {
+        field = 'saida';
+        name = 'Saída';
     } else {
-        if (!today.entrada) {
-            field = 'entrada';
-            name = 'Entrada';
-        } else if (!today.saida_almoco) {
-            field = 'saida_almoco';
-            name = 'Saída para Almoço';
-        } else if (!today.volta_almoco) {
-            field = 'volta_almoco';
-            name = 'Volta do Almoço';
-        } else if (!today.saida) {
-            field = 'saida';
-            name = 'Saída';
-        } else {
-            showMessage('⚠️ Dia completo!', 'warning');
-            return;
-        }
+        showMessage('⚠️ Dia completo!', 'warning');
+        return;
     }
     
     const success = await saveRecord(employee.id, date, field, now, false);
     if (success) {
-        const tipoDia = isReduced ? ' (Jornada reduzida)' : '';
-        showMessage(`✅ ${name}: ${now}${tipoDia}`, 'success');
+        showMessage(`✅ ${name}: ${now}`, 'success');
         await renderEmployeeGrid();
     }
 }
 
-function isDayCompleteForPrint(rec, dow, isHoliday) {
-    const isSaturday = dow === 6;
-    const isSunday = dow === 0;
-    const isSpecialDay = isSunday || isSaturday || isHoliday;
-    
-    // ✨ Se marcado como "Não Trabalhava", ignora validação
-    if (rec.observacao === 'nao-trabalhava') {
-        return true;
+/* ============================================================
+   VALIDAÇÃO INTELIGENTE DE IMPRESSÃO
+   ============================================================
+   Regras:
+   ✅ Aceita: entrada + saida (sem almoço) → trabalho direto
+   ✅ Aceita: entrada + saida_almoco + volta_almoco + saida → dia completo
+   ✅ Aceita: observação especial (folga, falta, atestado, férias,
+              feriado-descanso, nao-trabalhava)
+   ✅ Aceita: domingo, feriado descanso
+   ✅ Aceita: feriado trabalhado com entrada + saida (sem almoço)
+   ❌ Rejeita: entrada + saida_almoco SEM volta_almoco OU sem saida
+              → inconsistente, gestor precisa corrigir
+   ============================================================ */
+function validarDiaParaImpressao(rec, dow, isHoliday) {
+    // Sem registro → precisa verificar se é dia que deveria ter registro
+    if (!rec || Object.keys(rec).length === 0) {
+        // Domingo sem registro → OK
+        if (dow === 0) return { valido: true, motivo: null };
+        // Outros dias sem registro → precisa validação
+        return { valido: false, motivo: 'sem-registro' };
     }
-    
-    if (isSunday) {
-        return true;
+
+    // Observação especial → sempre aceita
+    const obsEspeciais = ['folga','falta','atestado','ferias','feriado-descanso','nao-trabalhava'];
+    if (rec.observacao && obsEspeciais.includes(rec.observacao)) {
+        return { valido: true, motivo: null };
     }
-    
-    if (rec.observacao === 'feriado-descanso') {
-        return true;
+
+    // Domingo → sempre aceita
+    if (dow === 0) return { valido: true, motivo: null };
+
+    const temEntrada = !!rec.entrada;
+    const temSaidaAlmoco = !!rec.saida_almoco;
+    const temVoltaAlmoco = !!rec.volta_almoco;
+    const temSaida = !!rec.saida;
+
+    // ❌ Caso crítico: entrada + saída almoço SEM volta almoço E sem saída
+    // Isso indica que o funcionário foi embora no meio e não registrou corretamente
+    if (temEntrada && temSaidaAlmoco && !temVoltaAlmoco && !temSaida) {
+        return { valido: false, motivo: 'saida-almoco-sem-retorno' };
     }
-    
-    const hasObservacao = rec.observacao && ['folga','falta','atestado','ferias','feriado-trabalhado','feriado-descanso'].includes(rec.observacao);
-    if (hasObservacao) return true;
-    
-    if (isSpecialDay) {
-        return rec.entrada && rec.saida;
+
+    // ✅ Caso 1: entrada + saída (direto, sem almoço) — funcionário veio e foi embora
+    if (temEntrada && temSaida && !temSaidaAlmoco && !temVoltaAlmoco) {
+        return { valido: true, motivo: null };
     }
-    
-    return rec.entrada && rec.saida_almoco && rec.volta_almoco && rec.saida;
+
+    // ✅ Caso 2: entrada + saída almoço + volta almoço + saída (dia completo)
+    if (temEntrada && temSaidaAlmoco && temVoltaAlmoco && temSaida) {
+        return { valido: true, motivo: null };
+    }
+
+    // ❌ Qualquer outra combinação → inválido
+    return { valido: false, motivo: 'incompleto' };
 }
 
-function calculateWorked(ent, sAlm, vAlm, sai, isReducedDay) {
+function isDayCompleteForPrint(rec, dow, isHoliday) {
+    return validarDiaParaImpressao(rec, dow, isHoliday).valido;
+}
+
+function calculateWorked(ent, sAlm, vAlm, sai) {
     let worked = 0;
     
     if (ent && sai) {
@@ -904,12 +811,15 @@ function calculateWorked(ent, sAlm, vAlm, sai, isReducedDay) {
         if (sMin < eMin) sMin += 1440;
         worked = sMin - eMin;
         
-        if (!isReducedDay && sAlm && vAlm) {
+        // ✨ Desconta almoço sempre que os horários estiverem preenchidos
+        // (vale para qualquer dia, inclusive sábado e feriado)
+        if (sAlm && vAlm) {
             let outMin = timeToMinutes(sAlm);
             let inMin = timeToMinutes(vAlm);
             if (inMin < outMin) inMin += 1440;
             worked -= (inMin - outMin);
-        } else if (!isReducedDay && worked > 360) {
+        } else if (worked > 360) {
+            // Se não marcou almoço mas trabalhou mais de 6h, desconta 1h automático
             worked -= 60;
         }
     }
@@ -918,7 +828,7 @@ function calculateWorked(ent, sAlm, vAlm, sai, isReducedDay) {
 }
 
 function calculateDayBalance(worked, dow, isHoliday, obs) {
-    // ✨ Não trabalava na empresa → zera tudo
+    // Não trabalava na empresa → zera tudo
     if (obs === 'nao-trabalhava') {
         return { balance: 0, bank: 0, extra: 0 };
     }
@@ -931,11 +841,19 @@ function calculateDayBalance(worked, dow, isHoliday, obs) {
         return { balance: 0, bank: 0, extra: 0 };
     }
     
-    if (dow === 0 || isHoliday) {
+    // Domingo → zera
+    if (dow === 0) {
         return { balance: 0, bank: 0, extra: 0 };
     }
     
-    let baseHour = (dow === 6) ? 240 : 480;
+    // Feriado sem horário (descanso) → zera
+    if (isHoliday && obs === 'feriado-descanso') {
+        return { balance: 0, bank: 0, extra: 0 };
+    }
+    
+    // ✨ Sábado E feriado → base 6h (360 min)
+    // ✨ Segunda a sexta → base 8h (480 min)
+    let baseHour = (dow === 6 || isHoliday) ? 360 : 480;
     let diff = worked - baseHour;
     
     let bank = 0;
@@ -962,7 +880,6 @@ function getObservationText(rec, dow, isHoliday, temHorario) {
     const obs = rec.observacao;
     const isSunday = dow === 0;
     
-    // ✨ Não trabalhava → aparece como "—"
     if (obs === 'nao-trabalhava') return '—';
     
     if (obs === 'folga') return 'Folga';
@@ -993,7 +910,7 @@ async function renderEmployeeGrid() {
     const dayTypeInfo = document.getElementById('dayTypeInfo');
     if (isTodayReduced) {
         dayTypeInfo.style.display = 'block';
-        dayTypeInfo.innerHTML = '📌 <strong>Hoje é dia de jornada reduzida!</strong> (Sábado ou Feriado) - Apenas <strong>Entrada</strong> e <strong>Saída</strong> serão registrados.';
+        dayTypeInfo.innerHTML = '📌 <strong>Hoje é dia de jornada reduzida!</strong> (Sábado ou Feriado) - Referência: <strong>6 horas</strong>';
         dayTypeInfo.style.background = '#fff3e0';
         dayTypeInfo.style.color = '#e67e22';
     } else {
@@ -1010,23 +927,11 @@ async function renderEmployeeGrid() {
         const nome = emp.nome.split(' ')[0];
         
         let status = '', sClass = '';
-        const isReduced = await isReducedDay(t);
         const dow = t.getDay();
         
         if (dow === 0) {
             status = '✅ Domingo (Liberado)';
             sClass = 'status-complete';
-        } else if (isReduced) {
-            if (today.entrada && today.saida) {
-                status = '✅ Completo';
-                sClass = 'status-complete';
-            } else if (today.entrada) {
-                status = '🟡 Aguardando Saída';
-                sClass = 'status-incomplete';
-            } else {
-                status = '⚪ Pendente';
-                sClass = 'status-none';
-            }
         } else {
             if (today.entrada && today.saida_almoco && today.volta_almoco && today.saida) {
                 status = '✅ Completo';
@@ -1040,10 +945,7 @@ async function renderEmployeeGrid() {
             }
         }
         
-        const previewHtml = isReduced ? `
-            <span>⏰ ${today.entrada || '--:--'}</span>
-            <span>🏠 ${today.saida || '--:--'}</span>
-        ` : `
+        const previewHtml = `
             <span>⏰ ${today.entrada || '--:--'}</span>
             <span>🍽️ ${today.saida_almoco || '--:--'}</span>
             <span>🍽️ ${today.volta_almoco || '--:--'}</span>
@@ -1379,10 +1281,10 @@ async function renderTabContent(idx) {
     
     let html = `<div class="jornada-edit"><h4>📋 Horários de Referência</h4>
         <div style="display:flex; gap:8px; flex-wrap:wrap; font-size:11px;">
-            <div><strong>Seg-Sex:</strong> ${emp.jornada_seg_sex_entrada || '--:--'} às ${emp.jornada_seg_sex_saida || '--:--'} (8h/dia)</div>
-            <div><strong>Sábado:</strong> ${emp.jornada_sabado_entrada || '--:--'} às ${emp.jornada_sabado_saida || '--:--'} (4h/dia - sem almoço)</div>
+            <div><strong>Seg-Sex:</strong> ${emp.jornada_seg_sex_entrada || '--:--'} às ${emp.jornada_seg_sex_saida || '--:--'} (base 8h)</div>
+            <div><strong>Sábado/Feriado:</strong> ${emp.jornada_sabado_entrada || '--:--'} às ${emp.jornada_sabado_saida || '--:--'} (base 6h)</div>
         </div>
-        <small style="color:#666;">* Sábado: base 4h sem intervalo | Segunda a Sexta: base 8h com 2h almoço | Banco de horas: até 2h/dia | Marque com ✕ os dias que o funcionário não trabalhava (antes da admissão, etc)</small>
+        <small style="color:#666;">* Sábado e Feriado: base 6h | Segunda a Sexta: base 8h | Banco: até 2h/dia | Use ✕ para marcar dias sem trabalho</small>
     </div><div class="table-wrapper"><table class="timesheet-table"><thead><tr><th>Data</th><th>Dia</th><th>Ent</th><th>Sai Alm</th><th>Vol Alm</th><th>Sai</th><th>H.T.</th><th>Saldo</th><th>Obs</th></tr></thead><tbody>`;
     
     for (let d = 1; d <= days; d++) {
@@ -1392,7 +1294,6 @@ async function renderTabContent(idx) {
         const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         let rec = records[dateKey] || {};
         const isHoliday = holidays.some(h => h.data === dateKey);
-        const isReduced = (dow === 6 || isHoliday);
         const temHorario = rec.entrada || rec.saida_almoco || rec.volta_almoco || rec.saida;
         
         let obsVal = rec.observacao || '';
@@ -1405,9 +1306,12 @@ async function renderTabContent(idx) {
             obsVal = temHorario ? 'feriado-trabalhado' : 'feriado-descanso';
         }
         
-        const worked = calculateWorked(rec.entrada, rec.saida_almoco, rec.volta_almoco, rec.saida, isReduced);
+        const worked = calculateWorked(rec.entrada, rec.saida_almoco, rec.volta_almoco, rec.saida);
         const { balance } = calculateDayBalance(worked, dow, isHoliday, obsVal);
-        const obsText = getObservationText({...rec, observacao: obsVal}, dow, isHoliday, temHorario);
+        
+        // Validação visual: destaca dias inconsistentes
+        const validacao = validarDiaParaImpressao({...rec, observacao: obsVal}, dow, isHoliday);
+        const temInconsistencia = !validacao.valido && validacao.motivo === 'saida-almoco-sem-retorno';
         
         let rowClass = '';
         if (obsVal === 'nao-trabalhava') rowClass = 'nao-trabalhava-row';
@@ -1415,17 +1319,15 @@ async function renderTabContent(idx) {
         else if (dow === 6) rowClass = 'saturday-row';
         if (isHoliday) rowClass = 'holiday-row';
         
-        const almocoDisabled = isReduced ? 'disabled' : '';
-        const almocoStyle = isReduced ? 'background:#f5f5f5;' : '';
-        
         const isNaoTrabalhava = obsVal === 'nao-trabalhava';
+        const styleAlerta = temInconsistencia ? 'background:#fff3cd;' : '';
         
-        html += `<tr class="${rowClass}">
+        html += `<tr class="${rowClass}" style="${styleAlerta}" ${temInconsistencia ? 'title="⚠️ Saída almoço sem retorno — gestor precisa corrigir"' : ''}>
             <td>${String(d).padStart(2,'0')}/${String(month).padStart(2,'0')}</td>
             <td>${dayName}</td>
             <td><input type="time" class="time-input" id="entrada-${idx}-${d}" value="${rec.entrada || ''}" onchange="saveField(${idx},${d},'entrada')"></td>
-            <td><input type="time" class="time-input" id="saida_almoco-${idx}-${d}" value="${rec.saida_almoco || ''}" ${almocoDisabled} style="${almocoStyle}" onchange="saveField(${idx},${d},'saida_almoco')"></td>
-            <td><input type="time" class="time-input" id="volta_almoco-${idx}-${d}" value="${rec.volta_almoco || ''}" ${almocoDisabled} style="${almocoStyle}" onchange="saveField(${idx},${d},'volta_almoco')"></td>
+            <td><input type="time" class="time-input ${temInconsistencia ? 'time-input-error' : ''}" id="saida_almoco-${idx}-${d}" value="${rec.saida_almoco || ''}" onchange="saveField(${idx},${d},'saida_almoco')"></td>
+            <td><input type="time" class="time-input" id="volta_almoco-${idx}-${d}" value="${rec.volta_almoco || ''}" onchange="saveField(${idx},${d},'volta_almoco')"></td>
             <td><input type="time" class="time-input" id="saida-${idx}-${d}" value="${rec.saida || ''}" onchange="saveField(${idx},${d},'saida')"></td>
             <td>${minutesToTime(worked)}</td>
             <td class="${balance >= 0 ? 'positive' : 'negative'}">${minutesToTime(balance)}</td>
@@ -1463,7 +1365,6 @@ async function renderTabContent(idx) {
         const dateKey = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         let rec = records[dateKey] || {};
         const isHoliday = holidays.some(h => h.data === dateKey);
-        const isReduced = (dow === 6 || isHoliday);
         const temHorario = rec.entrada || rec.saida_almoco || rec.volta_almoco || rec.saida;
         
         let obsVal = rec.observacao || '';
@@ -1472,7 +1373,7 @@ async function renderTabContent(idx) {
             obsVal = temHorario ? 'feriado-trabalhado' : 'feriado-descanso';
         }
         
-        const worked = calculateWorked(rec.entrada, rec.saida_almoco, rec.volta_almoco, rec.saida, isReduced);
+        const worked = calculateWorked(rec.entrada, rec.saida_almoco, rec.volta_almoco, rec.saida);
         const { bank, extra } = calculateDayBalance(worked, dow, isHoliday, obsVal);
         
         totalHoras += worked;
@@ -1576,6 +1477,7 @@ async function validateAndPrint(empId, year, month, isTest) {
     const records = await loadRecords(emp.id, month, year);
     const days = new Date(year, month, 0).getDate();
     const missing = [];
+    const inconsistentes = [];
     
     if (!isTest) {
         for (let d = 1; d <= days; d++) {
@@ -1587,25 +1489,40 @@ async function validateAndPrint(empId, year, month, isTest) {
             });
             const key = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
             const rec = records[key] || {};
+            const diaLabel = `${String(d).padStart(2,'0')}/${String(month).padStart(2,'0')} - ${['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][dow]}`;
             
-            if (dow === 0) {
-                continue;
-            }
+            const resultado = validarDiaParaImpressao(rec, dow, isHoliday);
             
-            if (rec.observacao === 'feriado-descanso') {
-                continue;
-            }
-            
-            if (rec.observacao === 'nao-trabalhava') {
-                continue;
-            }
-            
-            if (!isDayCompleteForPrint(rec, dow, isHoliday)) {
-                missing.push(`${d}/${month} - ${['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][dow]}`);
+            if (!resultado.valido) {
+                if (resultado.motivo === 'saida-almoco-sem-retorno') {
+                    inconsistentes.push(`${diaLabel} — <span style="color:#e74c3c;font-weight:bold;">Saída almoço sem retorno (corrigir: apagar saída almoço OU preencher volta+saída)</span>`);
+                } else if (resultado.motivo === 'incompleto') {
+                    inconsistentes.push(`${diaLabel} — <span style="color:#e67e22;">Horários incompletos</span>`);
+                } else if (resultado.motivo === 'sem-registro') {
+                    missing.push(diaLabel);
+                }
             }
         }
-        if (missing.length) {
-            document.getElementById('missingDaysList').innerHTML = missing.map(m => `<div class="missing-day-item">📅 ${m}</div>`).join('');
+        
+        if (missing.length || inconsistentes.length) {
+            let html = '';
+            
+            if (inconsistentes.length) {
+                html += `<div style="background:#fef2f2; padding:10px; border-radius:8px; margin-bottom:12px; border-left:4px solid #e74c3c;">
+                    <strong style="color:#e74c3c; display:block; margin-bottom:8px;">⚠️ Dias com horários inconsistentes (${inconsistentes.length})</strong>
+                    ${inconsistentes.map(m => `<div class="missing-day-item">⚠️ ${m}</div>`).join('')}
+                </div>`;
+            }
+            
+            if (missing.length) {
+                html += `<div style="background:#fff8e1; padding:10px; border-radius:8px; margin-bottom:12px; border-left:4px solid #f39c12;">
+                    <strong style="color:#e67e22; display:block; margin-bottom:8px;">📅 Dias sem classificação (${missing.length})</strong>
+                    ${missing.map(m => `<div class="missing-day-item">📅 ${m}</div>`).join('')}
+                </div>`;
+            }
+            
+            document.getElementById('validationSubtitle').innerHTML = 'Corrija os dias abaixo antes de imprimir:';
+            document.getElementById('missingDaysList').innerHTML = html;
             document.getElementById('validationModal').style.display = 'flex';
             return;
         }
@@ -1641,7 +1558,7 @@ async function generatePrint(empId, year, month, isTest) {
             obsVal = temHorario ? 'feriado-trabalhado' : 'feriado-descanso';
         }
         
-        const worked = calculateWorked(rec.entrada, rec.saida_almoco, rec.volta_almoco, rec.saida, isReduced);
+        const worked = calculateWorked(rec.entrada, rec.saida_almoco, rec.volta_almoco, rec.saida);
         const { balance, bank, extra } = calculateDayBalance(worked, dow, isHoliday, obsVal);
         
         totalHoras += worked;
@@ -1660,8 +1577,8 @@ async function generatePrint(empId, year, month, isTest) {
             <td>${String(d).padStart(2,'0')}/${String(month).padStart(2,'0')}</td>
             <td>${dayName}</td>
             <td>${rec.entrada || '—'}</td>
-            <td>${isReduced ? '—' : (rec.saida_almoco || '—')}</td>
-            <td>${isReduced ? '—' : (rec.volta_almoco || '—')}</td>
+            <td>${rec.saida_almoco || '—'}</td>
+            <td>${rec.volta_almoco || '—'}</td>
             <td>${rec.saida || '—'}</td>
             <td>${minutesToTime(worked)}</td>
             <td>${minutesToTime(balance)}</td>
@@ -1730,8 +1647,7 @@ async function generatePrint(empId, year, month, isTest) {
         <div style="text-align:center;"><div class="signature-line"></div>Assinatura do Responsável</div>
     </div>
     <div class="footer">
-        Sábados e feriados: jornada reduzida (sem intervalo de almoço)<br>
-        Dias úteis: 8h com 1h de almoço | Banco de horas: até 2h/dia<br>
+        Sábados e feriados: referência 6h | Dias úteis: 8h com 1h de almoço | Banco de horas: até 2h/dia<br>
         Documento eletrônico. * = Alterado pelo Gestor.<br>
         Emitido: ${new Date().toLocaleDateString('pt-BR')}
         ${isTest ? '<br><strong style="color:#f39c12;">IMPRESSÃO TESTE - NÃO VÁLIDA COMO REGISTRO OFICIAL</strong>' : ''}
@@ -1839,7 +1755,7 @@ async function testDatabaseConnection() {
             <div class="test-result test-success">
                 <strong>✅ CONEXÃO OK!</strong><br>
                 Banco de dados funcionando corretamente.<br>
-                Tabela logs_gestor: ${logsOk ? '✅ Disponível' : '⚠️ Não encontrada (execute o SQL para criar)'}
+                Tabela logs_gestor: ${logsOk ? '✅ Disponível' : '⚠️ Não encontrada'}
             </div>
         `;
     } catch (error) {
@@ -1870,10 +1786,9 @@ async function criarTabelaLogs() {
 }
 
 /* ============================================================
-   BOOTSTRAP DO APP (chamado depois das validações)
+   BOOTSTRAP DO APP
    ============================================================ */
 function bootstrapApp() {
-    // Event Listeners
     document.getElementById('managementBtn')?.addEventListener('click', showManagerModal);
     document.getElementById('backToClockBtn')?.addEventListener('click', backToClock);
     document.getElementById('updateMonthBtn')?.addEventListener('click', async () => { 
@@ -1911,7 +1826,7 @@ function bootstrapApp() {
                 const isTodayReduced = await isReducedDay(t);
                 const dayTypeInfo = document.getElementById('dayTypeInfo');
                 if (isTodayReduced) {
-                    dayTypeInfo.innerHTML = '📌 <strong>Hoje é dia de jornada reduzida!</strong> (Sábado ou Feriado) - Apenas <strong>Entrada</strong> e <strong>Saída</strong> serão registrados.';
+                    dayTypeInfo.innerHTML = '📌 <strong>Hoje é dia de jornada reduzida!</strong> (Sábado ou Feriado) - Referência: <strong>6 horas</strong>';
                     dayTypeInfo.style.background = '#fff3e0';
                     dayTypeInfo.style.color = '#e67e22';
                 } else {
